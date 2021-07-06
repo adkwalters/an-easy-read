@@ -18,17 +18,16 @@ body {
     background-color: #fbfdfe;
 }
 h1 {
-    font-size: 1.6rem;
+    font-size: 2.5rem;
 }
 h2 {
     font-size: 1.4rem;
-}
-h3 {
     margin-bottom: 1rem;
 }
+
 p {
     font-size: 1.2rem;
-    line-height: 1.5rem;
+    line-height: 1.6rem;
     margin-bottom: 1.5rem;
     padding: 1rem;
     background-color: #eee;
@@ -44,11 +43,11 @@ ul {
 
 /* || Utility classes */
 .label {
-    font-size: 0.8rem;
+    font-size: 1rem;
     padding: 0.3rem 0.6rem;
     margin: 0.2rem 0.1rem;
     background-color: #DDD;
-    border: 2px solid;
+    /* border: 2px solid; */
     border-radius: 10px;
     display: inline-block;
 }
@@ -65,15 +64,7 @@ header {
     display: flex;
     justify-content: space-between;
     height: 4rem;
-    /* display: grid; */
-    /* grid-template-columns: max-content max-content; */
-    /* grid-gap: 10px; */
-    /* justify-content: space-between; */
-    /* padding-bottom: 0.6rem; */
-    /* align-items: center; */
-    /* position: sticky; */
     width: 100%;
-    /* margin: auto; */
     box-shadow: 0 0px 12px 0;
 }
 #header-brand {
@@ -85,6 +76,7 @@ header {
     font-weight: 730; 
 }
 #brand-name {
+    font-size: 1.8rem;
     display: none;
     margin-left: 5px;
 }
@@ -116,10 +108,10 @@ article {
 }
 article img {
     width: 100%;
-    padding-bottom: 0.6rem;
+    padding: 1.5rem 0;
 }
 .article-header {
-    padding-bottom: 1rem;
+    padding: 1rem;
 }
 .article-category {
     padding-bottom: 1rem;
@@ -161,8 +153,18 @@ article img {
     #page {
         /* padding: 1rem 1.5rem; */
     }
-    article {
-        max-width: 38rem;
+    .article-header,
+    .article-body {
+        max-width: 40rem;
+        margin: auto;
     }
 }
 
+/* || Large landscape (1024px and above)
+    - Freeze image width */
+@media (min-width: 64rem) {
+    article {
+        max-width: 55rem;
+        margin: auto;
+    }
+}
