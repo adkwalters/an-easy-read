@@ -6,4 +6,5 @@ function showNav() {
         navList.style.display = "none";
     }
 }
+console.log("This is an arbitrary change to check out version control");
 
