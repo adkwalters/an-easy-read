@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width", initial-scale=1>
+
+    <meta name="description" content="A description of the article, most likely used in snippets">
+    <meta name="author" content="Andrew Walters">
+    <!-- Add in other rich data -->
+
+    <!-- Icons and fonts -->
+    <script src="https://kit.fontawesome.com/ab4f2900b6.js" crossorigin="anonymous"></script>  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="easy-read.css" /> 
+</html>
+<body>
+    <div id="page"> <!-- Why put div here? To give width to page? -->
+        <header>
+            <div id=header-brand>
+                <a id="brand-logo">
+                    <i class="fas fa-book-open"></i> 
+                </a>
+                <h1 id="brand-name">
+                    <a>Easy Read</a>
+                </h1>
+            </div>
+            <nav id="header-nav">
+                <i class="fas fa-bars" onclick="showNav()"></i>
+                <ul id="header-nav-list">    
+                    <li><a class="nav-link" href="">About</a></li>
+                    <li><a class="nav-link" href="">Categories</a></li>
+                    <li><a class="nav-link" href="">Contact</a></li>
+                </ul> 
+            </nav>   
+        </header>
+        <main>
+            <article>
+                <img src="Images/space_debris_esa_map.png" alt=""/>
+                <div id="article-text">    
+                    <div class="article-header">
+                        <div class="article-category">
+                            <a>
+                                <span class="label">Technology</span>
+                                <span class="label">Environment</span>
+                                <span class="label">Space</span>
+                            </a>
+                        </div>
+                        <h1 class="article-title">
+                            This is the title of the article
+                        </h1>
+                        <div class="article-meta">
+                            <time id="article-date">July 2021</time>
+                            <author id="article-author">Andrew Walters</author>
+                        </div>
+                    </div>
+                    <div class="article-body">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <h3>This is a sub-header</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    </div>
+                </div>
+            </article>
+        </main>
+        <footer>
+
+        </footer>
+    </div>    
+</body>
+<script src="easy-read.js"></script>
