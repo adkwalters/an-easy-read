@@ -61,16 +61,18 @@ ul {
     /* padding: 1rem 6%; */
 }
 #header-main {
+    position: fixed;
     display: flex;
     justify-content: space-between;
     height: 4rem;
     overflow: hidden;
     width: 100%;
+    background: white;
     box-shadow: 0 0px 12px 0;
 }
 #header-brand {
     display: flex;
-    margin: 1rem;
+    margin: 0.8rem 0 0 1rem;
 }
 #brand-logo {
     font-size: 2.1rem;
@@ -81,19 +83,18 @@ ul {
     display: none;
     margin-left: 5px;
 }
-nav {
+#header-nav {
     text-align: right;
-    margin: 1rem;
+    margin: 0.6rem 1rem;
 }
 nav i {
     font-size: 2.2rem;
 }
 nav ul {
     padding-top: 1rem;
-    /* height: 100vh; */
-    /* display: none; */
 }
 .nav-link {
+    color: black;
     font-size: 1.4rem;
     font-weight: 730;
     line-height: 2rem;
@@ -105,11 +106,11 @@ nav ul {
 /* || Article - Main image  */
 article {
     margin: auto;
-    padding: 1rem 6%;
+    padding: 0 6%;
 }
 article img {
     width: 100%;
-    padding: 1.5rem 0;
+    padding-top: 6rem;
 }
 .article-header {
     padding: 1rem;
@@ -140,6 +141,9 @@ article img {
     - Increase page width for header
     - Freeze article width  */
 @media (min-width: 48rem) {
+    #header-main {
+        height: 4rem;
+    }
     nav ul {
         display: flex;
         justify-content: flex-end;
@@ -150,9 +154,6 @@ article img {
     }
     nav i {
         font-size: 0;
-    }
-    #page {
-        /* padding: 1rem 1.5rem; */
     }
     .article-header,
     .article-body {
