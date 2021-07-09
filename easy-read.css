@@ -71,7 +71,6 @@ ul {
     box-shadow: 0 0px 12px 0;
 }
 #header-brand {
-    display: flex;
     margin: 0.8rem 0 0 1rem;
 }
 #brand-logo {
@@ -85,7 +84,7 @@ ul {
 }
 #header-nav {
     text-align: right;
-    margin: 0.6rem 1rem;
+    margin: 1rem;
 }
 nav i {
     font-size: 2.2rem;
@@ -128,36 +127,38 @@ article img {
 
 /* || Responsive design */
 
-/* large portrait (280px and above) 
+/* large portrait (336px and above) 
     - show header-name */
-@media (min-width: 17.5rem) {
+@media (min-width: 21rem) {
     #brand-name {
-        display: block;
+        display: inline-block;
     }
 }
 
-/* small landscape (768px and above) 
-    - Expand navigation
-    - Increase page width for header
-    - Freeze article width  */
-@media (min-width: 48rem) {
+/* small landscape (640px and above)
+    - Expand navigation*/
+@media (min-width: 40rem) {
     #header-main {
         height: 4rem;
     }
     nav ul {
         display: flex;
-        justify-content: flex-end;
-        align-items:flex-end;
+        justify-items: start;
         gap: 2rem;
-        height: 1rem;
-        padding-top: 0;
+        margin-top: -2.2rem; /* Compensate for hidden icon */
     }
     nav i {
-        font-size: 0;
+        font-size: 0; /* hide icon */
     }
+}
+
+/* Medium landscape (768px and above) 
+    - Increase page width for header
+    - Freeze article width  */
+@media (min-width: 48rem) {
     .article-header,
     .article-body {
-        max-width: 40rem;
+        max-width: 42rem;
         margin: auto;
     }
 }
