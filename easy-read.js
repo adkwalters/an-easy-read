@@ -1,9 +1,10 @@
 function showNav() {
-    navList = document.getElementById('header-nav-list');
-    if (navList.style.display === "block") {
-        navList.style.display = "none";
+    let header = document.getElementById('header-main');
+    if (header.style.height === "4rem") {
+        header.style.height = "11rem";
+        console.log("click logged and 4 found")
     } else {
-        navList.style.display = "block";
+        header.style.height = "4rem";
     }
 }
 
