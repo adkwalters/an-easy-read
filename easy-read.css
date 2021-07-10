@@ -62,8 +62,8 @@ ul {
 }
 #header-main {
     position: fixed;
-    display: flex;
-    justify-content: space-between;
+    /* display: flex; */
+    /* justify-content: space-between; */
     height: 4rem;
     overflow: hidden;
     width: 100%;
@@ -76,11 +76,15 @@ ul {
 #brand-logo {
     font-size: 2.1rem;
     font-weight: 730; 
+    float: left;
+    width: max-content;
 }
 #brand-name {
     font-size: 1.8rem;
     display: none;
     margin-left: 5px;
+    float: left;
+    width: max-content;
 }
 #header-nav {
     text-align: right;
@@ -127,9 +131,9 @@ article img {
 
 /* || Responsive design */
 
-/* large portrait (336px and above) 
+/* large portrait (280px and above) 
     - show header-name */
-@media (min-width: 21rem) {
+@media (min-width: 17.5rem) {
     #brand-name {
         display: inline-block;
     }
@@ -143,7 +147,7 @@ article img {
     }
     nav ul {
         display: flex;
-        justify-items: start;
+        justify-content: flex-end;
         gap: 2rem;
         margin-top: -2.2rem; /* Compensate for hidden icon */
     }
