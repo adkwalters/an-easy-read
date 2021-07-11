@@ -129,6 +129,26 @@ article img {
 }
 
 
+/* || Article - responsive paragraphs */
+.summary-paragraph {
+    position: relative;
+}
+.prev, 
+.next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin: -1rem;
+    margin-top: -20px;
+    font-weight: bold;
+    font-size: 1.5rem;   
+}
+.next {
+    right: 0;
+}
+
+
 /* || Responsive design */
 
 /* large portrait (280px and above) 
