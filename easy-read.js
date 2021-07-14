@@ -12,18 +12,19 @@ function showNav() {
 
 
 /* || Summarise
-        - Iterate forwards/backwards through paragraph summaries */
+        - Iterate forwards/backwards through paragraph summaries
+            - Adapted from https://www.w3schools.com/howto/howto_js_slideshow.asp */
 
 var summaryIndex = 0;
-changeSummary(summaryIndex);
+switchSummary(summaryIndex);
 
 // Difficulty controls
-function setLevel(num) {
-    summaryIndex += num;
-    changeSummary(summaryIndex);
+function setLevel(change) {
+    summaryIndex += change;
+    switchSummary(summaryIndex);
 }
 
-function changeSummary(index) {
+function switchSummary(index) {
     var paragraphs = document.getElementsByClassName("summary-paragraph");
     
     // For each paragraph, hide all but the selected summary
@@ -46,5 +47,5 @@ function changeSummary(index) {
 
         // Show selected summary
         summaries[summaryIndex].style.display = "block"
-        }
+    }
 }
