@@ -23,23 +23,28 @@ function setLevel(num) {
     changeSummary(summaryIndex);
 }
 
-// Show only selected summary
 function changeSummary(index) {
-    var summaries = document.getElementsByClassName("cefr");
+    var paragraphs = document.getElementsByClassName("summary-paragraph");
+    
+    // For each paragraph, hide all but the selected summary
+    for (let paragraph of paragraphs) {
+        
+        var summaries = paragraph.getElementsByClassName("cefr");
+        
+        // If summary index is out of bounds, stop scrolling
+        if (index > summaries.length - 1) {
+            summaryIndex = summaries.length - 1; 
+        }
+        if (index < 0) {
+            summaryIndex = 0;
+        }
 
-    // If summary index is out of bounds, stop scrolling
-    if (index > summaries.length - 1) {
-        summaryIndex = summaries.length - 1; 
-    }
-    if (index < 0) {
-        summaryIndex = 0;
-    }
+        // Hide all summaries
+        for (let i = 0; i < summaries.length; i++) {
+            summaries[i].style.display = "none";
+        }
 
-    // Hide all summaries
-    for (let i = 0; i < summaries.length; i++) {
-        summaries[i].style.display = "none";
-    }
-
-    // Show selected summary
-    summaries[summaryIndex].style.display = "block"
+        // Show selected summary
+        summaries[summaryIndex].style.display = "block"
+        }
 }
