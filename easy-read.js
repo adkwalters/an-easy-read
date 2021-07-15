@@ -12,40 +12,50 @@ function showNav() {
 
 
 /* || Summarise
-        - Iterate forwards/backwards through paragraph summaries
-            - Adapted from https://www.w3schools.com/howto/howto_js_slideshow.asp */
+        - Iterate forwards/backwards through paragraph summaries */
 
-var summaryIndex = 0;
-switchSummary(summaryIndex);
+// Set default level
+showSummary("c");
 
-// Difficulty controls
-function setLevel(change) {
-    summaryIndex += change;
-    switchSummary(summaryIndex);
+// Show only selected level
+function showSummary(level) {
+    var paragraphs = document.getElementsByClassName("summary-paragraph");
+
+    for (paragraph of paragraphs) {
+        let summaries = paragraph.getElementsByClassName("cefr");
+        
+        for (summary of summaries) {
+            summary.style.display = "none";
+            
+            if (summary.classList.contains(level)) {
+                summary.style.display = "block";
+            }
+        }
+    }   
 }
 
-function switchSummary(index) {
-    var paragraphs = document.getElementsByClassName("summary-paragraph");
-    
-    // For each paragraph, hide all but the selected summary
-    for (let paragraph of paragraphs) {
-        
-        var summaries = paragraph.getElementsByClassName("cefr");
-        
-        // If summary index is out of bounds, stop scrolling
-        if (index > summaries.length - 1) {
-            summaryIndex = summaries.length - 1; 
-        }
-        if (index < 0) {
-            summaryIndex = 0;
-        }
+function increaseLevel(paragraph) {
+    var summaries = paragraph.parentNode.getElementsByClassName("cefr");
 
-        // Hide all summaries
-        for (let i = 0; i < summaries.length; i++) {
+    for (let i = 0; i < summaries.length -1; i++) { 
+        
+        if (summaries[i].style.display === "block") {
             summaries[i].style.display = "none";
+            summaries[i + 1].style.display = "block";
+            break;
         }
+    } 
+}
 
-        // Show selected summary
-        summaries[summaryIndex].style.display = "block"
-    }
+function decreaseLevel(paragraph) {
+    var summaries = paragraph.parentNode.getElementsByClassName("cefr");
+
+    for (let i = summaries.length - 1; i > 0; i--) { 
+        
+        if (summaries[i].style.display === "block") {
+            summaries[i].style.display = "none";
+            summaries[i - 1].style.display = "block";
+            break;
+        }
+    } 
 }

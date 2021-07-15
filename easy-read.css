@@ -62,6 +62,7 @@ ul {
 }
 #header-main {
     position: fixed;
+    z-index: 1;
     /* display: flex; */
     /* justify-content: space-between; */
     height: 4rem;
