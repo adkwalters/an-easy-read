@@ -131,6 +131,15 @@ article img {
 
 
 /* || Article - responsive paragraphs */
+.cefr-b {
+    font-size: 1.4rem;
+    line-height: 1.8rem;
+}
+.cefr-a {
+    font-size: 1.6rem;
+    line-height: 2.2rem;
+}
+
 .summary-paragraph {
     position: relative;
 }

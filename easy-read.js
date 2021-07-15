@@ -15,7 +15,7 @@ function showNav() {
         - Iterate forwards/backwards through paragraph summaries */
 
 // Set default level
-showSummary("c");
+showSummary("cefr-c");
 
 // Show only selected level
 function showSummary(level) {
