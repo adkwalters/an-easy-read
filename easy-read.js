@@ -34,28 +34,29 @@ function showSummary(level) {
     }   
 }
 
-function increaseLevel(paragraph) {
+function ChangeLevel(paragraph, change) {
     var summaries = paragraph.parentNode.getElementsByClassName("cefr");
 
-    for (let i = 0; i < summaries.length -1; i++) { 
+    if (change > 0) {
+        for (let i = 0; i < summaries.length -1; i++) { 
+                    
+            if (summaries[i].style.display === "block") {
+                summaries[i].style.display = "none";
+                summaries[i + 1].style.display = "block";
+                break;
+            }
+        } 
+    }
+    else {
+        for (let i = summaries.length - 1; i > 0; i--) { 
         
-        if (summaries[i].style.display === "block") {
-            summaries[i].style.display = "none";
-            summaries[i + 1].style.display = "block";
-            break;
-        }
+            if (summaries[i].style.display === "block") {
+                summaries[i].style.display = "none";
+                summaries[i - 1].style.display = "block";
+                break;
+            }
+        } 
     } 
 }
 
-function decreaseLevel(paragraph) {
-    var summaries = paragraph.parentNode.getElementsByClassName("cefr");
 
-    for (let i = summaries.length - 1; i > 0; i--) { 
-        
-        if (summaries[i].style.display === "block") {
-            summaries[i].style.display = "none";
-            summaries[i - 1].style.display = "block";
-            break;
-        }
-    } 
-}
