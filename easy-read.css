@@ -2,12 +2,12 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 
-/* || Box-sizing and font-sizing  */
+/* || Font-sizing  */
 html {
-    box-sizing: border-box;
     font-size: 100%;
 }
 
