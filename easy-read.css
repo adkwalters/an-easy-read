@@ -65,15 +65,23 @@ ul {
     z-index: 1;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     padding: 1rem;
     overflow: hidden;
     width: 100%;
     background: white;
     box-shadow: 0 0px 12px 0;
 }
-#header-brand {
+#header-nav-list {
+    align-items: flex-end;
+    margin-top: 1rem;
+    display: none;
 }
+.displayMenu #header-nav-list {
+    display: flex;
+    flex-direction: column;
+}
+
 #brand-logo {
     font-size: 2.1rem;
     font-weight: 730; 
@@ -89,6 +97,8 @@ ul {
 }
 #header-nav {
     display: flex;
+        flex-direction: column;
+        align-items: flex-end;
 }
 nav i {
     font-size: 2.2rem;
@@ -154,7 +164,6 @@ article img {
     right: 0;
 }
 
-
 /* || Responsive design */
 
 /* large portrait (280px and above) 
@@ -169,11 +178,16 @@ article img {
     - Expand navigation*/
 @media (min-width: 40rem) {
     #header-main {
-        height: 4rem;
+        align-items: center;
     }
-    nav ul {
+    #header-main.displayMenu #header-nav-list {
+        display: flex;
+        flex-direction: row;
+    }
+    nav ul#header-nav-list {
         display: flex;
         gap: 2rem;
+        margin: 0;
     }
     nav i {
         font-size: 0; /* hide icon */
