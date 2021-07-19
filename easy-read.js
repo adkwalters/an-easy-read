@@ -15,7 +15,8 @@ function showNav() {
         - Iterate forwards/backwards through paragraph summaries */
 
 // Set default level
-showSummary("cefr-c");
+showSummary("level-2");
+// lastSummary level number needs to be dynamically coded
 
 // Set default hidden arrows
 hideArrows();
@@ -26,7 +27,7 @@ function showSummary(level) {
     var paragraphs = document.getElementsByClassName("summary-paragraph");
 
     for (paragraph of paragraphs) {
-        let summaries = paragraph.getElementsByClassName("cefr");
+        let summaries = paragraph.getElementsByClassName("summary");
         
         for (summary of summaries) {
             summary.style.display = "none";
@@ -45,16 +46,17 @@ function hideArrows() {
     for (paragraph of paragraphs) {
         let incArrow = paragraph.getElementsByClassName("next"),
             decArrow = paragraph.getElementsByClassName("prev"),
-            summaryA = paragraph.getElementsByClassName("cefr-a"),
-            summaryC = paragraph.getElementsByClassName("cefr-c");
+            firstSummary = paragraph.getElementsByClassName("level-1"),
+            lastSummary = paragraph.getElementsByClassName("level-2");
+            // lastSummary level number needs to be dynamically coded
 
-        if (summaryC[0].style.display == "block") {
+        if (lastSummary[0].style.display == "block") {
             incArrow[0].style.color = "#EEE"
         } else {
             incArrow[0].style.color = "black";
         }
 
-        if (summaryA[0].style.display == "block") {
+        if (firstSummary[0].style.display == "block") {
             decArrow[0].style.color = "#EEE";
         } else {
             decArrow[0].style.color = "black";
@@ -63,7 +65,7 @@ function hideArrows() {
 }
 
 function ChangeLevel(paragraph, change) {
-    var summaries = paragraph.parentNode.getElementsByClassName("cefr");
+    var summaries = paragraph.parentNode.getElementsByClassName("summary");
 
     if (change > 0) {
         for (let i = 0; i < summaries.length -1; i++) { 
