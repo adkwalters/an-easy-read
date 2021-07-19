@@ -63,16 +63,16 @@ ul {
 #header-main {
     position: fixed;
     z-index: 1;
-    /* display: flex; */
-    /* justify-content: space-between; */
-    height: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
     overflow: hidden;
     width: 100%;
     background: white;
     box-shadow: 0 0px 12px 0;
 }
 #header-brand {
-    margin: 0.8rem 0 0 1rem;
 }
 #brand-logo {
     font-size: 2.1rem;
@@ -88,14 +88,10 @@ ul {
     width: max-content;
 }
 #header-nav {
-    text-align: right;
-    margin: 1rem;
+    display: flex;
 }
 nav i {
     font-size: 2.2rem;
-}
-nav ul {
-    padding-top: 1rem;
 }
 .nav-link {
     color: black;
@@ -177,9 +173,7 @@ article img {
     }
     nav ul {
         display: flex;
-        justify-content: flex-end;
         gap: 2rem;
-        margin-top: -2.2rem; /* Compensate for hidden icon */
     }
     nav i {
         font-size: 0; /* hide icon */
