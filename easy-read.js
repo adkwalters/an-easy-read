@@ -14,11 +14,10 @@ function showNav() {
 /* || Summarise
         - Iterate forwards/backwards through paragraph summaries */
 
-// Set default level
-showSummary("level-2");
-// lastSummary level number needs to be dynamically coded
+// Set default level to lowest summarisation
+showSummary("level-1");
 
-// Set default hidden arrows
+// Set hidden arrows
 hideArrows();
 
 
@@ -44,22 +43,22 @@ function hideArrows() {
     var paragraphs = document.getElementsByClassName("summary-paragraph");
     
     for (paragraph of paragraphs) {
-        let incArrow = paragraph.getElementsByClassName("next"),
-            decArrow = paragraph.getElementsByClassName("prev"),
+        // n.b. summaries increase to the left and decrease to the right
+        let incSummary = paragraph.getElementsByClassName("prev"),
+            decSummary = paragraph.getElementsByClassName("next"),
             firstSummary = paragraph.getElementsByClassName("level-1"),
             lastSummary = paragraph.getElementsByClassName("level-2");
-            // lastSummary level number needs to be dynamically coded
 
         if (lastSummary[0].style.display == "block") {
-            incArrow[0].style.color = "#EEE"
+            incSummary[0].style.color = "#EEE"
         } else {
-            incArrow[0].style.color = "black";
+            incSummary[0].style.color = "black";
         }
 
         if (firstSummary[0].style.display == "block") {
-            decArrow[0].style.color = "#EEE";
+            decSummary[0].style.color = "#EEE";
         } else {
-            decArrow[0].style.color = "black";
+            decSummary[0].style.color = "black";
         }
     }
 }
