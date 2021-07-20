@@ -65,11 +65,17 @@ ul {
     z-index: 1;
     /* display: flex; */
     /* justify-content: space-between; */
-    height: 4rem;
+    /* height: 4rem; */
     overflow: hidden;
     width: 100%;
     background: white;
     box-shadow: 0 0px 12px 0;
+}
+.header-expand {
+    height: max-content;
+}
+.header-collapse {
+    height: 4rem;
 }
 #header-brand {
     margin: 0.8rem 0 0 1rem;

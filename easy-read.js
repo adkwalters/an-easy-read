@@ -3,10 +3,10 @@
 
 function showNav() {
     let header = document.getElementById('header-main');
-    if (header.style.height === "11rem") {
-        header.style.height = "4rem";
+    if (header.classList.contains("header-expand")) {
+        header.classList.replace("header-expand", "header-collapse");
     } else {
-        header.style.height = "11rem";
+        header.classList.replace("header-collapse", "header-expand");
     }
 }
 
