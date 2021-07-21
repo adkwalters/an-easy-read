@@ -3,10 +3,10 @@
 
 function showNav() {
     let header = document.getElementById('header-main');
-    if (header.classList.contains("header-expand")) {
-        header.classList.replace("header-expand", "header-collapse");
+    if (header.classList.contains('display-menu')) {
+        header.classList.remove('display-menu');
     } else {
-        header.classList.replace("header-collapse", "header-expand");
+        header.classList.add('display-menu');
     }
 }
 
@@ -14,10 +14,10 @@ function showNav() {
 /* || Summarise
         - Iterate forwards/backwards through paragraph summaries */
 
-// Set default level to lowest summarisation
-showSummary("level-1");
+// Set default level
+showSummary("cefr-c");
 
-// Set hidden arrows
+// Set default hidden arrows
 hideArrows();
 
 
@@ -26,7 +26,7 @@ function showSummary(level) {
     var paragraphs = document.getElementsByClassName("summary-paragraph");
 
     for (paragraph of paragraphs) {
-        let summaries = paragraph.getElementsByClassName("summary");
+        let summaries = paragraph.getElementsByClassName("cefr");
         
         for (summary of summaries) {
             summary.style.display = "none";
@@ -43,28 +43,27 @@ function hideArrows() {
     var paragraphs = document.getElementsByClassName("summary-paragraph");
     
     for (paragraph of paragraphs) {
-        // n.b. summaries increase to the left and decrease to the right
-        let incSummary = paragraph.getElementsByClassName("prev"),
-            decSummary = paragraph.getElementsByClassName("next"),
-            firstSummary = paragraph.getElementsByClassName("level-1"),
-            lastSummary = paragraph.getElementsByClassName("level-2");
+        let incArrow = paragraph.getElementsByClassName("next"),
+            decArrow = paragraph.getElementsByClassName("prev"),
+            summaryA = paragraph.getElementsByClassName("cefr-a"),
+            summaryC = paragraph.getElementsByClassName("cefr-c");
 
-        if (lastSummary[0].style.display == "block") {
-            incSummary[0].style.color = "#EEE"
+        if (summaryC[0].style.display == "block") {
+            incArrow[0].style.color = "#EEE"
         } else {
-            incSummary[0].style.color = "black";
+            incArrow[0].style.color = "black";
         }
 
-        if (firstSummary[0].style.display == "block") {
-            decSummary[0].style.color = "#EEE";
+        if (summaryA[0].style.display == "block") {
+            decArrow[0].style.color = "#EEE";
         } else {
-            decSummary[0].style.color = "black";
+            decArrow[0].style.color = "black";
         }
     }
 }
 
 function ChangeLevel(paragraph, change) {
-    var summaries = paragraph.parentNode.getElementsByClassName("summary");
+    var summaries = paragraph.parentNode.getElementsByClassName("cefr");
 
     if (change > 0) {
         for (let i = 0; i < summaries.length -1; i++) { 
