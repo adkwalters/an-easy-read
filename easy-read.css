@@ -178,10 +178,14 @@ article img {
 /* small landscape (640px and above)
     - Expand navigation*/
 @media (min-width: 40rem) {
+    #header-nav {
+        align-items: center;
+    }
     #header-nav-list {
         display: flex;
         flex-direction: row;
         gap: 2rem;
+        margin: 0;
     }
     nav i {
         font-size: 0; /* hide icon */
