@@ -51,14 +51,12 @@ function greyOutArrows() {
             firstSummary = paragraph.getElementsByClassName("level-1"),
             lastSummary = paragraph.getElementsByClassName("level-2");
 
-        // if (lastSummary[0].style.display === "block") {
         if (lastSummary[0].classList.contains("hidden")) {
             incSummary[0].classList.remove("unavailable");
         } else {
             incSummary[0].classList.add("unavailable");
         }
 
-        // if (firstSummary[0].style.display === "block") {
         if (firstSummary[0].classList.contains("hidden")) {
             decSummary[0].classList.remove("unavailable");
         } else {
@@ -67,17 +65,18 @@ function greyOutArrows() {
     }
 }
 
-function changeLevel(paragraph, change) {
+function selectSummary(paragraph, change) {
     var summaries = paragraph.parentNode.getElementsByClassName("summary");
 
     for (let i = 0; i < summaries.length; i++) {
         // If summary is displayed
         if (summaries[i].classList.contains("hidden") == false) {
-            // ...and if index + change is within index range
-            if (i + change >= 0 && i + change < summaries.length) {
+            // ...and if selected index is within index range
+            let newIndex = i + change;
+            if (newIndex >= 0 && newIndex < summaries.length) {
                 // hide summary and display the next according to change
                 summaries[i].classList.add("hidden");
-                summaries[i + change].classList.remove("hidden");
+                summaries[newIndex].classList.remove("hidden");
                 greyOutArrows();
                 return;
             }
