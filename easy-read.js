@@ -17,8 +17,8 @@ function showNav() {
 // Set default level
 showSummary("level-1");
 
-// Set default hidden arrows
-hideArrows();
+// Grey out arrows where no summary is available
+greyOutArrows();
 
 
 // Show only selected level
@@ -29,17 +29,19 @@ function showSummary(level) {
         let summaries = paragraph.getElementsByClassName("summary");
         
         for (summary of summaries) {
-            summary.style.display = "none";
+            // summary.style.display = "none";
+            summary.classList.add("hidden");
             
             if (summary.classList.contains(level)) {
-                summary.style.display = "block";
+                // summary.style.display = "block";
+                summary.classList.remove("hidden")
             }
         }
     }   
 }
 
 // Hide inc/decrease arrows when summary cannot be inc/decreased
-function hideArrows() {
+function greyOutArrows() {
     var paragraphs = document.getElementsByClassName("summary-paragraph");
     
     for (paragraph of paragraphs) {
@@ -49,45 +51,36 @@ function hideArrows() {
             firstSummary = paragraph.getElementsByClassName("level-1"),
             lastSummary = paragraph.getElementsByClassName("level-2");
 
-        if (lastSummary[0].style.display == "block") {
-            incSummary[0].style.color = "#EEE"
+        // if (lastSummary[0].style.display === "block") {
+        if (lastSummary[0].classList.contains("hidden")) {
+            incSummary[0].classList.remove("unavailable");
         } else {
-            incSummary[0].style.color = "black";
+            incSummary[0].classList.add("unavailable");
         }
 
-        if (firstSummary[0].style.display == "block") {
-            decSummary[0].style.color = "#EEE";
+        // if (firstSummary[0].style.display === "block") {
+        if (firstSummary[0].classList.contains("hidden")) {
+            decSummary[0].classList.remove("unavailable");
         } else {
-            decSummary[0].style.color = "black";
+            decSummary[0].classList.add("unavailable");
         }
     }
 }
 
-function ChangeLevel(paragraph, change) {
+function changeLevel(paragraph, change) {
     var summaries = paragraph.parentNode.getElementsByClassName("summary");
 
-    if (change > 0) {
-        for (let i = 0; i < summaries.length -1; i++) { 
-                    
-            if (summaries[i].style.display === "block") {
-                summaries[i].style.display = "none";
-                summaries[i + change].style.display = "block";
-                hideArrows();
+    for (let i = 0; i < summaries.length; i++) {
+        // If summary is displayed
+        if (summaries[i].classList.contains("hidden") == false) {
+            // ...and if index + change is within index range
+            if (i + change >= 0 && i + change < summaries.length) {
+                // hide summary and display the next according to change
+                summaries[i].classList.add("hidden");
+                summaries[i + change].classList.remove("hidden");
+                greyOutArrows();
                 return;
             }
-        } 
+        }
     }
-    else {
-        for (let i = summaries.length - 1; i > 0; i--) { 
-        
-            if (summaries[i].style.display === "block") {
-                summaries[i].style.display = "none";
-                summaries[i + change].style.display = "block";
-                hideArrows();
-                return;
-            }
-        } 
-    } 
 }
-
-

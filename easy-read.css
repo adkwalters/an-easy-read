@@ -51,6 +51,12 @@ ul {
     border-radius: 10px;
     display: inline-block;
 }
+.unavailable {
+    color: #EEE;
+}
+.hidden {
+    display: none;
+}
 
 
 /* || Sitewide  */
