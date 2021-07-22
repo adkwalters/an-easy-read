@@ -1,85 +1,97 @@
 /* || Navigate
-        - Toggle header length to show navigation */
-
-function showNav() {
-    let header = document.getElementById('header-main');
-    if (header.classList.contains('display-menu')) {
-        header.classList.remove('display-menu');
-    } else {
-        header.classList.add('display-menu');
-    }
-}
+        - Toggle navigation between displaying and hiding the navigation list */
 
 
-/* || Summarise
-        - Iterate forwards/backwards through paragraph summaries */
+    function showNav() {
+        let header = document.getElementById('header-main');
 
-// Set default level
-showSummary("level-1");
-
-// Grey out arrows where no summary is available
-greyOutArrows();
-
-
-// Show only selected level
-function showSummary(level) {
-    var paragraphs = document.getElementsByClassName("summary-paragraph");
-
-    for (paragraph of paragraphs) {
-        let summaries = paragraph.getElementsByClassName("summary");
-        
-        for (summary of summaries) {
-            // summary.style.display = "none";
-            summary.classList.add("hidden");
-            
-            if (summary.classList.contains(level)) {
-                // summary.style.display = "block";
-                summary.classList.remove("hidden")
-            }
+        // If the navigation list is displayed, hide it...
+        if (header.classList.contains('display-menu')) {
+            header.classList.remove('display-menu');
+        // ...else display it
+        } else {
+            header.classList.add('display-menu');
         }
-    }   
-}
+    }
 
-// Hide inc/decrease arrows when summary cannot be inc/decreased
-function greyOutArrows() {
-    var paragraphs = document.getElementsByClassName("summary-paragraph");
+
+
+
+/* || Control Summary
+        - control the reading level of the summary paragraphs shown */
+
+
+    // Set default level (high level = increased summary)
+    showSummary("level-1"); // Set to least amount of summarisation
     
-    for (paragraph of paragraphs) {
-        // n.b. summaries increase to the left and decrease to the right
-        let incSummary = paragraph.getElementsByClassName("prev"),
-            decSummary = paragraph.getElementsByClassName("next"),
-            firstSummary = paragraph.getElementsByClassName("level-1"),
-            lastSummary = paragraph.getElementsByClassName("level-2");
+    // Grey out unavailable options to increase or decrease summary
+    greyOutArrows();  
+    
+    
+    // Show only the selected summary level (high level = increased summary)
+    function showSummary(level) {
+        var paragraphs = document.getElementsByClassName("summary-paragraph");
 
-        if (lastSummary[0].classList.contains("hidden")) {
-            incSummary[0].classList.remove("unavailable");
-        } else {
-            incSummary[0].classList.add("unavailable");
-        }
-
-        if (firstSummary[0].classList.contains("hidden")) {
-            decSummary[0].classList.remove("unavailable");
-        } else {
-            decSummary[0].classList.add("unavailable");
-        }
-    }
-}
-
-function selectSummary(paragraph, change) {
-    var summaries = paragraph.parentNode.getElementsByClassName("summary");
-
-    for (let i = 0; i < summaries.length; i++) {
-        // If summary is displayed
-        if (summaries[i].classList.contains("hidden") == false) {
-            // ...and if selected index is within index range
-            let newIndex = i + change;
-            if (newIndex >= 0 && newIndex < summaries.length) {
-                // hide summary and display the next according to change
-                summaries[i].classList.add("hidden");
-                summaries[newIndex].classList.remove("hidden");
-                greyOutArrows();
-                return;
+        // For each of the paragraphs...
+        for (paragraph of paragraphs) {
+            let summaries = paragraph.getElementsByClassName("summary");
+            // ...and for each of the summaries...
+            for (summary of summaries) {
+                // ...hide...
+                summary.classList.add("hidden");
+                // ...and if the element matches the preset level...
+                if (summary.classList.contains(level)) {
+                    // show
+                    summary.classList.remove("hidden")
+                }
             }
         }
     }
-}
+
+
+    // Grey out unavailable options to increase or decrease summary
+    function greyOutArrows() {
+        var paragraphs = document.getElementsByClassName("summary-paragraph");
+        
+        // For each of the paragraphs...
+        for (paragraph of paragraphs) {
+            let summaries = paragraph.getElementsByClassName("summary");
+            let incArrows = paragraph.getElementsByClassName("prev");
+            let decArrows = paragraph.getElementsByClassName("next");
+
+            // ...if the last summary is shown, grey out the increase(prev) arrow
+            if (summaries[0].classList.contains("hidden") == false) {
+                incArrows[0].classList.add("unavailable");
+            } else {
+                incArrows[0].classList.remove("unavailable");
+            }
+
+            // ...or if the first summary is shown, grey out the decrease(next) arrow
+            if (summaries[summaries.length -1].classList.contains("hidden") == false) {
+                decArrows[0].classList.add("unavailable");
+            } else {
+                decArrows[0].classList.remove("unavailable");
+            }
+        }
+    }
+
+    // Switch the displayed summary according to the change selected
+    function selectSummary(paragraph, change) {
+        var summaries = paragraph.parentNode.getElementsByClassName("summary");
+
+        for (let i = 0; i < summaries.length; i++) {
+            // If summary is displayed...
+            if (summaries[i].classList.contains("hidden") == false) {
+                // ...and if selected index is within index range...
+                let newIndex = i + change;
+                if (newIndex >= 0 && newIndex < summaries.length) {
+                    // ...hide summary and show next...
+                    summaries[i].classList.add("hidden");
+                    summaries[newIndex].classList.remove("hidden");
+                    // ...then update arrows and stop loop
+                    greyOutArrows();
+                    return;
+                }
+            }
+        }
+    }
