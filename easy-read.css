@@ -73,7 +73,7 @@ ul {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     overflow: hidden;
     width: 100%;
     background: white;
@@ -94,7 +94,7 @@ ul {
 }
 #header-nav {
     display: flex;
-    align-items: flex-end;
+    align-self: center;
     flex-direction: column;
 }
 #header-nav-list {
@@ -214,7 +214,7 @@ article img {
     - Freeze image width */
 @media (min-width: 64rem) {
     article {
-        max-width: 55rem;
+        max-width: 64rem;
         margin: auto;
     }
 }
