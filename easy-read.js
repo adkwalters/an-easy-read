@@ -1,6 +1,5 @@
-/* || Navigate
-        - Toggle navigation between displaying and hiding the navigation list */
-
+// || Navigate
+//         - Toggle navigation between displaying and hiding the navigation list
 
     function showNav() {
         let header = document.getElementById('header-main');
@@ -13,16 +12,11 @@
             header.classList.add('display-menu');
         }
     }
-    
 
 
-/* || Control Summary
-        - control the reading level of the summary paragraphs shown */
 
-
-    // Set default level (high level = increased summary)
-    showSummary("level-1"); // Set to least amount of summarisation
-    
+//  || Control Summary
+//         - control the reading level of the summary paragraphs shown 
     
     // Show only the selected summary level (high level = increased summary)
     function showSummary(level) {
@@ -69,28 +63,68 @@
     }
 
 
-        // Grey out unavailable options to increase or decrease summary
-        function greyOutArrows() {
-            var paragraphs = document.getElementsByClassName("summary-paragraph");
-            
-            // For each of the paragraphs...
-            for (paragraph of paragraphs) {
-                let summaries = paragraph.getElementsByClassName("summary");
-                let incArrows = paragraph.getElementsByClassName("prev");
-                let decArrows = paragraph.getElementsByClassName("next");
-    
-                // ...if the last summary is shown, grey out the increase(prev) arrow
-                if (summaries[0].classList.contains("hidden") == false) {
-                    incArrows[0].classList.add("unavailable");
-                } else {
-                    incArrows[0].classList.remove("unavailable");
-                }
-    
-                // ...or if the first summary is shown, grey out the decrease(next) arrow
-                if (summaries[summaries.length -1].classList.contains("hidden") == false) {
-                    decArrows[0].classList.add("unavailable");
-                } else {
-                    decArrows[0].classList.remove("unavailable");
-                }
+    // Grey out unavailable options to increase or decrease summary
+    function greyOutArrows() {
+        var paragraphs = document.getElementsByClassName("summary-paragraph");
+        
+        // For each of the paragraphs...
+        for (paragraph of paragraphs) {
+            let summaries = paragraph.getElementsByClassName("summary");
+            let incArrows = paragraph.getElementsByClassName("increase-summary-level");
+            let decArrows = paragraph.getElementsByClassName("decrease-summary-level");
+
+            // ...if the last summary is shown, grey out the increase(prev) arrow
+            if (summaries[0].classList.contains("hidden") == false) {
+                incArrows[0].classList.add("unavailable");
+            } else {
+                incArrows[0].classList.remove("unavailable");
+            }
+
+            // ...or if the first summary is shown, grey out the decrease(next) arrow
+            if (summaries[summaries.length -1].classList.contains("hidden") == false) {
+                decArrows[0].classList.add("unavailable");
+            } else {
+                decArrows[0].classList.remove("unavailable");
             }
         }
+    }
+
+// || Event Listeners 
+//         - Add event listeners once DOM is loaded
+
+    function listen() {
+        
+        // Set default summary level (high level = simpler langauge)
+        showSummary("level-1"); // Set lowest level
+
+
+        // Show navigation when icon is clicked
+        var navIcon = document.getElementById("header-nav-icon");
+        
+        navIcon.addEventListener("click", showNav);
+
+
+        // Change default summary level to selected level
+        var level1 = document.getElementById("select-level-1"),
+            level2 = document.getElementById("select-level-2");
+        
+        level1.addEventListener("click", () => { showSummary("level-1"); }, false);
+        level2.addEventListener("click", () => { showSummary("level-2"); }, false);
+
+       
+        // Change paragraph summary to selected level
+        var increaseSummary = document.getElementsByClassName("increase-summary-level"),
+            decreaseSummary = document.getElementsByClassName("decrease-summary-level");
+
+        for (instance of increaseSummary) {
+            // n.b arrow functions inherit 'this' bindings of container function - must use anonymous instead 
+            instance.addEventListener("click", function() { changeSummary(this, -1); }, false);
+        }
+        for (instance of decreaseSummary) {
+            instance.addEventListener("click", function() { changeSummary(this, 1); }, false);
+        }
+        
+        // onclick="changeSummary(this, 1)
+    }
+
+    document.addEventListener("DOMContentLoaded", listen)

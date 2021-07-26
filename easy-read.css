@@ -106,7 +106,7 @@ ul {
     display: flex;
     flex-direction: column;
 }
-nav i {
+#header-nav-icon {
     font-size: 2.2rem;
 }
 .nav-link {
@@ -235,7 +235,7 @@ article img {
         gap: 2rem;
         margin: 0;
     }
-    nav i {
+    #header-nav-icon {
         font-size: 0; /* hide icon */
     }
 }
