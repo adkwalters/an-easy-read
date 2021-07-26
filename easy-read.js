@@ -13,8 +13,7 @@
             header.classList.add('display-menu');
         }
     }
-
-
+    
 
 
 /* || Control Summary
@@ -23,9 +22,6 @@
 
     // Set default level (high level = increased summary)
     showSummary("level-1"); // Set to least amount of summarisation
-    
-    // Grey out unavailable options to increase or decrease summary
-    greyOutArrows();  
     
     
     // Show only the selected summary level (high level = increased summary)
@@ -46,6 +42,8 @@
                 }
             }
         }
+        // Grey out unavailable options to increase or decrease summary
+        greyOutArrows(); 
     }
 
 

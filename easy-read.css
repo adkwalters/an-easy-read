@@ -36,6 +36,7 @@ p {
 }
 a {
     text-decoration: none;
+    cursor: pointer;
 }
 ul {
     list-style: none;
@@ -117,12 +118,12 @@ nav i {
 
 
 /* || Article */
-
-/* || Article - Main image  */
 article {
     margin: auto;
     padding: 0 6%;
 }
+
+/* || Article - Main image and header  */
 article img {
     width: 100%;
     padding-top: 6rem;
@@ -140,8 +141,49 @@ article img {
     padding-top: 0.6rem;
 }
 
+/* || Article - Article controls  */
+.article-control-panel {
+    display: flex;
+    justify-content: space-between;
+    background: #EEE;
+    margin-top: 1rem;
+}
+.article-controls {
+    display: flex;
+    align-items: center;
+}
+.article-control-option {
+    /* position: relative; */
+    /* display: flex; */
+    /* flex-direction: row; */
+    font-size: 1.2rem;
+    padding: 0.6rem 1rem;
+}
+.article-control-option:hover {
+    background: #999;
+}
+.option-dropdown {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    
 
-/* || Article - responsive paragraphs */
+    margin-top: 0.6rem;
+    padding: 1rem;
+    /* padding-left: 0; */
+    background: #EEE;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.option-dropdown li {
+    margin-top: 0.2rem;
+}
+.article-control-option:hover .option-dropdown {
+    display: block; 
+    /* flex-direction: column; */
+}
+
+
+/* || Article - paragraph controls */
 
 /* .cefr-b {
     font-size: 1.4rem;
