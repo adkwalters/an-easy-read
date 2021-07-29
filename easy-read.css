@@ -62,7 +62,6 @@
 /* || Header  */
     #page {
         min-width: 10rem;
-        /* padding: 1rem 6%; */
     }
     #header-main {
         position: fixed;
@@ -121,7 +120,7 @@
         padding: 0 6%;
     }
 
-    /* || Article - Main image and header  */
+    /* - Main image and header  */
     article img {
         width: 100%;
         padding-top: 6rem;
@@ -139,11 +138,12 @@
         padding-top: 0.6rem;
     }
 
-    /* || Article - Article controls  */
+    /* - Article controls  */
     .article-control-panel {
         display: flex;
         justify-content: space-between;
         min-width: max-content;
+        border-radius: 10px;
         background: #EEE;
         margin-top: 1rem;
     }
@@ -175,10 +175,7 @@
     }
 
 
-
-    /* || Article - paragraph controls */
-
-    /* || Article - paragraph controls - font size */
+   /* - Article controls - Font size */
     .small-font .article-text p {
         font-size: 1.1rem;
         line-height: 1.4rem;
@@ -192,7 +189,7 @@
         line-height: 1.8rem;
     }
 
-    /* || Article - paragraph controls - summary reading level */
+    /* - Article controls - Summary reading level */
     .summary-paragraph {
         position: relative;
     }
@@ -215,16 +212,16 @@
 
 /* || Responsive design */
 
-    /* large portrait (280px and above) 
-        - show header-name */
+    /* - large portrait (280px and above) 
+            - show header-name */
     @media (min-width: 17.5rem) {
         #brand-name {
             display: inline-block;
         }
     }
 
-    /* small landscape (640px and above)
-        - Expand navigation*/
+    /* - small landscape (640px and above)
+            - Expand navigation*/
     @media (min-width: 40rem) {
         #header-nav {
             align-self: center;
@@ -240,9 +237,9 @@
         }
     }
 
-    /* Medium landscape (768px and above) 
-        - Increase page width for header
-        - Freeze article width  */
+    /* - Medium landscape (768px and above) 
+            - Increase page width for header
+            - Freeze article width  */
     @media (min-width: 48rem) {
         .article-header,
         .article-body {
@@ -251,8 +248,8 @@
         }
     }
 
-    /* || Large landscape (1024px and above)
-        - Freeze image width */
+    /* - Large landscape (1024px and above)
+            - Freeze image width */
     @media (min-width: 64rem) {
         article {
             max-width: 64rem;
