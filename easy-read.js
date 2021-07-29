@@ -92,11 +92,12 @@
 
     // Change article font size to selected size
     function changeFontSize(size) {
-        
-        
         var articleText = document.getElementsByTagName("html");
 
+        // Remove all font-size selections...
         articleText[0].classList.remove("small-font", "medium-font", "large-font");
+       
+        // ...then add selected font-size 
         articleText[0].classList.add(size);
     }
 
