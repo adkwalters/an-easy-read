@@ -89,10 +89,23 @@
         }
     }
 
+
+    // Change article font size to selected size
+    function changeFontSize(size) {
+        
+        
+        var articleText = document.getElementsByTagName("html");
+
+        articleText[0].classList.remove("small-font", "medium-font", "large-font");
+        articleText[0].classList.add(size);
+    }
+
+
+
 // || Event Listeners 
 //         - Add event listeners once DOM is loaded
 
-    function listen() {
+    function listenForContentLoaded() {
         
         // Set default summary level (high level = simpler langauge)
         showSummary("level-1"); // Set lowest level
@@ -111,6 +124,16 @@
         level1.addEventListener("click", () => { showSummary("level-1"); }, false);
         level2.addEventListener("click", () => { showSummary("level-2"); }, false);
 
+        
+        // Change paragraph font size to user selection
+        var smallFont = document.getElementById("font-size-small"),
+            mediumFont = document.getElementById("font-size-medium"),
+            largeFont = document.getElementById("font-size-large");
+        
+        smallFont.addEventListener("click", () => { changeFontSize("small-font"); }, false);
+        mediumFont.addEventListener("click", () => { changeFontSize("medium-font"); }, false);
+        largeFont.addEventListener("click", () => { changeFontSize("large-font"); }, false);
+
        
         // Change paragraph summary to selected level
         var increaseSummary = document.getElementsByClassName("increase-summary-level"),
@@ -124,7 +147,6 @@
             instance.addEventListener("click", function() { changeSummary(this, 1); }, false);
         }
         
-        // onclick="changeSummary(this, 1)
     }
 
-    document.addEventListener("DOMContentLoaded", listen)
+    document.addEventListener("DOMContentLoaded", listenForContentLoaded);

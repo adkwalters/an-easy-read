@@ -185,15 +185,21 @@ article img {
 
 /* || Article - paragraph controls */
 
-/* .cefr-b {
+/* || Article - paragraph controls - font size */
+.small-font .article-text p {
+    font-size: 1.1rem;
+    line-height: 1.4rem;
+}
+.medium-font .article-text p {
+    font-size: 1.2rem;
+    line-height: 1.6rem;
+}
+.large-font .article-text p {
     font-size: 1.4rem;
     line-height: 1.8rem;
 }
-.cefr-a {
-    font-size: 1.6rem;
-    line-height: 2.2rem;
-} */
 
+/* || Article - paragraph controls - summary reading level */
 .summary-paragraph {
     position: relative;
 }
@@ -211,6 +217,7 @@ article img {
 .next {
     right: 0;
 }
+
 
 
 /* || Responsive design */
