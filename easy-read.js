@@ -1,6 +1,6 @@
-// || Navigate
-//         - Toggle navigation between displaying and hiding the navigation list
-
+// || Navigation
+         
+    // Toggle navigation between displaying and hiding the navigation list
     function showNav() {
         let header = document.getElementById('header-main');
 
@@ -16,8 +16,7 @@
 
 
 //  || Control Summary
-//         - control the reading level of the summary paragraphs shown 
-    
+          
     // Show only the selected summary level (high level = increased summary)
     function showSummary(level) {
         var paragraphs = document.getElementsByClassName("summary-paragraph");
@@ -104,21 +103,21 @@
 
 
 // || Event Listeners 
-//         - Add event listeners once DOM is loaded
 
+    // Add event listeners once DOM is loaded
     function listenForContentLoaded() {
         
-        // Set default summary level (high level = simpler langauge)
-        showSummary("level-1"); // Set lowest level
-
-
         // Show navigation when icon is clicked
         var navIcon = document.getElementById("header-nav-icon");
         
         navIcon.addEventListener("click", showNav);
 
+        
+        // Set author-selected paragraph summary level (all)
+        showSummary("level-1"); // Set lowest level
 
-        // Change default summary level to selected level
+
+        // Set user-selected paragraph summary level (all)
         var level1 = document.getElementById("select-level-1"),
             level2 = document.getElementById("select-level-2");
         
@@ -126,7 +125,21 @@
         level2.addEventListener("click", () => { showSummary("level-2"); }, false);
 
         
-        // Change paragraph font size to user selection
+        // Set user-selected paragraph summary level (individual)
+        var summaryParagraphs = document.getElementsByClassName("summary-paragraph");
+
+        for (paragraph of summaryParagraphs) {
+            paragraph.addEventListener("click", function(e) {
+                if (e.target.classList.contains("increase-summary-level")) {
+                    changeSummary(e.target.parentNode, -1);
+                } else if (e.target.classList.contains("decrease-summary-level")) {
+                    changeSummary(e.target.parentNode, 1);
+                }
+            })
+        }
+        
+        
+        // Set user-selected paragraph font size 
         var smallFont = document.getElementById("font-size-small"),
             mediumFont = document.getElementById("font-size-medium"),
             largeFont = document.getElementById("font-size-large");
@@ -134,19 +147,6 @@
         smallFont.addEventListener("click", () => { changeFontSize("small-font"); }, false);
         mediumFont.addEventListener("click", () => { changeFontSize("medium-font"); }, false);
         largeFont.addEventListener("click", () => { changeFontSize("large-font"); }, false);
-
-       
-        // Change paragraph summary to selected level
-        var increaseSummary = document.getElementsByClassName("increase-summary-level"),
-            decreaseSummary = document.getElementsByClassName("decrease-summary-level");
-
-        for (instance of increaseSummary) {
-            // n.b arrow functions inherit 'this' bindings of container function - must use anonymous instead 
-            instance.addEventListener("click", function() { changeSummary(this, -1); }, false);
-        }
-        for (instance of decreaseSummary) {
-            instance.addEventListener("click", function() { changeSummary(this, 1); }, false);
-        }
         
     }
 
