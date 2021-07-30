@@ -128,9 +128,13 @@
         // Set user-selected paragraph summary level (individual)
         var summaryParagraphs = document.getElementsByClassName("summary-paragraph");
 
+        // For each summary paragraph...
         for (paragraph of summaryParagraphs) {
+            // ...add an event listener...
             paragraph.addEventListener("click", function(e) {
+                // ...that checks whether an increase or decrease was selected...
                 if (e.target.classList.contains("increase-summary-level")) {
+                    // ...and calls a function with the relevant arguments
                     changeSummary(e.target.parentNode, -1);
                 } else if (e.target.classList.contains("decrease-summary-level")) {
                     changeSummary(e.target.parentNode, 1);
