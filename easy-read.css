@@ -210,16 +210,19 @@
         right: 0;
     }
 
-    /* - Paragraph labels
-    .level-1::after {
+    /* - Paragraph labels */
+    .level-1::after, 
+    .level-2::after {
         content: "Intermediate";
-        display: block;
-        bottom: 0;
+        position: absolute;
+        bottom: -8px;
         right: 0;
+        font-size: 0.7rem;
+        display: none;
     }
-    .level-2 {
+    .level-2::after {
         content: "Beginner";
-    } */
+    }
 
 
 
@@ -285,5 +288,9 @@
         }
         article p {
             margin-bottom: 1rem;
+        }
+        .level-1::after, 
+        .level-2::after {
+            display: block;
         }
     }
