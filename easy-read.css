@@ -47,6 +47,9 @@
         padding: 0.3rem 0.6rem;
         margin: 0.2rem 0.1rem;
     }
+    .label-size:hover {
+        background: #DDD;
+    }
     .label-colour {
         background: #EEE;
         border-radius: 10px;
@@ -121,7 +124,7 @@
         padding: 0 6%;
     }
 
-    /* - Main image and header  */
+    /* - Article main image and header  */
     article img {
         width: 100%;
         padding-top: 6rem;
@@ -207,6 +210,17 @@
         right: 0;
     }
 
+    /* - Paragraph labels
+    .level-1::after {
+        content: "Intermediate";
+        display: block;
+        bottom: 0;
+        right: 0;
+    }
+    .level-2 {
+        content: "Beginner";
+    } */
+
 
 
 /* || Responsive design */
@@ -253,5 +267,23 @@
         article {
             max-width: 64rem;
             margin: auto;
+        }
+    }
+
+
+    
+/* || Print article */
+
+    @media print {
+        #header-main,
+        article img,
+        .article-categories,
+        .article-control-panel,
+        .prev,
+        .next {
+            display: none;
+        }
+        article p {
+            margin-bottom: 1rem;
         }
     }

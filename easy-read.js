@@ -100,6 +100,12 @@
         articleText[0].classList.add(size);
     }
 
+    // Print article image currently selected summary paragraphs
+    function printArticle() {
+        var article = document.getElementsByTagName("article-text");
+        print(article[0]); 
+    }
+
 
 
 // || Event Listeners 
@@ -121,8 +127,8 @@
         var level1 = document.getElementById("select-level-1"),
             level2 = document.getElementById("select-level-2");
         
-        level1.addEventListener("click", () => { showSummary("level-1"); }, false);
-        level2.addEventListener("click", () => { showSummary("level-2"); }, false);
+        level1.addEventListener("click", () => { showSummary("level-1"); });
+        level2.addEventListener("click", () => { showSummary("level-2"); });
 
         
         // Set user-selected paragraph summary level (individual)
@@ -148,10 +154,16 @@
             mediumFont = document.getElementById("font-size-medium"),
             largeFont = document.getElementById("font-size-large");
         
-        smallFont.addEventListener("click", () => { changeFontSize("small-font"); }, false);
-        mediumFont.addEventListener("click", () => { changeFontSize("medium-font"); }, false);
-        largeFont.addEventListener("click", () => { changeFontSize("large-font"); }, false);
+        smallFont.addEventListener("click", () => { changeFontSize("small-font"); });
+        mediumFont.addEventListener("click", () => { changeFontSize("medium-font"); });
+        largeFont.addEventListener("click", () => { changeFontSize("large-font"); });
         
+
+        // Print article 
+        var printButton = document.getElementById("print-article");
+
+        printButton.addEventListener("click", printArticle);
+
     }
 
     document.addEventListener("DOMContentLoaded", listenForContentLoaded);
