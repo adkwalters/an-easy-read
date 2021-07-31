@@ -42,7 +42,7 @@
 
     // Switch the displayed summary according to the change selected
     function changeSummary(paragraph, change) {
-        var summaries = paragraph.parentNode.getElementsByClassName("summary");
+        var summaries = paragraph.getElementsByClassName("summary");
 
         for (let i = 0; i < summaries.length; i++) {
             // If summary is displayed...
