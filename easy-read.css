@@ -159,16 +159,17 @@
     .article-control-dropdown {
         position: absolute;
         display: none;
-        margin-top: 0.6rem;
-        /* padding: 0.6rem 1rem; */
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        margin-top: 0.5rem;
+        margin-left: -1rem;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2),
+                    0px 4px 8px 0px rgba(0,0,0,0.1);
         z-index: 1;        
     }
     .article-control-option:hover .article-control-dropdown {
         display: block;
     }
     .article-control-dropdown>li {
-        padding: 0.6rem 1rem;
+        padding: 0.3rem 1rem;
     }
     .article-control-option:hover,
     .article-control-dropdown>li:hover {
