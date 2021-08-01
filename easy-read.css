@@ -1,3 +1,11 @@
+/* Property order (https://webdesign.tutsplus.com/articles/outside-in-ordering-css-properties-by-importance--cms-21685)
+    - layout (position, display)
+    - box model (outside-in)
+    - visual (colour, background, border)
+    - text
+    - other */
+
+
 /* || Base reset  */
     * {
         margin: 0;
@@ -12,22 +20,21 @@
         font-size: 100%;
     }
     body {
-        font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
         background-color: #fbfdfe;
+        font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
     }
     h1 {
         font-size: 2.5rem;
     }
     h2 {
-        font-size: 1.4rem;
         margin: 2rem 0 1.5rem 1rem;
-        /* margin-bottom: 1rem; */
+        font-size: 1.4rem;
     }
     p {
-        font-size: 1.2rem;
-        line-height: 1.6rem;
         margin-bottom: 1.5rem;
         padding: 1rem;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
     }
     a {
         text-decoration: none;
@@ -41,19 +48,13 @@
 
 /* || Utility classes */
     .label-size {
-        font-size: 1rem;
-        padding: 0.3rem 0.6rem;
         margin: 0.2rem 0.1rem;
-    }
-    .label-size:hover {
-        background: #DDD;
+        padding: 0.3rem 0.6rem;
+        font-size: 1rem;
     }
     .label-colour {
         background: #EEE;
         border-radius: 10px;
-    }
-    .unavailable {
-        color: #EEE;
     }
 
 
@@ -64,42 +65,42 @@
     }
     #header-main {
         position: fixed;
-        z-index: 1;
         display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding: 1rem 1.5rem;
-        overflow: hidden;
+            justify-content: space-between;
+            align-items: flex-start;
         width: 100%;
+        padding: 1rem 1.5rem;
         background: white;
         box-shadow: 0 0px 12px 0;
+        z-index: 1;
+        overflow: hidden;  
     }
     #brand-logo {
-        font-size: 2.1rem;
-        font-weight: 730; 
         float: left;
         width: max-content;
+        font-size: 2.1rem;
+        font-weight: 730;  
     }
     #brand-name {
-        font-size: 1.8rem;
         display: none;
-        margin-left: 5px;
         float: left;
         width: max-content;
+        margin-left: 5px;
+        font-size: 1.8rem;
     }
     #header-nav {
         display: flex;
-        align-items: flex-end;
-        flex-direction: column;
+            flex-direction: column;
+            align-items: flex-end;
     }
     #header-nav-list {
+        display: none;
         align-items: flex-end;
         margin-top: 1rem;
-        display: none;
     }
     .display-menu #header-nav-list {
         display: flex;
-        flex-direction: column;
+            flex-direction: column;
     }
     #header-nav-icon {
         font-size: 2.2rem;
@@ -130,46 +131,51 @@
     .article-categories {
         padding-bottom: 1rem;
     }
+    .article-categories>a>span:hover {
+        background: #DDD;
+    }
     .article-meta {
         display: flex;
-        flex-direction: column;
-        gap: 5px;
+            flex-direction: column;
+            gap: 5px;
         padding-top: 0.6rem;
     }
 
     /* - Article controls  */
     .article-control-panel {
         display: flex;
-        justify-content: space-between;
+            justify-content: space-between;
         min-width: max-content;
         margin-top: 1rem;
     }
     .article-controls {
         display: flex;
-        align-items: center;
+            align-items: center;
     }
     .article-control-option {
+        padding: 0.6rem 1rem;
         font-size: 1.2rem;
+    }
+    .article-control-dropdown {
+        position: absolute;
+        display: none;
+        margin-top: 0.6rem;
+        /* padding: 0.6rem 1rem; */
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;        
+    }
+    .article-control-option:hover .article-control-dropdown {
+        display: block;
+    }
+    .article-control-dropdown>li {
         padding: 0.6rem 1rem;
     }
-    .article-control-option:hover {
+    .article-control-option:hover,
+    .article-control-dropdown>li:hover {
         background: #DDD;
         border-radius: 10px;
     }
-    .option-dropdown {
-        display: none;
-        position: absolute;
-        z-index: 1;
-        margin-top: 0.6rem;
-        padding: 0.6rem 1rem;        
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    }
-    .option-dropdown li {
-        margin-top: 0.2rem;
-    }
-    .article-control-option:hover .option-dropdown {
-        display: block; 
-    }
+    
 
 
    /* - Article controls - Font size */
@@ -199,15 +205,14 @@
     .prev, 
     .next {
         position: absolute;
+            top: 50%;
         display: none;
-        top: 50%;
         width: auto;
         margin: -1rem;
-        margin-top: -20px;
-        font-weight: bold;
-        font-size: 1.5rem;
         background: transparent;
-        border: none;   
+        border: none;
+        font-size: 1.5rem;
+        font-weight: bold;   
         cursor: pointer;
     }
     .next {
@@ -222,10 +227,11 @@
     .display-summary.level-2::after {
         content: "Intermediate";
         position: absolute;
-        bottom: -8px;
-        right: 0;
-        font-size: 0.7rem;
+            bottom: -8px;
+            right: 0;
         display: none;
+        font-size: 0.7rem;
+        
     }
     .display-summary.level-2::after {
         content: "Beginner";
@@ -255,8 +261,8 @@
         }
         #header-nav-list {
             display: flex;
-            flex-direction: row;
-            gap: 2rem;
+                flex-direction: row;
+                gap: 2rem;
             margin: 0;
         }
         #header-nav-icon {
