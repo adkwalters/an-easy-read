@@ -28,8 +28,6 @@
         line-height: 1.6rem;
         margin-bottom: 1.5rem;
         padding: 1rem;
-        background-color: #EEE;
-        border-radius: 10px;
     }
     a {
         text-decoration: none;
@@ -56,9 +54,6 @@
     }
     .unavailable {
         color: #EEE;
-    }
-    .hidden {
-        display: none;
     }
 
 
@@ -132,7 +127,7 @@
     .article-header {
         padding: 1rem;
     }
-    .article-category {
+    .article-categories {
         padding-bottom: 1rem;
     }
     .article-meta {
@@ -191,28 +186,40 @@
         line-height: 1.8rem;
     }
 
-    /* - Article controls - Summary reading level */
+    /* - Summary controls */
     .summary-paragraph {
         position: relative;
     }
+    .summary p {
+        display: none;
+    }
+    .display-summary p {
+        display: block;
+    }
     .prev, 
     .next {
-        cursor: pointer;
         position: absolute;
+        display: none;
         top: 50%;
         width: auto;
         margin: -1rem;
         margin-top: -20px;
         font-weight: bold;
-        font-size: 1.5rem;   
+        font-size: 1.5rem;
+        background: transparent;
+        border: none;   
+        cursor: pointer;
     }
     .next {
         right: 0;
     }
+    .arrow-display {
+        display: block
+    }
 
     /* - Paragraph labels */
-    .level-1::after, 
-    .level-2::after {
+    .display-summary.level-1::after, 
+    .display-summary.level-2::after {
         content: "Intermediate";
         position: absolute;
         bottom: -8px;
@@ -220,8 +227,12 @@
         font-size: 0.7rem;
         display: none;
     }
-    .level-2::after {
+    .display-summary.level-2::after {
         content: "Beginner";
+    }
+    .display-summary.level-1:hover::after, 
+    .display-summary.level-2:hover::after {
+        display: block;
     }
 
 
@@ -289,8 +300,8 @@
         article p {
             margin-bottom: 1rem;
         }
-        .level-1::after, 
-        .level-2::after {
+        .display-summary.level-1::after, 
+        .display-summary.level-2::after {
             display: block;
         }
     }
