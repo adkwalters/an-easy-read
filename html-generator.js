@@ -21,11 +21,11 @@ class SummaryParagraph extends HTMLElement {
         const summaryUL = document.createElement("ul");
 
         const summaryLevel1 = document.createElement("li");
-        summaryLevel1.setAttribute("class", "summary level-1")
+        summaryLevel1.setAttribute("class", "summary level-1");
 
-        // Get attribute content and set it as paragraph text
-        const level1Para = document.createElement("p");
-        level1Para.textContent = this.getAttribute("data-text"); 
+        // Get templates and content
+        const templateLevel1 = document.getElementById("summary-paragraph-level-1");
+        const templateContentLevel1 = templateLevel1.content;
 
         // Apply external styles to the shadow DOM
         const styleLink = document.createElement("link");
@@ -39,7 +39,7 @@ class SummaryParagraph extends HTMLElement {
         wrapper.appendChild(decButton);
         wrapper.appendChild(summaryUL);
         summaryUL.appendChild(summaryLevel1);
-        summaryLevel1.appendChild(level1Para);
+        summaryLevel1.appendChild(templateContentLevel1.cloneNode(true));
     }
 }
 

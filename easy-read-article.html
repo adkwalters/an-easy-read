@@ -85,7 +85,16 @@
                         </div>
                     </div>
                     <div class="article-body">
-                        <summary-paragraph data-text="This is my text content for summary level 1 web content paragraph"></summary-paragraph>
+                   
+                        <!-- Template  -->
+                        <template id="summary-paragraph-level-1">
+                            <p><slot name="summary-text-level-1">This is the default text for level 1 summary.</slot></p>
+                        </template>
+
+                        <!-- Test instance -->
+                        <summary-paragraph><span slot="summary-text-level-1">This text has been slotted into the template for level 1 summary</span></summary-paragraph>
+
+
                         <div class="summary-paragraph label-colour">
                             <button class="prev">&#10094;</button>
                             <ul>
