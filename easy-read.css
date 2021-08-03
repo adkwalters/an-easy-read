@@ -199,7 +199,7 @@
         position: relative;
     }
     .summary p {
-        display: none;
+        /* display: none; */
     }
     .display-summary p {
         display: block;
@@ -208,7 +208,7 @@
     .next {
         position: absolute;
             top: 50%;
-        display: none;
+        /* display: none; */
         width: auto;
         margin: -1rem;
         background: transparent;

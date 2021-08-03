@@ -13,11 +13,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&family=Source+Sans+Pro&display=swap" rel="stylesheet">
     
+
+    <!-- JavaScript --> 
+    <script src="html-generator.js" defer></script> <!--not, -->
+    <script src="easy-read.js"></script>
+    
+
     <!-- CSS -->
     <link rel="stylesheet" href="easy-read.css" /> 
 </html>
 <body>
-    <div id="page"> <!-- Why put div here? To give width to page? -->
+    <div id="page">
         <header id="header-main">
             <div id=header-brand>
                 <a id="brand-logo">
@@ -79,6 +85,7 @@
                         </div>
                     </div>
                     <div class="article-body">
+                        <summary-paragraph data-text="This is my text content for summary level 1 web content paragraph"></summary-paragraph>
                         <div class="summary-paragraph label-colour">
                             <button class="prev">&#10094;</button>
                             <ul>
@@ -260,4 +267,3 @@
         </footer>
     </div>    
 </body>
-<script src="easy-read.js"></script>
