@@ -1,4 +1,4 @@
-// Create a custom class 
+// Create a custom class for the summary paragraphs
 class SummaryParagraph extends HTMLElement {
     constructor() {
         super();
@@ -23,9 +23,15 @@ class SummaryParagraph extends HTMLElement {
         const summaryLevel1 = document.createElement("li");
         summaryLevel1.setAttribute("class", "summary level-1");
 
+        const summaryLevel2 = document.createElement("li");
+        summaryLevel2.setAttribute("class", "summary level-2");
+
+        const summaryLevel3 = document.createElement("li");
+        summaryLevel3.setAttribute("class", "summary level-3");
+
         // Get templates and content
-        const templateLevel1 = document.getElementById("summary-paragraph-level-1");
-        const templateContentLevel1 = templateLevel1.content;
+        const templateSummary = document.getElementById("summary-paragraph-text");
+        const templateSummaryContent = templateSummary.content;
 
         // Apply external styles to the shadow DOM
         const styleLink = document.createElement("link");
@@ -39,8 +45,33 @@ class SummaryParagraph extends HTMLElement {
         wrapper.appendChild(decButton);
         wrapper.appendChild(summaryUL);
         summaryUL.appendChild(summaryLevel1);
-        summaryLevel1.appendChild(templateContentLevel1.cloneNode(true));
+        summaryUL.appendChild(summaryLevel2);
+        summaryUL.appendChild(summaryLevel3);
+        summaryLevel1.appendChild(templateSummaryContent.cloneNode(true));
     }
 }
-
 customElements.define("summary-paragraph", SummaryParagraph);
+
+
+// Create a custom class for the summary headers
+class SummaryHeader extends HTMLElement {
+    constructor() {
+        super();
+
+        // Create shadow root
+        const shadow = this.attachShadow({mode: "open"});
+
+        // Create elements
+        const header = document.createElement("h2");
+        header.setAttribute("class", "summary-header");
+
+        // Get template and content
+        const templateHeader = document.getElementById("summary-paragraph-header");
+        const templateHeaderContent = templateHeader.content;
+
+        // Attach elements to the shadow DOM
+        shadow.appendChild(header);
+        header.appendChild(templateHeaderContent.cloneNode(true));
+    }
+}
+customElements.define("summary-header", SummaryHeader);
