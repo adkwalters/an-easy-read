@@ -1,0 +1,58 @@
+CREATE TABLE article (
+    id INTEGER,
+    title TEXT,
+    date_published TEXT,
+    date_updated TEXT,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE author (
+    id INTEGER,
+    article_id INTEGER,
+    name TEXT,
+    contact TEXT,
+    PRIMARY KEY(id),
+    FOREIGN KEY(article_id) REFERENCES article(id)
+);
+
+CREATE TABLE source (
+    article_id INTEGER,
+    website TEXT,
+    title TEXT, 
+    author TEXT,
+    hyperlink TEXT,
+    FOREIGN KEY(article_id) REFERENCES article(id)
+);
+
+CREATE TABLE article_categories (
+    article_id INTEGER,
+    category_id INTEGER,
+    FOREIGN KEY(article_id) REFERENCES article(id),
+    FOREIGN KEY(category_id) REFERENCES categories(id)
+);
+
+CREATE TABLE categories (
+    id INTEGER,
+    category TEXT,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE article_paragraph (
+    article_id INTEGER,
+    paragraph_id INTEGER,
+    FOREIGN KEY(article_id) REFERENCES article(id),
+    FOREIGN KEY(paragraph_id) REFERENCES paragraph_level(paragraph_id)
+);
+
+CREATE TABLE paragraph_level (
+    paragraph_id INTEGER,
+    level_id INTEGER,
+    FOREIGN KEY(paragraph_id) REFERENCES article_paragraph(paragraph_id),
+    FOREIGN KEY(level_id) REFERENCES level(id)
+);
+
+CREATE TABLE level (
+    id INTEGER,
+    summary TEXT,
+    PRIMARY KEY(id)
+);
