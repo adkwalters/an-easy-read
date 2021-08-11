@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width", initial-scale=1>
+
+    <meta name="description" content="A page with which to post progressively summarised content">
+    <!-- Add in other rich data -->
+
+    <!-- Icons and fonts -->
+    <script src="https://kit.fontawesome.com/ab4f2900b6.js" crossorigin="anonymous"></script>  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    
+
+    <!-- JavaScript --> 
+    <script src="/static/easy-read-header.js" ></script>
+    <script src="/static/easy-read-components.js"></script> 
+    <script src="/static/easy-read-cms.js" defer></script> <!-- deferred to allow custom element attribute to be read -->    
+    
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/easy-read.css" /> 
+</html>
+<body>
+    <div id="page">
+        <header id="header-main">
+            <div id=header-brand>
+                <a id="brand-logo">
+                    <i class="fas fa-book-open"></i> 
+                </a>
+                <h1 id="brand-name">
+                    <a>Easy Read</a>
+                </h1>
+            </div>
+            <nav id="header-nav">
+                <i id="header-nav-icon" class="fas fa-bars"></i>
+                <ul id="header-nav-list">    
+                    <li><a class="nav-link" href="">About</a></li>
+                    <li><a class="nav-link" href="">Categories</a></li>
+                    <li><a class="nav-link" href="">Contact</a></li>
+                </ul> 
+            </nav>   
+        </header>
+        <!-- Article form -->
+        <form id="article-form" action="">
+            <section id="article-source" class="label-colour">
+                <h2>Source data</h2>
+                <label for="source-website">Source website:<input id="source-website" id="source-website" type="text"/></label>
+                <label for="source-author">Source author:<input id="source-author" type="text"/></label>
+                <label for="source-title">Source title:<input id="source-title" type="text"/></label>
+                <label for="source-hyperlink">Source link:<input id="source-hyperlink" type="text"/></label>
+            </section>
+            <section id="article-meta" class="label-colour">
+                <h2>Article data</h2>
+                <label for="article-title">Title:<input id="article-title" type="text"/></label>
+                <label for="article-date-published">Date published:<input id="article-date-published" type="text"></label>
+                <label for="article-date-updated">Date updated:<input id="article-date-updated" type="text"></label>
+                <label for="article-categories">Categories:
+                    <div id="article-categories">
+                        <select name="article-categories">
+                            <option value="category-1">Category 1</option>
+                            <option value="category-2">Category 2</option>
+                            <option value="category-2">Category 2</option>
+                            <option value="category-2">Category 2</option>
+                            <option value="category-2">Category 2</option>
+                            <option value="category-2">Category 2</option>
+                            <option value="category-2">Category 2</option>
+                            <option value="category-2">Category 2</option>
+                            <option value="category-2">Category 2</option>
+                            <option value="category-2">Category 2</option>
+                            <option value="category-2">Category 2</option>
+                            <option value="category-2">Category 2</option>
+                            <!-- Options to be dynamically inserted -->
+                        </select>
+                        <select name="article-categories">
+                            <option value="category-1">Category 1</option>
+                            <option value="category-2">Category 2</option>
+                            <!-- Options to be dynamically inserted -->
+                        </select>
+                        <select name="article-categories">
+                            <option value="category-1">Category 1</option>
+                            <option value="category-2">Category 2</option>
+                            <!-- Options to be dynamically inserted -->
+                        </select>
+                    </div>
+                    <input name="new-categories" type="text" placeholder="Other"/>
+                    <!-- Inputs to be dynamically inserted -->
+                </label>
+            </section>
+            <section class="label-colour">
+                <h2>Article Content</h2>
+                <ul id="article-content">
+                </ul>
+                <button id="add-paragraph" type="button">Add Paragraph</button>
+            </section>
+        </form>
+    </div>
+</body>

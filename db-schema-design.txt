@@ -3,6 +3,7 @@ CREATE TABLE article (
     title TEXT,
     date_published TEXT,
     date_updated TEXT,
+    article_description TEXT,
     PRIMARY KEY(id)
 );
 

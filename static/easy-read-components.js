@@ -38,7 +38,7 @@ class CreateParagraph extends HTMLElement {
         // Apply external styles to the shadow DOM
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "easy-read.css");
+        styleLink.setAttribute("href", "/static/easy-read.css");
 
         // Attach elements to the shadow DOM
         shadow.appendChild(styleLink);
@@ -81,7 +81,7 @@ class CreateLevel extends HTMLElement {
         // Apply external styles to the shadow DOM
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "easy-read.css");
+        styleLink.setAttribute("href", "/static/easy-read.css");
 
         // Attach elements to the shadow DOM
         shadow.appendChild(styleLink)
@@ -139,7 +139,7 @@ class SummaryParagraph extends HTMLElement {
         // Apply external styles to the shadow DOM
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "easy-read.css");
+        styleLink.setAttribute("href", "/static/easy-read.css");
 
         // Attach elements to the shadow DOM
         shadow.appendChild(styleLink);
