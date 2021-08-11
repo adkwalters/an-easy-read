@@ -65,6 +65,7 @@
     }
     #header-main {
         position: fixed;
+            top: 0;
         display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -116,16 +117,23 @@
 
 /* || Article */
     article {
+        max-width: 64rem;
         margin: auto;
         padding: 0 6%;
     }
 
     /* - Article main image and header  */
+    .article-body {
+        max-width: 42rem;
+        margin: auto;
+    }
     article img {
         width: 100%;
         padding-top: 6rem;
     }
     .article-header {
+        max-width: 42rem;
+        margin: auto;
         padding: 1rem;
     }
     .article-categories {
@@ -175,12 +183,9 @@
     .article-control-dropdown>li:hover {
         background: #DDD;
         border-radius: 10px;
-        /* box-shadow: inset 0px -1px 2px 0px rgba(0,0,0,0.1); */
     }
-    
 
-
-   /* - Article controls - Font size */
+    /* - Article controls - Font size */
     .small-font .article-text p {
         font-size: 1.1rem;
         line-height: 1.4rem;
@@ -245,6 +250,83 @@
 
 
 
+/* || Article form*/
+    #article-form {
+        display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding: 0 1rem;
+        max-width: 49rem;
+        margin: 7rem auto;
+    }
+    #article-form section{
+        padding: 1rem;
+    }
+    #article-form h2, 
+    #article-form h3 {
+        margin: 0;
+        margin-bottom: 1rem;
+    }
+    #article-form label {
+        font-size: 1.1rem;
+    }
+    #article-form input,
+    #article-form select,
+    /* .form-text class seems to be needed to ensure styling. 
+    This is part of a bigger issue - elements from custom elements
+    are not getting styled unless they have more-specific selectors */
+    .form-text {
+        width: 100%;
+        margin: 1rem auto;
+        padding: 1rem;
+        border-radius: 10px;
+        border: none;
+        font-size: 1rem;
+    }
+    .form-text {
+        resize: vertical;
+        margin-bottom: 0;
+    }
+    #article-categories {
+        display: flex;
+            flex-direction: row;
+            gap: 1rem;
+    }
+
+    /* - Article content */
+    #add-paragraph {
+        display: block;
+        width: 100%;        
+        margin-top: 1rem;
+        padding: 1rem 0;
+        font-size: 1.1rem;
+    }
+    #add-paragraph,
+    .add-level {
+        font-size: 1.1rem;
+        background: #fbfdfe;
+        border: 1px solid #DDD;
+        border-radius: 10px;
+    }
+    .add-level {
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+        padding: 0.4rem 0.8rem;
+        /* See, why am I having to re-declare font-family?! */
+        font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+    }
+    .new-level {
+        width: 100%;
+        resize: vertical;
+        /* This is where things show that they're really messed up. 
+        For some reason, padding-left has the effect of padding-top. */
+        padding-left: 0.5rem;
+        font-size: 1.1rem;       
+    }
+    
+    
+
+
 /* || Responsive design */
 
     /* - large portrait (280px and above) 
@@ -272,26 +354,6 @@
         }
     }
 
-    /* - Medium landscape (768px and above) 
-            - Increase page width for header
-            - Freeze article width  */
-    @media (min-width: 48rem) {
-        .article-header,
-        .article-body {
-            max-width: 42rem;
-            margin: auto;
-        }
-    }
-
-    /* - Large landscape (1024px and above)
-            - Freeze image width */
-    @media (min-width: 64rem) {
-        article {
-            max-width: 64rem;
-            margin: auto;
-        }
-    }
-
 
     
 /* || Print article */
@@ -301,6 +363,7 @@
         article img,
         .article-categories,
         .article-control-panel,
+        .article-form-control-panel,
         .prev,
         .next {
             display: none;
