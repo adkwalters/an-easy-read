@@ -272,10 +272,7 @@
     }
     #article-form input,
     #article-form select,
-    /* .form-text class seems to be needed to ensure styling. 
-    This is part of a bigger issue - elements from custom elements
-    are not getting styled unless they have more-specific selectors */
-    .form-text {
+    #article-form textarea {
         width: 100%;
         margin: 1rem auto;
         padding: 1rem;
@@ -312,18 +309,8 @@
         margin-top: 1rem;
         margin-bottom: 3rem;
         padding: 0.4rem 0.8rem;
-        /* See, why am I having to re-declare font-family?! */
-        font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
     }
-    .new-level {
-        width: 100%;
-        resize: vertical;
-        /* This is where things show that they're really messed up. 
-        For some reason, padding-left has the effect of padding-top. */
-        padding-left: 0.5rem;
-        font-size: 1.1rem;       
-    }
-    #submit-form {
+    #submit-form-button {
         width: max-content;
         margin: 2rem auto;
         padding: 1rem;
@@ -334,7 +321,7 @@
         box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.1),
                     inset 0px -2px 4px 0px rgba(0,0,0,0.1);
     }
-    #submit-form:hover {
+    #submit-form-button:hover {
         background: #DDD;
         transform: translateY(2px);
     }
