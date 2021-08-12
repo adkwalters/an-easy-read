@@ -65,7 +65,7 @@ class CreateLevel extends HTMLElement {
        
         const textarea = document.createElement("textarea");
         textarea.setAttribute("id", levelId);
-        textarea.setAttribute("name", "article-summaries");
+        textarea.setAttribute("name", levelId);
         textarea.setAttribute("class", "form-text");
 
         // Attach elements to the DOM
@@ -82,11 +82,13 @@ customElements.define("create-level", CreateLevel);
 class SummaryParagraph extends HTMLElement {
     constructor() {
         super();
-
+    }
+        connectedCallback() {
+    
         // Note, this constructor seems to demand a shadow DOM.
         // When I removed the shadow DOM, an error was throw
         // saying that the custom element should not have children.
-    
+        
         // Create a shadow root
         const shadow = this.attachShadow({mode: "open"});
 
@@ -158,6 +160,8 @@ customElements.define("summary-paragraph", SummaryParagraph);
 class SummaryHeader extends HTMLElement {
     constructor() {
         super();
+    }
+    connectedCallback() {
 
         // Note, this constructor seems to demand not to be put 
         // in a connectedCallback(). If it is, the slot default
