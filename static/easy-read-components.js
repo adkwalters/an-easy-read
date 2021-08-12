@@ -5,9 +5,6 @@ class CreateParagraph extends HTMLElement {
     }
     connectedCallback() {
 
-        // Create a shadow root
-        const shadow = this.attachShadow({mode: "open"});
-
         // Get paragraph index and set level index counter
         const paragraphIndex = this.getAttribute("data-paragraph-index");
         let levelIndex = 1;
@@ -23,7 +20,8 @@ class CreateParagraph extends HTMLElement {
 
         const button = document.createElement("button");
         button.setAttribute("class", "add-level");
-        button.textContent = "Add Level"
+        button.setAttribute("type", "button");
+        button.textContent = "Add Level";
 
         // Add event listener to button to add paragraph
         button.addEventListener("click", () => {
@@ -35,14 +33,8 @@ class CreateParagraph extends HTMLElement {
             levelIndex++;
         });
 
-        // Apply external styles to the shadow DOM
-        const styleLink = document.createElement("link");
-        styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read.css");
-
         // Attach elements to the shadow DOM
-        shadow.appendChild(styleLink);
-        shadow.appendChild(li);
+        this.appendChild(li);
         li.appendChild(h3);
         li.appendChild(ul);
         li.appendChild(button);
@@ -59,9 +51,6 @@ class CreateLevel extends HTMLElement {
     }
     connectedCallback() {
 
-        // Create a shadow root
-        const shadow = this.attachShadow({mode: "open"});
-
         // Generate level id
         const paragraphIndex = this.getAttribute("data-paragraph-index");
         const levelIndex = this.getAttribute("data-level-index");
@@ -75,17 +64,12 @@ class CreateLevel extends HTMLElement {
         label.textContent = `Level ${levelIndex}:`;
        
         const textarea = document.createElement("textarea");
-        textarea.setAttribute("id", levelId)
+        textarea.setAttribute("id", levelId);
+        textarea.setAttribute("name", "article-summaries");
         textarea.setAttribute("class", "form-text");
 
-        // Apply external styles to the shadow DOM
-        const styleLink = document.createElement("link");
-        styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read.css");
-
-        // Attach elements to the shadow DOM
-        shadow.appendChild(styleLink)
-        shadow.appendChild(li);
+        // Attach elements to the DOM
+        this.appendChild(li);
         li.appendChild(label);
         label.appendChild(textarea);
     }
@@ -99,6 +83,10 @@ class SummaryParagraph extends HTMLElement {
     constructor() {
         super();
 
+        // Note, this constructor seems to demand a shadow DOM.
+        // When I removed the shadow DOM, an error was throw
+        // saying that the custom element should not have children.
+    
         // Create a shadow root
         const shadow = this.attachShadow({mode: "open"});
 
@@ -171,8 +159,9 @@ class SummaryHeader extends HTMLElement {
     constructor() {
         super();
 
-        // Create shadow root
-        const shadow = this.attachShadow({mode: "open"});
+        // Note, this constructor seems to demand not to be put 
+        // in a connectedCallback(). If it is, the slot default
+        // values are shown along the custom values
 
         // Create elements
         const header = document.createElement("h2");
@@ -183,7 +172,7 @@ class SummaryHeader extends HTMLElement {
         const templateHeaderContent = templateHeader.content;
 
         // Attach elements to the shadow DOM
-        shadow.appendChild(header);
+        this.appendChild(header);
         header.appendChild(templateHeaderContent.cloneNode(true));
     }
 }
