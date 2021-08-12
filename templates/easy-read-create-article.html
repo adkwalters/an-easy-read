@@ -42,21 +42,22 @@
         </header>
         <!-- Article form -->
         <form id="article-form" action="/create-article" method="post">
-            <section id="article-source" class="label-colour">
+            <section id="article-form-source" class="label-colour">
                 <h2>Source data</h2>
-                <label for="source-website">Source website:<input id="source-website" name="source-website" type="text"/></label>
-                <label for="source-author">Source author:<input id="source-author" name="source-author" type="text"/></label>
-                <label for="source-title">Source title:<input id="source-title" name="source-title" type="text"/></label>
-                <label for="source-hyperlink">Source link:<input id="source-hyperlink" name="source-hyperlink" type="text"/></label>
+                <label for="article-form-source-website">Source website:<input id="article-form-source-website" name="article-form-source-website" type="text"/></label>
+                <label for="article-form-source-author">Source author:<input id="article-form-source-author" name="article-form-source-author" type="text"/></label>
+                <label for="article-form-source-title">Source title:<input id="article-form-source-title" name="article-form-source-title" type="text"/></label>
+                <label for="article-form-source-hyperlink">Source link:<input id="article-form-source-hyperlink" name="article-form-source-hyperlink" type="text"/></label>
             </section>
-            <section id="article-meta" class="label-colour">
+            <section id="article-form-meta" class="label-colour">
                 <h2>Article data</h2>
-                <label for="article-title">Title:<input id="article-title" name="article-title" type="text"/></label>
-                <label for="article-date-published">Date published:<input id="article-date-published" name="article-date-published" type="text"></label>
-                <label for="article-date-updated">Date updated:<input id="article-date-updated" name="article-date-updated" type="text"></label>
-                <label for="article-categories">Categories:
-                    <div id="article-categories">
-                        <select name="article-categories">
+                <label for="article-form-title">Title:<input id="article-form-title" name="article-form-title" type="text"/></label>
+                <label for="article-form-description">Description:<input id="article-form-description" name="article-form-description" type="text"/></label>
+                <label for="article-form-date-published">Date published:<input id="article-form-date-published" name="article-form-date-published" type="text"></label>
+                <label for="article-form-date-updated">Date updated:<input id="article-form-date-updated" name="article-form-date-updated" type="text"></label>
+                <label for="article-form-categories">Categories:
+                    <div id="article-form-categories">
+                        <select name="article-form-categories">
                             <option value="category-1">Category 1</option>
                             <option value="category-2">Category 2</option>
                             <option value="category-2">Category 2</option>
@@ -71,25 +72,24 @@
                             <option value="category-2">Category 2</option>
                             <!-- Options to be dynamically inserted -->
                         </select>
-                        <select name="article-categories">
+                        <select name="article-form-categories">
                             <option value="category-1">Category 1</option>
                             <option value="category-2">Category 2</option>
                             <!-- Options to be dynamically inserted -->
                         </select>
-                        <select name="article-categories">
+                        <select name="article-form-categories">
                             <option value="category-1">Category 1</option>
                             <option value="category-2">Category 2</option>
                             <!-- Options to be dynamically inserted -->
                         </select>
                     </div>
-                    <input name="article-categories" type="text" placeholder="Other"/>
+                    <input name="article-form-categories" type="text" placeholder="Other"/>
                     <!-- Inputs to be dynamically inserted -->
                 </label>
             </section>
             <section class="label-colour">
                 <h2>Article Content</h2>
-                <ul id="article-content">
-                </ul>
+                <ul id="article-form-content"></ul>
                 <button id="add-paragraph" type="button">Add Paragraph</button>
             </section>
             <button id="submit-form-button" type="submit">Create Article</button>

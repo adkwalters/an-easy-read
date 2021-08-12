@@ -4,7 +4,7 @@
     function addParagraph(paragraphId) {
         
         // Select article content 
-        const articleContent = document.getElementById("article-content");
+        const articleContent = document.getElementById("article-form-content");
 
         const newParagraph = document.createElement("create-paragraph");
         newParagraph.setAttribute("data-paragraph-level", paragraphId)
@@ -24,7 +24,7 @@
 
         // Add paragraph to content section of article form
         const addParagraphButton = document.getElementById("add-paragraph");
-        const articleContent = document.getElementById("article-content");
+        const articleContent = document.getElementById("article-form-content");
         let paragraphIndex = 1;
 
         addParagraphButton.addEventListener("click", () => {
