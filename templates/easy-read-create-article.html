@@ -11,13 +11,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    
 
     <!-- JavaScript --> 
     <script src="/static/easy-read-header.js" ></script>
     <script src="/static/easy-read-components.js"></script> 
     <script src="/static/easy-read-cms.js" defer></script> <!-- deferred to allow custom element attribute to be read -->    
-    
 
     <!-- CSS -->
     <link rel="stylesheet" href="/static/easy-read.css" /> 
@@ -43,19 +41,19 @@
             </nav>   
         </header>
         <!-- Article form -->
-        <form id="article-form" action="">
+        <form id="article-form" action="/create-article" method="post">
             <section id="article-source" class="label-colour">
                 <h2>Source data</h2>
-                <label for="source-website">Source website:<input id="source-website" id="source-website" type="text"/></label>
-                <label for="source-author">Source author:<input id="source-author" type="text"/></label>
-                <label for="source-title">Source title:<input id="source-title" type="text"/></label>
-                <label for="source-hyperlink">Source link:<input id="source-hyperlink" type="text"/></label>
+                <label for="source-website">Source website:<input id="source-website" name="source-website" type="text"/></label>
+                <label for="source-author">Source author:<input id="source-author" name="source-author" type="text"/></label>
+                <label for="source-title">Source title:<input id="source-title" name="source-title" type="text"/></label>
+                <label for="source-hyperlink">Source link:<input id="source-hyperlink" name="source-hyperlink" type="text"/></label>
             </section>
             <section id="article-meta" class="label-colour">
                 <h2>Article data</h2>
-                <label for="article-title">Title:<input id="article-title" type="text"/></label>
-                <label for="article-date-published">Date published:<input id="article-date-published" type="text"></label>
-                <label for="article-date-updated">Date updated:<input id="article-date-updated" type="text"></label>
+                <label for="article-title">Title:<input id="article-title" name="article-title" type="text"/></label>
+                <label for="article-date-published">Date published:<input id="article-date-published" name="article-date-published" type="text"></label>
+                <label for="article-date-updated">Date updated:<input id="article-date-updated" name="article-date-updated" type="text"></label>
                 <label for="article-categories">Categories:
                     <div id="article-categories">
                         <select name="article-categories">
@@ -84,7 +82,7 @@
                             <!-- Options to be dynamically inserted -->
                         </select>
                     </div>
-                    <input name="new-categories" type="text" placeholder="Other"/>
+                    <input name="article-categories" type="text" placeholder="Other"/>
                     <!-- Inputs to be dynamically inserted -->
                 </label>
             </section>
@@ -94,6 +92,7 @@
                 </ul>
                 <button id="add-paragraph" type="button">Add Paragraph</button>
             </section>
+            <button id="submit-form" type="submit">Create Article</button>
         </form>
     </div>
 </body>

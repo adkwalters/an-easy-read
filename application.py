@@ -15,17 +15,40 @@ cursor = connection.cursor()
 # Test index page
 @app.route("/")
 def index():
-    return "hello, world"
+
+    return render_template("easy-read-index.html")
 
 
 @app.route("/create-article", methods=["GET", "POST"])
 def createArticle():
 
-    # cursor.execute()
+    if request.method == "POST":
+        
+        source_website = request.form.get("source-website")
+        source_author = request.form.get("source-author")
+        source_title = request.form.get("source-title")
+        source_hyperlink = request.form.get("source-hyperlink")
+        article_title = request.form.get("article-title")
+        article_date_published = request.form.get("article-date-pblished")
+        article_date_updated = request.form.get("article-date-updated")
+        article_categories = request.form.getlist("article-categories")
+        article_summaries = request.form.getlist("article-summaries[]") 
 
-    # Write data to db from form
+        print(article_summaries)
+        print(request.form.has_key(article_summaries))
+        f = request.form
+        for key in f.keys():
+            for value in f.getlist(key):
+                print(key,":",value)
 
-    return render_template("easy-read-create-article.html")
+        # cursor.execute()
+        # Write data to db from form
+        
+        return redirect("/")
+    
+    else:
+        return render_template("easy-read-create-article.html")
+
 
 @app.route("/article")
 def showArticle():

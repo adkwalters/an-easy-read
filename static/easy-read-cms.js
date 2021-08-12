@@ -13,7 +13,6 @@
         articleContent.appendChild(h3);
         articleContent.appendChild(li);
         li.appendChild(customParagraph);
-        li.scrollIntoView();
     }
 
 
@@ -32,7 +31,6 @@
             const newParagraph = document.createElement("create-paragraph");
             newParagraph.setAttribute("data-paragraph-index", paragraphIndex);
             articleContent.appendChild(newParagraph);
-            addParagraphButton.scrollIntoView(); // Not quite low enough to see the button
             paragraphIndex++;
         });
     }

@@ -71,7 +71,7 @@
             align-items: flex-start;
         width: 100%;
         padding: 1rem 1.5rem;
-        background: white;
+        background: #fbfdfe;
         box-shadow: 0 0px 12px 0 rgba(0,0,0,0.8);
         z-index: 1;
         overflow: hidden;  
@@ -322,6 +322,21 @@
         For some reason, padding-left has the effect of padding-top. */
         padding-left: 0.5rem;
         font-size: 1.1rem;       
+    }
+    #submit-form {
+        width: max-content;
+        margin: 2rem auto;
+        padding: 1rem;
+        font-size: 1.5rem;
+        background: #EEE;
+        border: 2px solid #EEE;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.1),
+                    inset 0px -2px 4px 0px rgba(0,0,0,0.1);
+    }
+    #submit-form:hover {
+        background: #DDD;
+        transform: translateY(2px);
     }
     
     
