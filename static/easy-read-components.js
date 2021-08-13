@@ -7,37 +7,90 @@ class CreateParagraph extends HTMLElement {
 
         // Get paragraph index and set level index counter
         const paragraphIndex = this.getAttribute("data-paragraph-index");
+
+        // Set counter for level index (non zero-indexed)
         let levelIndex = 1;
         
-        // Create elements for additional article paragraph
+        // Create elements for additional article paragraph       
         const li = document.createElement("li");
 
         const h3 = document.createElement("h3");
-        h3.innerHTML = `Paragraph ${paragraphIndex}`;
+        h3.innerHTML = `Paragraph ${paragraphIndex}`; 
 
         const ul = document.createElement("ul");
         ul.setAttribute("data-paragraph-index", paragraphIndex);
 
-        const button = document.createElement("button");
-        button.setAttribute("class", "add-level");
-        button.setAttribute("type", "button");
-        button.textContent = "Add Level";
+        const div = document.createElement("div");
+        div.setAttribute("class", "article-form-summary-controls")
 
-        // Add event listener to button to add paragraph
-        button.addEventListener("click", () => {
-            const newLevel = document.createElement("create-level");
-            newLevel.setAttribute("data-paragraph-index", paragraphIndex);
-            newLevel.setAttribute("data-level-index", levelIndex)
-            newLevel.setAttribute("class", "new-level")
-            ul.appendChild(newLevel);
+        // Add button to add paragraph level
+        const addLevelButton = document.createElement("button");
+        addLevelButton.setAttribute("class", "add-level");
+        addLevelButton.setAttribute("type", "button");
+        addLevelButton.textContent = "Add Level";    
+
+        // Add event listener for add level functionality
+        addLevelButton.addEventListener("click", () => {
+            const customLevel = document.createElement("create-level");
+            customLevel.setAttribute("data-paragraph-index", paragraphIndex);
+            customLevel.setAttribute("data-level-index", levelIndex)
+            customLevel.setAttribute("class", "custom-level")
             levelIndex++;
+
+            // Attach custom element to the DOM
+            ul.appendChild(customLevel);
+
+            // Get number of levels currently showing for paragraph
+            const currentCustomLevels = this.getElementsByTagName("create-level");
+
+            // If a custom levels exist, switch delete option from paragraph to level
+            if (currentCustomLevels.length == 1) { // Switch only once
+                div.removeChild(delParaButton);
+                div.appendChild(delLevelButton);
+            } 
         });
 
-        // Attach elements to the shadow DOM
+        // Add delete paragraph button
+        const delParaButton = document.createElement("button");
+        delParaButton.setAttribute("class", "del-paragraph");
+        delParaButton.setAttribute("type", "button");
+        delParaButton.textContent = "Delete Paragraph";
+
+        // Delete custom paragraph
+        delParaButton.addEventListener("click", () => {
+            // If there is a previous paragraph, display its delete paragraph button
+            if (this.previousElementSibling) {
+                this.previousElementSibling.querySelector(".del-paragraph").classList.remove("hidden");
+            }
+            this.remove();
+        });     
+
+        // Add delete paragraph level button
+        const delLevelButton = document.createElement("button");
+        delLevelButton.setAttribute("class", "del-level");
+        delLevelButton.setAttribute("type", "button");
+        delLevelButton.textContent = "Delete Level";
+
+        // Add event listener for delete level functionality
+        delLevelButton.addEventListener("click", () => {
+            const customLevel = this.getElementsByTagName("create-level");
+            ul.removeChild(customLevel[customLevel.length - 1]); // Ultimate level (LIFO)
+            levelIndex--;
+
+            // If no levels exist, switch delete option from level to paragraph
+            if (customLevel.length === 0) {
+                div.removeChild(delLevelButton);
+                div.appendChild(delParaButton);
+            }           
+        });
+
+        // Attach elements to the DOM
         this.appendChild(li);
         li.appendChild(h3);
         li.appendChild(ul);
-        li.appendChild(button);
+        li.appendChild(div);
+        div.appendChild(addLevelButton);
+        div.appendChild(delParaButton);
     }
 }
 customElements.define("create-paragraph", CreateParagraph);
@@ -51,9 +104,11 @@ class CreateLevel extends HTMLElement {
     }
     connectedCallback() {
 
-        // Generate level id
+        // Get paragraph and level indices 
         const paragraphIndex = this.getAttribute("data-paragraph-index");
         const levelIndex = this.getAttribute("data-level-index");
+
+        // Generate id to be used in name attribute
         const levelId = `paragraph-${paragraphIndex}-level-${levelIndex}`;
                 
         // Create elements for additional article paragraph
@@ -61,7 +116,7 @@ class CreateLevel extends HTMLElement {
         
         const label = document.createElement("label");
         label.setAttribute("for", levelId);
-        label.textContent = `Level ${levelIndex}:`;
+        label.textContent = `Level ${levelIndex}:`; 
        
         const textarea = document.createElement("textarea");
         textarea.setAttribute("id", levelId);
@@ -73,6 +128,7 @@ class CreateLevel extends HTMLElement {
         li.appendChild(label);
         label.appendChild(textarea);
     }
+
 }
 customElements.define("create-level", CreateLevel);
 

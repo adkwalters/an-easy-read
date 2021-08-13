@@ -56,6 +56,9 @@
         background: #EEE;
         border-radius: 10px;
     }
+    .hidden {
+        display: none;
+    }
 
 
 
@@ -291,24 +294,45 @@
     }
 
     /* - Article content */
+    #article-form-content h3 {
+        margin-top: 1rem;
+    }
     #add-paragraph {
         display: block;
         width: 100%;        
         margin-top: 1rem;
         padding: 1rem 0;
-        font-size: 1.1rem;
-    }
-    #add-paragraph,
-    .add-level {
-        font-size: 1.1rem;
         background: #fbfdfe;
         border: 1px solid #DDD;
         border-radius: 10px;
+        font-size: 1.1rem;
+    }
+    
+    /* - Paragraph control */
+    .article-form-control-panel {
+        display: flex;
+            justify-content: space-between;
     }
     .add-level {
-        margin-top: 1rem;
-        margin-bottom: 3rem;
         padding: 0.4rem 0.8rem;
+    }
+    .del-paragraph,
+    .del-level {
+        float: right;
+        padding: 0.3rem 0.6rem;
+        color: #DDD;
+        }
+    .add-level,
+    .del-paragraph,
+    .del-level {
+        background: #fbfdfe;
+        border: 1px solid #DDD;
+        border-radius: 10px;
+        font-size: 1.1rem;
+    }
+    .del-paragraph:hover,
+    .del-level:hover {
+        color: red;
     }
     #submit-form-button {
         width: max-content;

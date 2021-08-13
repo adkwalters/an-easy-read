@@ -1,21 +1,4 @@
-// || Article CMS 
-
-    // Add paragraph to article CMS
-    function addParagraph(paragraphId) {
-        
-        // Select article content 
-        const articleContent = document.getElementById("article-form-content");
-
-        const newParagraph = document.createElement("create-paragraph");
-        newParagraph.setAttribute("data-paragraph-level", paragraphId)
-        
-        // Append elements to article content
-        articleContent.appendChild(h3);
-        articleContent.appendChild(li);
-        li.appendChild(customParagraph);
-    }
-
-
+// // || Article CMS 
 
 // || Event Listeners 
 
@@ -25,13 +8,20 @@
         // Add paragraph to content section of article form
         const addParagraphButton = document.getElementById("add-paragraph");
         const articleContent = document.getElementById("article-form-content");
-        let paragraphIndex = 1;
-
+        
         addParagraphButton.addEventListener("click", () => {
             const newParagraph = document.createElement("create-paragraph");
-            newParagraph.setAttribute("data-paragraph-index", paragraphIndex);
+            let paragraphIndex = document.getElementsByTagName("create-paragraph").length; 
+            newParagraph.setAttribute("data-paragraph-index", paragraphIndex + 1); // Non zero-indexing
             articleContent.appendChild(newParagraph);
-            paragraphIndex++;
+
+            const allDelParaButtons = document.getElementsByClassName("del-paragraph");
+            const previousDelParaButtons = Array.from(allDelParaButtons).slice(0, -1); // Excludes ultimate
+
+            // Hide all previous delete paragraph buttons (enforces LIFO while keeping event listener)
+            for (const button of previousDelParaButtons) {
+                button.classList.add("hidden");
+            }
         });
     }
   
