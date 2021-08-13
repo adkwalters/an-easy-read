@@ -1,59 +1,58 @@
-CREATE TABLE article (
+CREATE TABLE articles (
     id INTEGER,
-    title TEXT,
-    date_published TEXT,
+    article_title TEXT NOT NULL,
+    article_description TEXT NOT NULL,
+    date_published TEXT NOT NULL,
     date_updated TEXT,
-    article_description TEXT,
     PRIMARY KEY(id)
 );
 
-CREATE TABLE author (
+CREATE TABLE authors (
     id INTEGER,
-    article_id INTEGER,
-    name TEXT,
+    article_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
     contact TEXT,
-    PRIMARY KEY(id),
+    PRIMARY KEY(id), 
     FOREIGN KEY(article_id) REFERENCES article(id)
 );
 
-CREATE TABLE source (
-    article_id INTEGER,
+CREATE TABLE sources (
+    article_id INTEGER NOT NULL,
     website TEXT,
-    title TEXT, 
-    author TEXT,
+    source_author TEXT,
+    source_title TEXT, 
     hyperlink TEXT,
     FOREIGN KEY(article_id) REFERENCES article(id)
 );
 
 CREATE TABLE article_categories (
-    article_id INTEGER,
-    category_id INTEGER,
+    article_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
     FOREIGN KEY(article_id) REFERENCES article(id),
     FOREIGN KEY(category_id) REFERENCES categories(id)
 );
 
 CREATE TABLE categories (
     id INTEGER,
-    category TEXT,
+    category TEXT NOT NULL,
     PRIMARY KEY(id)
 );
 
-CREATE TABLE article_paragraph (
-    article_id INTEGER,
-    paragraph_id INTEGER,
-    FOREIGN KEY(article_id) REFERENCES article(id),
-    FOREIGN KEY(paragraph_id) REFERENCES paragraph_level(paragraph_id)
-);
-
-CREATE TABLE paragraph_level (
-    paragraph_id INTEGER,
-    level_id INTEGER,
-    FOREIGN KEY(paragraph_id) REFERENCES article_paragraph(paragraph_id),
-    FOREIGN KEY(level_id) REFERENCES level(id)
-);
-
-CREATE TABLE level (
+CREATE TABLE paragraphs (
     id INTEGER,
-    summary TEXT,
-    PRIMARY KEY(id)
+    article_id INTEGER NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(article_id) REFERENCES article(id)
 );
+
+CREATE TABLE summaries (
+    id INTEGER,
+    paragraphs_id INTEGER NOT NULL,
+    level INTEGER NOT NULL,
+    summary_id_name TEXT NOT NULL,
+    content TEXT NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(paragraphs_id) REFERENCES paragraphs(id)
+);
+
+PRAGMA foreign_keys = ON;
