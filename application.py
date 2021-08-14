@@ -38,32 +38,27 @@ def createArticle():
         source_hyperlink = request.form.get("article-form-source-hyperlink")
 
         # Insert article content into database
-        article_insert = cursor.execute("INSERT INTO articles (article_title, article_description, date_published, date_updated) VALUES (?, ?, ?, ?)", 
-                        (article_title, article_description, article_date_published, article_date_updated))
+        article_insert = cursor.execute("INSERT INTO article (article_title, article_description, date_published, date_updated) VALUES (?, ?, ?, ?)", 
+            (article_title, article_description, article_date_published, article_date_updated))
 
         # Get article ID primary key to use as a foreign key in other tables
         article_id = article_insert.lastrowid
        
         # Insert source content into database
-        source_insert = cursor.execute("INSERT INTO sources (article_id, website, source_author, source_title, hyperlink) VALUES (?, ?, ?, ?, ?)", 
-                        (article_id, source_website, source_author, source_title, source_hyperlink))
+        cursor.execute("INSERT INTO source (article_id, website, source_author, source_title, hyperlink) VALUES (?, ?, ?, ?, ?)", 
+            (article_id, source_website, source_author, source_title, source_hyperlink))
         
         # Get paragraph content into database
         for key in request.form.keys():
             if "paragraph" in key:
-                paragraphs_insert = cursor.execute("INSERT INTO paragraphs (article_id) VALUES (?)", (article_id,))
 
-                paragraph_id = paragraphs_insert.lastrowid
-        
-                cursor.execute("INSERT INTO summaries (paragraphs_id, level, summary_id_name, content) VALUES (?, ?, ?, ?)",
-                    (paragraph_id, key[-1], key, request.form[key]))
+                # Get paragraph number from name, eg "paragraph-2-level-1"
+                #    - filter all but the last number
+                paragraph_id = "".join(filter(str.isdigit, key[:-1]))            
 
-        #  # Get paragraph content into database
-        # for key in request.form.keys():
-        #     if "paragraph" in key:
-        #         cursor.execute("INSERT INTO paragraphs (article_id, summary_id_name, content) VALUES (?, ?, ?)",
-        #         (article_id, key, request.form[key]))
-        #         # print(key, request.form[key])
+                # Insert summary content into database
+                cursor.execute("INSERT INTO summary (article_id, paragraph, level, name, content) VALUES (?, ?, ?, ?, ?)",
+                    (article_id, paragraph_id, key[-1], key, request.form[key]))
 
 
         connection.commit()

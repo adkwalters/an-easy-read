@@ -1,4 +1,4 @@
-CREATE TABLE articles (
+CREATE TABLE article (
     id INTEGER,
     article_title TEXT NOT NULL,
     article_description TEXT NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE articles (
     PRIMARY KEY(id)
 );
 
-CREATE TABLE authors (
+CREATE TABLE author (
     id INTEGER,
     article_id INTEGER NOT NULL,
     name TEXT NOT NULL,
@@ -16,43 +16,37 @@ CREATE TABLE authors (
     FOREIGN KEY(article_id) REFERENCES article(id)
 );
 
-CREATE TABLE sources (
+CREATE TABLE source (
+    id INTEGER,
     article_id INTEGER NOT NULL,
     website TEXT,
     source_author TEXT,
     source_title TEXT, 
     hyperlink TEXT,
+    PRIMARY KEY(id),
     FOREIGN KEY(article_id) REFERENCES article(id)
 );
 
-CREATE TABLE article_categories (
+CREATE TABLE article_category (
     article_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL,
     FOREIGN KEY(article_id) REFERENCES article(id),
-    FOREIGN KEY(category_id) REFERENCES categories(id)
+    FOREIGN KEY(category_id) REFERENCES category(id)
 );
 
-CREATE TABLE categories (
+CREATE TABLE category (
     id INTEGER,
     category TEXT NOT NULL,
     PRIMARY KEY(id)
 );
 
-CREATE TABLE paragraphs (
-    id INTEGER,
+CREATE TABLE summary (
     article_id INTEGER NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY(article_id) REFERENCES article(id)
-);
-
-CREATE TABLE summaries (
-    id INTEGER,
-    paragraphs_id INTEGER NOT NULL,
+    paragraph INTEGER NOT NULL,
     level INTEGER NOT NULL,
-    summary_id_name TEXT NOT NULL,
+    name TEXT NOT NULL,
     content TEXT NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY(paragraphs_id) REFERENCES paragraphs(id)
+    FOREIGN KEY(article_id) REFERENCES article(id)
 );
 
 PRAGMA foreign_keys = ON;
