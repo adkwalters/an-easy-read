@@ -30,8 +30,8 @@ def createArticle():
         # Get static form content
         article_title = request.form.get("article-form-title")
         article_description = request.form.get("article-form-description")
-        article_published = request.form.get("article-form-date-published")
-        article_updated = request.form.get("article-form-date-updated")
+        # article_published = request.form.get("article-form-date-published")
+        # article_updated = request.form.get("article-form-date-updated")
         source_name = request.form.get("article-form-source-name")
         source_author = request.form.get("article-form-source-author")
         source_title = request.form.get("article-form-source-title")
@@ -39,40 +39,19 @@ def createArticle():
         source_hyperlink = request.form.get("article-form-source-hyperlink")
 
         # Insert article metadata into database
-        article_insert = cursor.execute("INSERT INTO article (title, description, published, updated) VALUES (?, ?, ?, ?)", 
-            (article_title, article_description, article_published, article_updated))
+        article_insert = cursor.execute("INSERT INTO article (title, description, published) VALUES (?, ?, datetime('now'))", 
+            (article_title, article_description,))
+
+        # Old version with manual date entry
+        # article_insert = cursor.execute("INSERT INTO article (title, description, published, updated) VALUES (?, ?, ?, ?)", 
+        #     (article_title, article_description, article_published, article_updated))
 
         # Get article ID primary key to use as a foreign key in other tables
         article_id = article_insert.lastrowid
 
         # Insert source metadata into database
         cursor.execute("INSERT INTO source (article_id, name, author, title, contact, hyperlink) VALUES (?, ?, ?, ?, ?, ?)",
-            (article_id, source_name, source_author, source_title, source_contact, source_hyperlink ))
-
-
-        # # Basically re-created a FOREIGN KEY 
-        # # Check if source table exists
-        # source_exists = cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='source'")
-
-        # # If so, ...
-        # if (source_exists):
-        
-        #     # ...check if source ID exists
-        #     source_id_exists = cursor.execute("SELECT id FROM source WHERE website = (?)", source_website)
-            
-        #     # If so, ...
-        #     if (source_id_exists):
-        #         source_id = source_id_exists.fetchone()
-
-        #     # ...and insert source ID with source content into database
-        #     cursor.execute("INSERT INTO source (id, article_id, website, source_author, source_title, hyperlink) VALUES (?, ?, ?, ?, ?, ?)", 
-        #         (source_id, article_id, source_website, source_author, source_title, source_hyperlink))
-        
-        # else:
-        #     # ...else insert source content into database and allow auto ID assignment
-        #     cursor.execute("INSERT INTO source (article_id, website, source_author, source_title, hyperlink) VALUES (?, ?, ?, ?, ?)", 
-        #         (article_id, source_website, source_author, source_title, source_hyperlink))
-        
+            (article_id, source_name, source_author, source_title, source_contact, source_hyperlink ))        
 
         # Get paragraph content into database
         for key in request.form.keys():
