@@ -56,35 +56,18 @@
                 <label for="article-form-description">Description:<input id="article-form-description" name="article-form-description" type="text" required/></label>
                 <!-- <label for="article-form-date-updated">Date updated:<input id="article-form-date-updated" name="article-form-date-updated" type="text"></label> -->
                 <label for="article-form-categories">Categories:
-                    <div id="article-form-categories">
-                        <select name="article-form-categories">
-                            <option value="category-1">Category 1</option>
-                            <option value="category-2">Category 2</option>
-                            <option value="category-2">Category 2</option>
-                            <option value="category-2">Category 2</option>
-                            <option value="category-2">Category 2</option>
-                            <option value="category-2">Category 2</option>
-                            <option value="category-2">Category 2</option>
-                            <option value="category-2">Category 2</option>
-                            <option value="category-2">Category 2</option>
-                            <option value="category-2">Category 2</option>
-                            <option value="category-2">Category 2</option>
-                            <option value="category-2">Category 2</option>
-                            <!-- Options to be dynamically inserted -->
-                        </select>
-                        <select name="article-form-categories">
-                            <option value="category-1">Category 1</option>
-                            <option value="category-2">Category 2</option>
-                            <!-- Options to be dynamically inserted -->
-                        </select>
-                        <select name="article-form-categories">
-                            <option value="category-1">Category 1</option>
-                            <option value="category-2">Category 2</option>
-                            <!-- Options to be dynamically inserted -->
-                        </select>
+                    <!-- <input id="article-form-categories" name="article-form-categories" type="text" maxlength="15"/> -->
+                    <input list="article-form-categories" name="article-form-categories">
+                    <datalist id="article-form-categories"> 
+                        <option value="Category 1"></option>
+                        <option value="Category 2"></option>
+                    </datalist>
+                    <div>
+                        <button id="article-form-add-category-button" type="button" class="add-level">Add Category</button>
+                        <button id="article-form-del-category-button" type="button" class="del-level">Delete Category</button>
                     </div>
-                    <input name="article-form-categories" type="text" placeholder="Other"/>
-                    <!-- Inputs to be dynamically inserted -->
+                    <ul class="article-form-categories-list">
+                    </ul>
                 </label>
             </section>
             <section class="label-colour">
