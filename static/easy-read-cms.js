@@ -1,5 +1,8 @@
 // // || Article CMS 
     
+    // Initialise a categories array
+    const categoriesArray = [];
+
 
 // || Event Listeners 
 
@@ -11,19 +14,25 @@
         const articleFormCategoriesList = document.querySelector(".article-form-categories-list")
 
         // Upon click, add an element to the category list
-        addCategoryButton.addEventListener("click", e => {
+        addCategoryButton.addEventListener("click", () => {
             const newCategory = document.createElement("li");
             newCategory.setAttribute("class", "label-size label-colour");
-            
-            // Take the selected value and display it in the element
-            const categoryText = document.querySelector("input[name='article-form-categories']").value
 
+            // If a user selects a value, get that value... 
+            const categoryText = document.querySelector("input[name='article-form-categories']").value
             if (categoryText) {
-                newCategory.textContent = categoryText;
-                articleFormCategoriesList.appendChild(newCategory);
+
+                // If it exists, throw an alert
+                if (categoriesArray.includes(categoryText)) {
+                    alert("Category already exists");
+                //...else add it to the categories array and display it as a list element
+                } else {
+                    categoriesArray.push(categoryText);
+                    newCategory.textContent = categoryText;
+                    articleFormCategoriesList.appendChild(newCategory);
+                };                
             }
 
-            // How to avoid adding a category twice?
             // How to get the data of all categories added?
         })
 
