@@ -57,8 +57,8 @@
                 <!-- <label for="article-form-date-updated">Date updated:<input id="article-form-date-updated" name="article-form-date-updated" type="text"></label> -->
                 <label for="article-form-categories">Categories:
                     <!-- <input id="article-form-categories" name="article-form-categories" type="text" maxlength="15"/> -->
-                    <input list="article-form-categories" name="article-form-categories">
-                    <datalist id="article-form-categories"> 
+                    <input list="article-form-categories-input"> <!-- Remove name to stop form being input -->
+                    <datalist id="article-form-categories-input"> 
                         <option value="Category 1"></option>
                         <option value="Category 2"></option>
                     </datalist>
@@ -66,7 +66,7 @@
                         <button id="article-form-add-category-button" type="button" class="add-level">Add Category</button>
                         <button id="article-form-del-category-button" type="button" class="del-level">Delete Category</button>
                     </div>
-                    <ul class="article-form-categories-list">
+                    <ul id="article-form-categories-selected">
                     </ul>
                 </label>
             </section>

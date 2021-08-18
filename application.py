@@ -30,21 +30,25 @@ def createArticle():
         # Get static form content
         article_title = request.form.get("article-form-title")
         article_description = request.form.get("article-form-description")
-        # article_published = request.form.get("article-form-date-published")
         # article_updated = request.form.get("article-form-date-updated")
         source_name = request.form.get("article-form-source-name")
         source_author = request.form.get("article-form-source-author")
         source_title = request.form.get("article-form-source-title")
         source_contact = request.form.get("article-form-source-contact")
         source_hyperlink = request.form.get("article-form-source-hyperlink")
+        categories = request.form.getlist("article-form-categories-selected")
+        # categories = request.get_json() # Required for alternative approach using fetch
+
+
+        # For testing request form:
+
+        # for key in request.form.keys():
+        #     print(key, ":", request.form[key])
+    
 
         # Insert article metadata into database
         article_insert = cursor.execute("INSERT INTO article (title, description, published) VALUES (?, ?, datetime('now'))", 
-            (article_title, article_description,))
-
-        # Old version with manual date entry
-        # article_insert = cursor.execute("INSERT INTO article (title, description, published, updated) VALUES (?, ?, ?, ?)", 
-        #     (article_title, article_description, article_published, article_updated))
+            (article_title, article_description))
 
         # Get article ID primary key to use as a foreign key in other tables
         article_id = article_insert.lastrowid
@@ -64,6 +68,33 @@ def createArticle():
                 # Insert summary content into database
                 cursor.execute("INSERT INTO summary (article_id, paragraph, level, name, content) VALUES (?, ?, ?, ?, ?)",
                     (article_id, paragraph_id, key[-1], key, request.form[key]))
+
+        # Insert category data into databse
+        for category in categories:
+
+            # Check whether category exists
+            cursor.execute("SELECT 1 FROM category WHERE category = (?)", 
+                (category,))
+            
+            category_id = cursor.fetchone() # Cannot use .lastrowid as it is always truthy
+          
+            if category_id is None: 
+
+                # ...insert category into database
+                cursor.execute("INSERT INTO category (category) VALUES (?)", 
+                    (category,))
+
+                # ...get its ID
+                category_id = cursor.lastrowid
+
+                # ...and insert it with article ID into database
+                cursor.execute("INSERT INTO article_category (article_id, category_id) VALUES (?, ?)", 
+                    (article_id, category_id))
+            else:
+                
+                # ...and insert it with article ID into database
+                cursor.execute("INSERT INTO article_category (article_id, category_id) VALUES (?, ?)", 
+                    (article_id, category_id[0])) # indexing to get int within tuple
 
 
         connection.commit()

@@ -140,15 +140,14 @@
         margin: auto;
         padding: 1rem;
     }
-    .article-categories-list,
-    .article-form-categories-list {
+    #article-form-categories-selected {
         display: flex;
             flex-direction: row;
             flex-wrap: wrap;
             gap: 1rem;
         padding: 1rem;
     }
-    .article-form-categories-list>li {
+    #article-form-categories-selected>li {
         background: #DDD;
     }
     .article-categories-list>li:hover {
