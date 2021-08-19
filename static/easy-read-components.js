@@ -8,7 +8,6 @@ class CreateParagraph extends HTMLElement {
         // Get paragraph index from html attribute and set level index counter
         const paragraphIndex = this.getAttribute("data-paragraph-index");
 
-        
         // Prepare elements    
         const li = document.createElement("li");
 
@@ -36,6 +35,13 @@ class CreateParagraph extends HTMLElement {
         delLevelButton.setAttribute("type", "button");
         delLevelButton.textContent = "Delete Level";
 
+        // Attach elements to the DOM
+        this.appendChild(li);
+        li.appendChild(h3);
+        li.appendChild(ul);
+        li.appendChild(div);
+        div.appendChild(addLevelButton);
+        div.appendChild(delParaButton);
 
         // Add a level
         addLevelButton.addEventListener("click", () => {
@@ -59,7 +65,6 @@ class CreateParagraph extends HTMLElement {
             }
         });    
 
-
         // Delete a level (LIFO)
         delLevelButton.addEventListener("click", () => {
             let paragraph = this.querySelector("ul");
@@ -76,20 +81,10 @@ class CreateParagraph extends HTMLElement {
             }           
         });
 
-
         // Delete this paragraph
         delParaButton.addEventListener("click", () => {
             this.remove();
         }); 
-
-        
-        // Attach elements to the DOM
-        this.appendChild(li);
-        li.appendChild(h3);
-        li.appendChild(ul);
-        li.appendChild(div);
-        div.appendChild(addLevelButton);
-        div.appendChild(delParaButton);
     }
 }
 customElements.define("create-paragraph", CreateParagraph);

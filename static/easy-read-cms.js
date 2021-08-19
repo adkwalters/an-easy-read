@@ -49,7 +49,6 @@ addCategoryButton.addEventListener("click", () => {
     }
 })
 
-
 // Delete ultimate category (LIFO)
 delCategoryButton.addEventListener("click", () => {
     if (categoryDisplay.firstChild) {
@@ -66,7 +65,6 @@ delCategoryButton.addEventListener("click", () => {
 // Prepare elements
 const articleContent = document.getElementById("article-form-content");
 const addParagraphButton = document.getElementById("add-paragraph");
-
 
 // Add paragraph
 addParagraphButton.addEventListener("click", () => {
