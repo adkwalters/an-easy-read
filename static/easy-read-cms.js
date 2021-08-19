@@ -73,4 +73,17 @@ addParagraphButton.addEventListener("click", () => {
     let paragraphIndex = paragraphs.length + 1; // Non zero-indexing
     paragraph.setAttribute("data-paragraph-index", paragraphIndex); 
     articleContent.appendChild(paragraph);
+
+    // Display only the ultimate delete paragraph button (LIFO)
+    let prevParagraph = paragraph.previousElementSibling;
+    if (prevParagraph) {
+        delButton = prevParagraph.querySelector(".del-paragraph");
+        if (delButton) {
+            // delButton.classList.add("hidden");
+            delButton.style.visibility = "hidden"; 
+
+            // nb. setting the element to hidden retails its event listeners
+            //     This is important when deleting paragraphs 
+        }
+    }
 });
