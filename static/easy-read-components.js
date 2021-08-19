@@ -43,11 +43,14 @@ class CreateParagraph extends HTMLElement {
             // Get number of levels currently showing for paragraph
             const currentCustomLevels = this.getElementsByTagName("create-level");
 
-            // If a custom levels exist, switch delete option from paragraph to level
-            if (currentCustomLevels.length == 1) { // Switch only once
-                div.removeChild(delParaButton);
+            // If a custom level is the first added, switch delete paragraph to delete level
+            if (currentCustomLevels.length === 1) {
                 div.appendChild(delLevelButton);
-            } 
+                
+                if (this.querySelector(".del-paragraph")) {
+                    div.removeChild(delParaButton);
+                }
+            }
         });
 
         // Add delete paragraph button
@@ -59,9 +62,11 @@ class CreateParagraph extends HTMLElement {
         // Delete custom paragraph
         delParaButton.addEventListener("click", () => {
             // If there is a previous paragraph, display its delete paragraph button
-            if (this.previousElementSibling) {
-                this.previousElementSibling.querySelector(".del-paragraph").classList.remove("hidden");
-            }
+            // if (this.previousElementSibling) {                
+            //     let controls = this.previousElementSibling.querySelector(".article-form-summary-controls");
+            //     controls.removeChild(delLevelButton);
+            //     controls.appendChild(delParaButton);
+            // }
             this.remove();
         });     
 
@@ -71,11 +76,11 @@ class CreateParagraph extends HTMLElement {
         delLevelButton.setAttribute("type", "button");
         delLevelButton.textContent = "Delete Level";
 
-        // Add event listener for delete level functionality
+        // Upon click, remove the ultimate level (LIFO)
         delLevelButton.addEventListener("click", () => {
             const customLevel = this.getElementsByTagName("create-level");
-            ul.removeChild(customLevel[customLevel.length - 1]); // Ultimate level (LIFO)
-            levelIndex--;
+            ul.removeChild(customLevel[customLevel.length - 1]); 
+            levelIndex--; // decrement level counter for proper labelling
 
             // If no levels exist, switch delete option from level to paragraph
             if (customLevel.length === 0) {
@@ -131,6 +136,20 @@ class CreateLevel extends HTMLElement {
 
 }
 customElements.define("create-level", CreateLevel);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

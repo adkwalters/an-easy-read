@@ -37,10 +37,8 @@
                     let newCategory = document.createElement("li");
                     newCategory.setAttribute("class", "label-size label-colour");
 
-                    //...add the category to the categories array
+                    //...add the category to the categories array and display area
                     categoriesArray.push(articleFormCategoriesInput.value);
-
-                    //...add the category to the display area
                     newCategory.textContent = articleFormCategoriesInput.value;
                     articleFormCategoriesSelected.appendChild(newCategory);
 
@@ -51,37 +49,6 @@
                     hiddenCategoryInput.setAttribute("value", articleFormCategoriesInput.value)
                     hiddenCategoryInput.value = articleFormCategoriesInput.value;
                     articleForm.appendChild(hiddenCategoryInput);
-                    
-                    
-                    // The following is an alternative that uses fetch()
-                    //
-                    // I sent a long time on this and it works in a way that I don't want
-                    // 
-                    // I tested:
-                    //      - urls for my local host
-                    //      - header content-types
-                    //      - body datatypes and JSON
-                    //      - including and omitting promises
-                    //
-                    // Eventually, I found that posting to /create-article was returning html not JSON
-                    // It works but it triggers createArticle() on the server when fetched 
-                    //      resulting in sending separate forms for each category 
-                    //      yet none being sent with the actual form
-                    //
-                    // I decided to simply add the data to hidden inputs in the form
-
-
-                    // fetch("/add-category", {
-                    //     method: "POST", 
-                    //     headers: {
-                    //         "Content-Type": "application/json" 
-                    //     },
-                    //     body: JSON.stringify(categoriesArray)
-                    // })
-                    // .then(response => response.text()) // Will NOT work with response.JSON (response is html) 
-                    // .then(json => {
-                    //     console.log(json);
-                    // });
                 }; 
             }
         })
@@ -119,13 +86,15 @@
             //...and add it to the DOM
             articleContent.appendChild(newParagraph);
 
-            // Hide all but the ultimate paragraph's delete button (enforces LIFO)
-            let allDelParaButtons = document.getElementsByClassName("del-paragraph");
-            let previousDelParaButtons = Array.from(allDelParaButtons).slice(0, -1); // Excludes ultimate
-            // n.b hiding rather than deleting the button keeps its event listener
-            for (let button of previousDelParaButtons) {
-                button.classList.add("hidden");
-            }
+            // // Hide all but the ultimate paragraph's delete button (enforces LIFO)
+            // let allDelParaButtons = document.getElementsByClassName("del-paragraph");
+            // let previousDelParaButtons = Array.from(allDelParaButtons).slice(0, -1); // Excludes ultimate
+            // // n.b hiding rather than deleting the button keeps its event listener
+            // for (let button of previousDelParaButtons) {
+            //     // button.classList.add("hidden");
+            //     // console.log(button.parentNode)
+            //     // button.remove();
+            // }
         });
     }
   
