@@ -83,14 +83,9 @@ class CreateParagraph extends HTMLElement {
 
         // Delete this paragraph
         delParaButton.addEventListener("click", () => {
-            // Display only the ultimate delete paragraph button (LIFO)
-            let prevParagraph = this.previousElementSibling;
-            if (prevParagraph) {
-                delButton = prevParagraph.querySelector(".del-paragraph");
-                if (delButton) {
-                    delButton.style.visibility = "visible"; 
-                }
-            }
+            // Display previous paragraph's delete paragraph button
+            updateDelButton(this, "visible")
+            // Remove paragraph
             this.remove();
         }); 
     }

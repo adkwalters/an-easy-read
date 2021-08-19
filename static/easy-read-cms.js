@@ -1,9 +1,7 @@
-// // || Article CMS 
-    
+// || Categories
+
 // Initialise a categories array
 const categoriesArray = [];
-
-// || Categories
 
 // Prepare elements
 const articleForm = document.querySelector("#article-form");
@@ -66,6 +64,21 @@ delCategoryButton.addEventListener("click", () => {
 const articleContent = document.getElementById("article-form-content");
 const addParagraphButton = document.getElementById("add-paragraph");
 
+
+// Display the proper delete button (paragraph or level)
+function updateDelButton(paragraph, visibility) {
+    let prevParagraph = paragraph.previousElementSibling;
+    if (prevParagraph) {
+        delButton = prevParagraph.querySelector(".del-paragraph");
+        if (delButton) {
+            delButton.style.visibility = visibility; 
+            // nb. setting the element to hidden retails its event listeners
+            //     This is important when deleting paragraphs 
+        }
+    }
+}
+
+
 // Add paragraph
 addParagraphButton.addEventListener("click", () => {
     let paragraph = document.createElement("create-paragraph");
@@ -74,16 +87,6 @@ addParagraphButton.addEventListener("click", () => {
     paragraph.setAttribute("data-paragraph-index", paragraphIndex); 
     articleContent.appendChild(paragraph);
 
-    // Display only the ultimate delete paragraph button (LIFO)
-    let prevParagraph = paragraph.previousElementSibling;
-    if (prevParagraph) {
-        delButton = prevParagraph.querySelector(".del-paragraph");
-        if (delButton) {
-            // delButton.classList.add("hidden");
-            delButton.style.visibility = "hidden"; 
-
-            // nb. setting the element to hidden retails its event listeners
-            //     This is important when deleting paragraphs 
-        }
-    }
+    // Hide previous button
+    updateDelButton(paragraph, "hidden")
 });
