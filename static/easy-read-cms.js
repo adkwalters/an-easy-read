@@ -65,17 +65,36 @@ const articleContent = document.getElementById("article-form-content");
 const addParagraphButton = document.getElementById("add-paragraph");
 
 
-// Display the proper delete button (paragraph or level)
-function updateDelButton(paragraph, visibility) {
+// // Display the proper delete button (paragraph or level)
+// function updateDelButton(paragraph, visibility) {
+//     let prevParagraph = paragraph.previousElementSibling;
+//     if (prevParagraph) {
+//         delButton = prevParagraph.querySelector(".del-paragraph");
+//         if (delButton) {
+//             delButton.style.visibility = visibility; 
+//             // nb. setting the element to hidden retails its event listeners
+//             //     This is important when deleting paragraphs 
+//         }
+//     }
+// }
+
+function removeButton(paragraph, button) {
     let prevParagraph = paragraph.previousElementSibling;
     if (prevParagraph) {
-        delButton = prevParagraph.querySelector(".del-paragraph");
-        if (delButton) {
-            delButton.style.visibility = visibility; 
-            // nb. setting the element to hidden retails its event listeners
-            //     This is important when deleting paragraphs 
-        }
+        button.remove()
+        console.log("removed", button) 
     }
+}
+
+function addButton(paragraph, button) {
+    let nextParagraph = paragraph.nextElementSibling;
+    let nextNextParagraph = nextParagraph.nextElementSibling;
+
+    if (!nextNextParagraph) {
+        let controls = paragraph.querySelector("div");
+        controls.appendChild(button);
+        console.log("added", button) 
+    } 
 }
 
 
@@ -88,5 +107,19 @@ addParagraphButton.addEventListener("click", () => {
     articleContent.appendChild(paragraph);
 
     // Hide previous button
-    updateDelButton(paragraph, "hidden")
+    // updateDelButton(paragraph, "hidden")
+
+    // let prevParagraph = paragraph.previousElementSibling;
+    // if (prevParagraph) {
+    //     delButton = prevParagraph.querySelector(".del-paragraph");
+    //     if (delButton) {
+    //         delButton.remove();
+    //     }
+    // }
+
+    let prevParagraph = paragraph.previousElementSibling;
+    if (prevParagraph) {
+        let delButton = prevParagraph.querySelector(".del-paragraph");
+        removeButton(paragraph, delButton);
+    }
 });

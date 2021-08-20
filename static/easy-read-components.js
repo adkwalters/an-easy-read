@@ -70,21 +70,23 @@ class CreateParagraph extends HTMLElement {
             let paragraph = this.querySelector("ul");
             paragraph.removeChild(paragraph.lastChild);
             
-            // If no levels exist...
-            if (!paragraph.firstChild) {
-                //...add a button to delete paragraph
-                div.appendChild(delParaButton);
-                //...remove the button to delete level, if it has one
-                if (this.querySelector(".del-level")) {
-                    div.removeChild(delLevelButton);
+            // If no levels exist and the paragraph is the ultimate paragraph
+            if (paragraph.childElementCount === 0) { 
+                if (!this.nextElementSibling) {
+                    //...add a button to delete paragraph
+                    div.appendChild(delParaButton); 
                 }
-            }           
+                //...remove the button to delete level
+                div.removeChild(delLevelButton);
+            }        
         });
 
         // Delete this paragraph
         delParaButton.addEventListener("click", () => {
-            // Display previous paragraph's delete paragraph button
-            updateDelButton(this, "visible")
+            // Add button to delete paragraph to previous paragraph         
+            let prevParagraph = this.previousElementSibling;
+            addButton(prevParagraph, delParaButton);
+            
             // Remove paragraph
             this.remove();
         }); 
