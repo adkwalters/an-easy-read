@@ -19,7 +19,10 @@
     html {
         font-size: 100%;
     }
-    body {
+    body, 
+    input, 
+    textarea, 
+    button {
         background-color: #fbfdfe;
         font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
     }
@@ -57,8 +60,16 @@
         background: #EEE;
         border-radius: 10px;
     }
+    .button {
+        padding: 0.4rem 0.8rem;
+        background: #fbfdfe;
+        border: 1px solid #DDD;
+        border-radius: 10px;
+        font-size: 1.1rem;
+    }
     .hidden {
         height: 1px;
+        width: 1px;
         visibility: hidden;
     }
 
@@ -141,12 +152,11 @@
         margin: auto;
         padding: 1rem;
     }
-    #article-form-categories-selected {
+    .article-categories-list {
         display: flex;
             flex-direction: row;
             flex-wrap: wrap;
             gap: 1rem;
-        padding: 1rem;
     }
     #article-form-categories-selected>li {
         background: #DDD;
@@ -313,30 +323,45 @@
         font-size: 1.1rem;
     }
     
+    /* - Category control */
+    #article-form-categories-selected {
+        display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 1rem;
+        padding: 1rem;
+    }
+
     /* - Paragraph control */
-    .article-form-control-panel {
+    .article-content-controls {
         display: flex;
             justify-content: space-between;
     }
-    .add-level {
-        padding: 0.4rem 0.8rem;
+    .article-content-controls-left {
+        display: flex;
+        position: relative;
+        min-height: 2.2rem;
     }
-    .del-paragraph,
-    .del-level {
-        float: right;
-        padding: 0.3rem 0.6rem;
-        color: #DDD;
-        }
-    .add-level,
-    .del-paragraph,
-    .del-level {
-        background: #fbfdfe;
-        border: 1px solid #DDD;
-        border-radius: 10px;
-        font-size: 1.1rem;
+    .add-menu {
+        position: absolute;
+            top: 0; 
+            left: 100%;
+        display: flex;
+            gap: 1.5rem;
+            align-content: center;
     }
-    .del-paragraph:hover,
-    .del-level:hover {
+    .side-list {
+        display: none;
+        cursor: pointer;
+    }
+    .add-menu:hover .side-list {
+        display: block;
+    }
+    .del-button {
+        width: max-content;
+        color: #DDD;        
+    }
+    .del-button:hover {
         color: red;
     }
     #submit-form-button {

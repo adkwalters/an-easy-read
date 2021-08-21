@@ -77,7 +77,7 @@ const addParagraphButton = document.getElementById("add-paragraph");
 
 // Hide or show delete-paragraph button
 function updateDelParaButton(paragraph, update) {
-    let button = paragraph.querySelector(".del-paragraph");
+    let button = paragraph.querySelector(".del-para-button");
     if (button) {
         if (update == "hide") {
             button.classList.add("hidden");

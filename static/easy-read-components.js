@@ -18,30 +18,57 @@ class CreateParagraph extends HTMLElement {
         ul.setAttribute("data-paragraph-index", paragraphIndex);
 
         const div = document.createElement("div");
-        div.setAttribute("class", "article-form-summary-controls")
+        div.setAttribute("class", "article-content-controls")
 
-        const addLevelButton = document.createElement("button");
-        addLevelButton.setAttribute("class", "add-level");
-        addLevelButton.setAttribute("type", "button");
-        addLevelButton.textContent = "Add Level";    
+        const divLeft = document.createElement("div");
+        divLeft.setAttribute("class", "article-content-controls-left")
 
+        const divRight = document.createElement("div");
+        divRight.setAttribute("class", "article-content-controls-right")
+
+        const addButton = document.createElement("button");
+        addButton.setAttribute("class", "button");
+        addButton.setAttribute("type", "button");
+        addButton.textContent = "Add";
+        
+        const addMenu = document.createElement("ul");
+        addMenu.setAttribute("class", "button add-menu")
+        addMenu.textContent = "Add...";  
+
+        const addLevelButton = document.createElement("li");
+        addLevelButton.setAttribute("class", "side-list add-level");
+        addLevelButton.textContent = "level";  
+
+        const addHeaderButton = document.createElement("li");
+        addHeaderButton.setAttribute("class", "side-list add-header");
+        addHeaderButton.textContent = "header";  
+
+        const addImageButton = document.createElement("li");
+        addImageButton.setAttribute("class", "side-list add-image");
+        addImageButton.textContent = "image"; 
+         
+        const delLevelButton = document.createElement("button");
+        delLevelButton.setAttribute("class", "button del-button del-level-button");
+        delLevelButton.setAttribute("type", "button");
+        delLevelButton.textContent = "Delete Level";          
+        
         const delParaButton = document.createElement("button");
-        delParaButton.setAttribute("class", "del-paragraph");
+        delParaButton.setAttribute("class", "button del-button del-para-button");
         delParaButton.setAttribute("type", "button");
         delParaButton.textContent = "Delete Paragraph";
-
-        const delLevelButton = document.createElement("button");
-        delLevelButton.setAttribute("class", "del-level");
-        delLevelButton.setAttribute("type", "button");
-        delLevelButton.textContent = "Delete Level";
 
         // Attach elements to the DOM
         this.appendChild(li);
         li.appendChild(h3);
         li.appendChild(ul);
         li.appendChild(div);
-        div.appendChild(addLevelButton);
-        div.appendChild(delParaButton);
+            div.appendChild(divLeft);
+                divLeft.appendChild(addMenu);
+                    addMenu.appendChild(addLevelButton);
+                    addMenu.appendChild(addHeaderButton);
+                    addMenu.appendChild(addImageButton);
+            div.appendChild(delParaButton);
+ 
 
         // Add a level to the article paragraph
         addLevelButton.addEventListener("click", () => {
@@ -58,7 +85,7 @@ class CreateParagraph extends HTMLElement {
                 //...hide the delete-paragraph button
                 updateDelParaButton(this, "hide")
                 //...add a delete-level button as a first child
-                div.prepend(delLevelButton); 
+                div.appendChild(delLevelButton); 
             }
         });    
 
@@ -127,7 +154,7 @@ class CreateLevel extends HTMLElement {
         // Attach elements to the DOM
         this.appendChild(li);
         li.appendChild(label);
-        label.appendChild(textarea);
+            label.appendChild(textarea);
     }
 }
 customElements.define("create-level", CreateLevel);
@@ -204,13 +231,13 @@ class SummaryParagraph extends HTMLElement {
         // Attach elements to the shadow DOM
         shadow.appendChild(styleLink);
         shadow.appendChild(wrapper);
-        wrapper.appendChild(incButton);
-        wrapper.appendChild(decButton);
-        wrapper.appendChild(summaryUL);
-        summaryUL.appendChild(summaryLevel1);
-        summaryUL.appendChild(summaryLevel2);
-        summaryUL.appendChild(summaryLevel3);
-        summaryLevel1.appendChild(templateSummaryContent.cloneNode(true));
+            wrapper.appendChild(incButton);
+            wrapper.appendChild(decButton);
+            wrapper.appendChild(summaryUL);
+                summaryUL.appendChild(summaryLevel1);
+                summaryUL.appendChild(summaryLevel2);
+                summaryUL.appendChild(summaryLevel3);
+                    summaryLevel1.appendChild(templateSummaryContent.cloneNode(true));
     }
     // Is this the proper way to define methods? 
     // It's not allowing function or this keywords to be declared
@@ -248,7 +275,7 @@ class SummaryHeader extends HTMLElement {
 
         // Attach elements to the shadow DOM
         this.appendChild(header);
-        header.appendChild(templateHeaderContent.cloneNode(true));
+            header.appendChild(templateHeaderContent.cloneNode(true));
     }
 }
 customElements.define("summary-header", SummaryHeader);
