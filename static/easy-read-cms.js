@@ -12,37 +12,37 @@ const categoryDisplay = document.getElementById("article-form-categories-selecte
 
 
 // Clear category input (reset upon click) 
-categoryInput.addEventListener("focus", function() { // Non-arrow for this() binding
+categoryInput.addEventListener("focus", function() { // Non-arrow func for this. binding
     this.value = "";
 });
 
 
 // Add a category
 addCategoryButton.addEventListener("click", () => {
-
-    // If an author enters or selects a category...
+    // If an author has entered or selected a category...
     if (categoryInput.value) {
-
-        // If the category already exists, remind the author...
-        if (categoriesArray.includes(categoryInput.value)) {
-            alert("Category already exists");
-        } else {
-            //...append the categories array
+        // ...and if that category does not already exist...
+        if (!categoriesArray.includes(categoryInput.value)) {
+            //...append it to the categories array
             categoriesArray.push(categoryInput.value);
 
-            //...display category name in display area
+            //...display its name in the display area
             let newCategory = document.createElement("li");
             newCategory.setAttribute("class", "label-size label-colour");
             newCategory.textContent = categoryInput.value;
             categoryDisplay.appendChild(newCategory);
 
-            //...add a hidden form input to hold category value
-            let hiddenCategoryInput = document.createElement("input")
-            hiddenCategoryInput.setAttribute("type", "hidden")
-            hiddenCategoryInput.setAttribute("name", "article-form-categories-selected")
-            hiddenCategoryInput.setAttribute("value", categoryInput.value)
-            hiddenCategoryInput.value = categoryInput.value;
-            articleForm.appendChild(hiddenCategoryInput);
+            //...add a hidden form input to hold its value
+            let hiddenInput = document.createElement("input")
+            hiddenInput.setAttribute("type", "hidden")
+            hiddenInput.setAttribute("name", "article-form-categories-selected")
+            hiddenInput.setAttribute("value", categoryInput.value)
+            hiddenInput.value = categoryInput.value;
+            articleForm.appendChild(hiddenInput);
+        } 
+        else {   
+             //...remind the author        
+            alert(`${categoryInput.value} has already been selected`);
         }; 
     }
 })
@@ -50,9 +50,9 @@ addCategoryButton.addEventListener("click", () => {
 // Delete ultimate category (LIFO)
 delCategoryButton.addEventListener("click", () => {
     if (categoryDisplay.firstChild) {
-        categoriesArray.pop(); //...pop off array
-        categoryDisplay.lastChild.remove(); //...remove from display area
-        articleForm.lastChild.remove(); //...remove from article form
+        categoriesArray.pop(); //...pop it off the array
+        categoryDisplay.lastChild.remove(); //...remove it from the display area
+        articleForm.lastChild.remove(); //...remove it from the article form
     }
 })
 
@@ -65,40 +65,30 @@ const articleContent = document.getElementById("article-form-content");
 const addParagraphButton = document.getElementById("add-paragraph");
 
 
-// // Display the proper delete button (paragraph or level)
-// function updateDelButton(paragraph, visibility) {
-//     let prevParagraph = paragraph.previousElementSibling;
-//     if (prevParagraph) {
-//         delButton = prevParagraph.querySelector(".del-paragraph");
-//         if (delButton) {
-//             delButton.style.visibility = visibility; 
-//             // nb. setting the element to hidden retails its event listeners
-//             //     This is important when deleting paragraphs 
-//         }
-//     }
-// }
+// N.B.
+// The following function has been put in place to enforce LIFO for paragraph 
+// deletion. If previous paragraphs are deleted otherwise, indexing from html
+// through to SQL will be non-contiguous. 
 
-function removeButton(paragraph, button) {
-    let prevParagraph = paragraph.previousElementSibling;
-    if (prevParagraph) {
-        button.remove()
-        console.log("removed", button) 
+// Furthermore, the delete-paragraph buttons are hidden, rather than removed
+// from the DOM in order to preserve their event-listeners. In a simple codepen,
+// I can move buttons around with their event listeners. However, when I move
+// a delete-paragraph button to the preceding paragraph, it becomes unclickable.
+
+// Hide or show delete-paragraph button
+function updateDelParaButton(paragraph, update) {
+    let button = paragraph.querySelector(".del-paragraph");
+    if (button) {
+        if (update == "hide") {
+            button.classList.add("hidden");
+        } else {
+            button.classList.remove("hidden");
+        }
     }
 }
 
-function addButton(paragraph, button) {
-    let nextParagraph = paragraph.nextElementSibling;
-    let nextNextParagraph = nextParagraph.nextElementSibling;
 
-    if (!nextNextParagraph) {
-        let controls = paragraph.querySelector("div");
-        controls.appendChild(button);
-        console.log("added", button) 
-    } 
-}
-
-
-// Add paragraph
+// Add a paragraph to the article
 addParagraphButton.addEventListener("click", () => {
     let paragraph = document.createElement("create-paragraph");
     let paragraphs = document.getElementsByTagName("create-paragraph");
@@ -106,20 +96,9 @@ addParagraphButton.addEventListener("click", () => {
     paragraph.setAttribute("data-paragraph-index", paragraphIndex); 
     articleContent.appendChild(paragraph);
 
-    // Hide previous button
-    // updateDelButton(paragraph, "hidden")
-
-    // let prevParagraph = paragraph.previousElementSibling;
-    // if (prevParagraph) {
-    //     delButton = prevParagraph.querySelector(".del-paragraph");
-    //     if (delButton) {
-    //         delButton.remove();
-    //     }
-    // }
-
+    // Hide previous paragraph's delete-paragraph button (enforce LIFO)
     let prevParagraph = paragraph.previousElementSibling;
     if (prevParagraph) {
-        let delButton = prevParagraph.querySelector(".del-paragraph");
-        removeButton(paragraph, delButton);
+        updateDelParaButton(prevParagraph, "hide")
     }
 });

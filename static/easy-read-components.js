@@ -43,7 +43,7 @@ class CreateParagraph extends HTMLElement {
         div.appendChild(addLevelButton);
         div.appendChild(delParaButton);
 
-        // Add a level
+        // Add a level to the article paragraph
         addLevelButton.addEventListener("click", () => {
             let level = document.createElement("create-level"); 
             let levels = this.getElementsByTagName("create-level")
@@ -54,40 +54,42 @@ class CreateParagraph extends HTMLElement {
             ul.appendChild(level);
                
             // If this is the first level...
-            let paragraph = this.querySelector("ul");
-            if (paragraph.childElementCount === 1) {
-                //...add a button to delete level 
-                div.appendChild(delLevelButton);
-                //...remove the button to delete paragraph, if it has one
-                if (this.querySelector(".del-paragraph")) {
-                    div.removeChild(delParaButton);
-                }
+            if (ul.childElementCount === 1) {
+                //...hide the delete-paragraph button
+                updateDelParaButton(this, "hide")
+                //...add a delete-level button as a first child
+                div.prepend(delLevelButton); 
             }
         });    
 
-        // Delete a level (LIFO)
+        // Delete the ultimate level from the article paragraph 
         delLevelButton.addEventListener("click", () => {
-            let paragraph = this.querySelector("ul");
-            paragraph.removeChild(paragraph.lastChild);
-            
-            // If no levels exist and the paragraph is the ultimate paragraph
-            if (paragraph.childElementCount === 0) { 
-                if (!this.nextElementSibling) {
-                    //...add a button to delete paragraph
-                    div.appendChild(delParaButton); 
-                }
-                //...remove the button to delete level
+            ul.removeChild(ul.lastChild); 
+            // If no level exists...
+            if (ul.childElementCount === 0) {               
+                //...remove the delete-level button
                 div.removeChild(delLevelButton);
+                //...show the delete-paragraph button
+                if (!this.nextElementSibling) {
+                    updateDelParaButton(this, "show")
+                }
             }        
         });
 
         // Delete this paragraph
         delParaButton.addEventListener("click", () => {
-            // Add button to delete paragraph to previous paragraph         
-            let prevParagraph = this.previousElementSibling;
-            addButton(prevParagraph, delParaButton);
-            
-            // Remove paragraph
+            // If there is a previous paragraph...         
+            let prevParagraph = this.previousElementSibling
+            if (prevParagraph) {
+                //...and if no levels exist in that paragraph...
+                let prevParagraphUl = prevParagraph.querySelector("ul");
+                let prevParagraphLevels = prevParagraphUl.childElementCount;
+                if (prevParagraphLevels === 0) {
+                    //...show it's delete-paragraph button   
+                    updateDelParaButton(prevParagraph, "show")
+                }
+            }        
+            // Remove this paragraph
             this.remove();
         }); 
     }
@@ -160,11 +162,12 @@ class SummaryParagraph extends HTMLElement {
         // Create a shadow root
         const shadow = this.attachShadow({mode: "open"});
 
-        // Bind 'this' keyword to custom element, not the object that triggers the callback
+        // Bind 'this' keyword to custom element, 
+        // not the object that triggers the callback
         this.increase = this.increase.bind(this);
         this.decrease = this.decrease.bind(this);
 
-        // Create elements for summary text
+        // Prepare elements
         const wrapper = document.createElement("div");
         wrapper.setAttribute("class", "summary-paragraph label-colour");
 
@@ -179,7 +182,6 @@ class SummaryParagraph extends HTMLElement {
         const summaryLevel3 = document.createElement("li");
         summaryLevel3.setAttribute("class", "summary level-3");
 
-        // Create elements for increase and decrease buttons and add event listeners
         const incButton = document.createElement("button");
         incButton.setAttribute("class", "prev");
         incButton.innerHTML = "&#10094;";
@@ -210,8 +212,9 @@ class SummaryParagraph extends HTMLElement {
         summaryUL.appendChild(summaryLevel3);
         summaryLevel1.appendChild(templateSummaryContent.cloneNode(true));
     }
-
-    increase() {  // Is this the proper way to define methods? It's not allowing the function/this keywords first
+    // Is this the proper way to define methods? 
+    // It's not allowing function or this keywords to be declared
+    increase() {  
         console.log("increase this summary");
         console.log(this);
     }
@@ -235,7 +238,7 @@ class SummaryHeader extends HTMLElement {
         // in a connectedCallback(). If it is, the slot default
         // values are shown along the custom values
 
-        // Create elements
+        // Prepare elements
         const header = document.createElement("h2");
         header.setAttribute("class", "summary-header");
 

@@ -57,6 +57,10 @@
         background: #EEE;
         border-radius: 10px;
     }
+    .hidden {
+        height: 1px;
+        visibility: hidden;
+    }
 
 
 
