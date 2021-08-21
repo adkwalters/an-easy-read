@@ -12,6 +12,7 @@ class CreateParagraph extends HTMLElement {
         const li = document.createElement("li");
 
         const h3 = document.createElement("h3");
+        h3.setAttribute("class", "paragraph-header");
         h3.innerHTML = `Paragraph ${paragraphIndex}`; 
 
         const ul = document.createElement("ul");
@@ -22,9 +23,6 @@ class CreateParagraph extends HTMLElement {
 
         const divLeft = document.createElement("div");
         divLeft.setAttribute("class", "article-content-controls-left")
-
-        const divRight = document.createElement("div");
-        divRight.setAttribute("class", "article-content-controls-right")
 
         const addButton = document.createElement("button");
         addButton.setAttribute("class", "button");
@@ -48,12 +46,12 @@ class CreateParagraph extends HTMLElement {
         addImageButton.textContent = "image"; 
          
         const delLevelButton = document.createElement("button");
-        delLevelButton.setAttribute("class", "button del-button del-level-button");
+        delLevelButton.setAttribute("class", "button delete del-level-button");
         delLevelButton.setAttribute("type", "button");
-        delLevelButton.textContent = "Delete Level";          
+        delLevelButton.textContent = "Delete Level";   
         
         const delParaButton = document.createElement("button");
-        delParaButton.setAttribute("class", "button del-button del-para-button");
+        delParaButton.setAttribute("class", "button delete del-para-button");
         delParaButton.setAttribute("type", "button");
         delParaButton.textContent = "Delete Paragraph";
 
@@ -70,7 +68,7 @@ class CreateParagraph extends HTMLElement {
             div.appendChild(delParaButton);
  
 
-        // Add a level to the article paragraph
+        // Add a level to the this paragraph
         addLevelButton.addEventListener("click", () => {
             let level = document.createElement("create-level"); 
             let levels = this.getElementsByTagName("create-level")
@@ -87,31 +85,52 @@ class CreateParagraph extends HTMLElement {
                 //...add a delete-level button as a first child
                 div.appendChild(delLevelButton); 
             }
-        });    
+        });   
+        
 
-        // Delete the ultimate level from the article paragraph 
+        // Add a header to this paragraph    
+        addHeaderButton.addEventListener("click", () => {
+            let currentHeaders = this.querySelector("create-header");
+            if (!currentHeaders) {
+                let header = document.createElement("create-header")
+                let menuLabel = this.querySelector(".add-header");
+                menuLabel.classList.add("unavailable")
+                header.setAttribute("data-paragraph-index", paragraphIndex);
+                li.insertBefore(header, ul)
+                updateDelParaButton(this, "hide") 
+            } else {
+                alert("A header has already been added for this paragraph")
+            }
+        });
+
+
+        // Delete the ultimate level from this paragraph 
         delLevelButton.addEventListener("click", () => {
             ul.removeChild(ul.lastChild); 
-            // If no level exists...
+            // If no level exists in this paragraph...
             if (ul.childElementCount === 0) {               
                 //...remove the delete-level button
-                div.removeChild(delLevelButton);
-                //...show the delete-paragraph button
-                if (!this.nextElementSibling) {
+                delLevelButton.remove();
+                //...and if this is the ultimate paragraph and no header exists...
+                let header = this.querySelector("create-header");
+                if (!this.nextElementSibling && !header) {
+                    //...show the delete-paragraph button
                     updateDelParaButton(this, "show")
                 }
             }        
         });
+
 
         // Delete this paragraph
         delParaButton.addEventListener("click", () => {
             // If there is a previous paragraph...         
             let prevParagraph = this.previousElementSibling
             if (prevParagraph) {
-                //...and if no levels exist in that paragraph...
+                //...and if no level or header exists in that paragraph...
                 let prevParagraphUl = prevParagraph.querySelector("ul");
                 let prevParagraphLevels = prevParagraphUl.childElementCount;
-                if (prevParagraphLevels === 0) {
+                let header = prevParagraph.querySelector("create-header");
+                if (prevParagraphLevels === 0 && !header) {
                     //...show it's delete-paragraph button   
                     updateDelParaButton(prevParagraph, "show")
                 }
@@ -158,6 +177,66 @@ class CreateLevel extends HTMLElement {
     }
 }
 customElements.define("create-level", CreateLevel);
+
+
+
+// Create a custom class for each level in the article CMS
+class CreateHeader extends HTMLElement {
+    constructor() {
+        super();
+    }
+    connectedCallback() {    
+
+        // Generate label name   
+        const paragraphIndex = this.getAttribute("data-paragraph-index");
+        const labelName = `paragraph-${paragraphIndex}-header`
+        
+        // Prepare elements       
+        const label = document.createElement("label");
+        label.setAttribute("for", labelName);
+        label.textContent = "Header:" 
+       
+        const textarea = document.createElement("textarea");
+        textarea.setAttribute("name", labelName);
+        textarea.setAttribute("class", "form-text form-text-header");
+
+        const delHeaderButton = document.createElement("button");
+        delHeaderButton.setAttribute("class", "button delete del-header-button");
+        delHeaderButton.setAttribute("type", "button");
+        delHeaderButton.textContent = "Delete Header";  
+
+        // Attach elements to the DOM
+        this.appendChild(label)
+        this.appendChild(textarea)
+        this.appendChild(delHeaderButton)
+
+        // Delete header
+        delHeaderButton.addEventListener("click", () => { 
+            // Re-activate add-header option
+            let menuLabel = this.parentNode.querySelector(".add-header");
+            menuLabel.classList.remove("unavailable");
+            // If this is the ultimate paragraph
+            if (!this.nextElementSibling) {
+                //...show the delete-paragraph button
+                updateDelParaButton(this, "show")
+            }
+            // Delete header and delete-header button
+            delHeaderButton.remove();
+            this.remove();
+        });
+    }
+}
+customElements.define("create-header", CreateHeader);
+
+
+
+
+
+
+
+
+
+
 
 
 

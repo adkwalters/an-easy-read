@@ -33,6 +33,9 @@
         margin: 2rem 0 1.5rem 1rem;
         font-size: 1.4rem;
     }
+    h3 {
+        font-size: 1.2rem;
+    }
     p {
         margin-bottom: 1.5rem;
         padding: 1rem;
@@ -66,6 +69,15 @@
         border: 1px solid #DDD;
         border-radius: 10px;
         font-size: 1.1rem;
+    }
+    .unavailable {
+        color: #DDD;
+    }
+    .delete {
+        color: #DDD;        
+    }
+    .delete:hover {
+        color: red;
     }
     .hidden {
         height: 1px;
@@ -306,6 +318,9 @@
         resize: vertical;
         margin-bottom: 0;
     }
+    #article-form textarea.form-text-header {
+        font-size: 1.4rem;
+    }
 
 
     /* - Article content */
@@ -357,12 +372,8 @@
     .add-menu:hover .side-list {
         display: block;
     }
-    .del-button {
-        width: max-content;
-        color: #DDD;        
-    }
-    .del-button:hover {
-        color: red;
+    .del-header-button {
+        float: right
     }
     #submit-form-button {
         width: max-content;
