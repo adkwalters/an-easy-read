@@ -1,4 +1,4 @@
-// Create a custom class for each paragraph in the article CMS
+// Create a custom class for adding paragraphs to the article CMS
 class CreateParagraph extends HTMLElement {
     constructor() {
         super(); 
@@ -9,8 +9,6 @@ class CreateParagraph extends HTMLElement {
         const paragraphIndex = this.getAttribute("data-paragraph-index");
 
         // Prepare elements    
-        const li = document.createElement("li");
-
         const h3 = document.createElement("h3");
         h3.setAttribute("class", "paragraph-header");
         h3.innerHTML = `Paragraph ${paragraphIndex}`; 
@@ -56,10 +54,9 @@ class CreateParagraph extends HTMLElement {
         delParaButton.textContent = "Delete Paragraph";
 
         // Attach elements to the DOM
-        this.appendChild(li);
-        li.appendChild(h3);
-        li.appendChild(ul);
-        li.appendChild(div);
+        this.appendChild(h3);
+        this.appendChild(ul);
+        this.appendChild(div);
             div.appendChild(divLeft);
                 divLeft.appendChild(addMenu);
                     addMenu.appendChild(addLevelButton);
@@ -91,12 +88,12 @@ class CreateParagraph extends HTMLElement {
         // Add a header to this paragraph    
         addHeaderButton.addEventListener("click", () => {
             // If there is no current header...
-            let currentHeaders = this.querySelector("create-header");
-            if (!currentHeaders) {
+            let currentHeader = this.querySelector("create-header");
+            if (!currentHeader) {
                 //...create one
                 let header = document.createElement("create-header")
                 header.setAttribute("data-paragraph-index", paragraphIndex);
-                li.insertBefore(header, ul)
+                this.insertBefore(header, ul)
                 //...set the create header option to unavailable
                 let menuOption = this.querySelector(".add-header");
                 menuOption.classList.add("unavailable")
@@ -104,6 +101,25 @@ class CreateParagraph extends HTMLElement {
                 updateDelParaButton(this, "hide") 
             } else {
                 alert("A header has already been added for this paragraph")
+            }
+        });
+
+        // Add an image to this paragraph
+        addImageButton.addEventListener("click", () => {
+            // If there is no current image...
+            let currentImage = this.querySelector(".image-upload");
+            if (!currentImage) {
+                //...create one 
+                let image = document.createElement("create-image");
+                image.setAttribute("data-paragraph-index", paragraphIndex);
+                this.insertBefore(image, ul)
+                //...set the create image option to unavailable
+                let menuOption = this.querySelector(".add-image");
+                menuOption.classList.add("unavailable")
+                //...hide the delete-paragraph button
+                updateDelParaButton(this, "hide") 
+            } else {
+                alert("An image has already been added for this paragraph")
             }
         });
 
@@ -115,29 +131,27 @@ class CreateParagraph extends HTMLElement {
             if (ul.childElementCount === 0) {               
                 //...remove the delete-level button
                 delLevelButton.remove();
-                //...and if this is the ultimate paragraph and no header exists...
-                let header = this.querySelector("create-header");
-                if (!this.nextElementSibling && !header) {
-                    //...show the delete-paragraph button
-                    updateDelParaButton(this, "show")
-                }
-            }        
+                // Show the delete-paragraph button
+                updateDelParaButton(this, "show")
+            }               
         });
 
 
         // Delete this paragraph
-        delParaButton.addEventListener("click", () => {
-            // If there is a previous paragraph...         
+        delParaButton.addEventListener("click", () => {            
+            // If this is the ultimate paragraph       
             let prevParagraph = this.previousElementSibling
-            if (prevParagraph) {
-                //...and if no level or header exists in that paragraph...
-                let prevParagraphUl = prevParagraph.querySelector("ul");
-                let prevParagraphLevels = prevParagraphUl.childElementCount;
-                let header = prevParagraph.querySelector("create-header");
-                if (prevParagraphLevels === 0 && !header) {
-                    //...show its delete-paragraph button   
-                    updateDelParaButton(prevParagraph, "show")
-                }
+            let nextParagraph = this.nextElementSibling;
+            if (prevParagraph && !nextParagraph) {
+                //...and if the previous paragraph is empty of content
+                let levels = prevParagraph.querySelector("ul").childElementCount;
+                let header = prevParagraph.querySelector(".form-text-header");
+                let image = prevParagraph.querySelector(".image-upload");
+                if (levels === 0 && !header && !image) {
+                    //...show the previous paragraph's delete-paragraph button
+                    let button = prevParagraph.querySelector(".del-para-button");
+                    button.classList.remove("hidden");
+                }                
             }        
             // Remove this paragraph
             this.remove();
@@ -148,7 +162,7 @@ customElements.define("create-paragraph", CreateParagraph);
 
 
 
-// Create a custom class for each level in the article CMS
+// Create a custom class for adding levels to the article CMS
 class CreateLevel extends HTMLElement {
     constructor() {
         super();
@@ -176,15 +190,15 @@ class CreateLevel extends HTMLElement {
 
         // Attach elements to the DOM
         this.appendChild(li);
-        li.appendChild(label);
-            label.appendChild(textarea);
+            li.appendChild(label);
+                label.appendChild(textarea);
     }
 }
 customElements.define("create-level", CreateLevel);
 
 
 
-// Create a custom class for each header in the article CMS
+// Create a custom class for adding headers to the article CMS
 class CreateHeader extends HTMLElement {
     constructor() {
         super();
@@ -219,11 +233,8 @@ class CreateHeader extends HTMLElement {
             // Re-activate add-header option
             let menuOption = this.parentNode.querySelector(".add-header");
             menuOption.classList.remove("unavailable");
-            // If this is the ultimate paragraph
-            if (!this.nextElementSibling) {
-                //...show the delete-paragraph button
-                updateDelParaButton(this, "show")
-            }
+            // Show the delete-paragraph button
+            updateDelParaButton(this.parentNode, "show")
             // Delete header and delete-header button
             delHeaderButton.remove();
             this.remove();
@@ -231,6 +242,53 @@ class CreateHeader extends HTMLElement {
     }
 }
 customElements.define("create-header", CreateHeader);
+
+
+// Create a custom class for adding images to the article CMS
+class CreateImage extends HTMLElement {
+    constructor() {
+        super();
+    }
+    connectedCallback() {    
+
+        // Generate label name   
+        const paragraphIndex = this.getAttribute("data-paragraph-index");
+        const labelName = `paragraph-${paragraphIndex}-image`
+        
+        // Prepare elements       
+        const label = document.createElement("label");
+        label.setAttribute("for", labelName);
+        label.textContent = "Image:" 
+
+        const image = document.createElement("input");
+        image.setAttribute("class", "image-upload")
+        image.setAttribute("type", "file");
+        image.setAttribute("accept", "image/*")
+       
+        const delImageButton = document.createElement("button");
+        delImageButton.setAttribute("class", "button delete del-image-button");
+        delImageButton.setAttribute("type", "button");
+        delImageButton.textContent = "Delete Image";  
+
+        // Attach elements to the DOM
+        this.appendChild(label)
+        this.appendChild(image)
+        this.appendChild(delImageButton)
+
+        // Delete image
+        delImageButton.addEventListener("click", () => { 
+            // Re-activate add-image option
+            let menuOption = this.parentNode.querySelector(".add-image");
+            menuOption.classList.remove("unavailable");
+            // Show the delete-paragraph button
+            updateDelParaButton(this.parentNode, "show")
+            // Delete image and delete-image button
+            delImageButton.remove();
+            this.remove();
+        });
+    }
+}
+customElements.define("create-image", CreateImage);
 
 
 

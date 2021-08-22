@@ -80,8 +80,8 @@
         color: red;
     }
     .hidden {
-        height: 1px;
-        width: 1px;
+        /* height: 1px;
+        width: 1px; */
         visibility: hidden;
     }
 
@@ -372,7 +372,8 @@
     .add-menu:hover .side-list {
         display: block;
     }
-    .del-header-button {
+    .del-header-button,
+    .del-image-button {
         float: right
     }
     #submit-form-button {

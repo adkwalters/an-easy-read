@@ -78,11 +78,19 @@ const addParagraphButton = document.getElementById("add-paragraph");
 
 // Hide or show delete-paragraph button
 function updateDelParaButton(paragraph, update) {
+
+    // Get delete-paragraph button
     let button = paragraph.querySelector(".del-para-button");
-    if (button) {
-        if (update == "hide") {
-            button.classList.add("hidden");
-        } else {
+
+    if (update == "hide") {
+        //...hide the button
+        button.classList.add("hidden");
+    } else {
+        //...if this is the ultimate paragraph and is empty...
+        let nextParagraph = paragraph.nextElementSibling;
+        let paragraphContent = paragraph.querySelector("ul").childElementCount;
+        if (!nextParagraph && paragraphContent === 0) {
+            //...show the button
             button.classList.remove("hidden");
         }
     }
