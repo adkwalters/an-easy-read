@@ -28,14 +28,14 @@ def createArticle():
     if request.method == "POST":
 
         # Get static form content
-        article_title = request.form.get("article-form-title")
-        article_description = request.form.get("article-form-description")
+        article_title = request.form.get("article-form-title").strip()
+        article_description = request.form.get("article-form-description").strip()
         # article_updated = request.form.get("article-form-date-updated")
-        source_name = request.form.get("article-form-source-name")
-        source_author = request.form.get("article-form-source-author")
-        source_title = request.form.get("article-form-source-title")
-        source_contact = request.form.get("article-form-source-contact")
-        source_hyperlink = request.form.get("article-form-source-hyperlink")
+        source_name = request.form.get("article-form-source-name").strip()
+        source_author = request.form.get("article-form-source-author").strip()
+        source_title = request.form.get("article-form-source-title").strip()
+        source_contact = request.form.get("article-form-source-contact").strip()
+        source_hyperlink = request.form.get("article-form-source-hyperlink").strip()
         categories = request.form.getlist("article-form-categories-selected")
         # categories = request.get_json() # Required for alternative approach using fetch
 
@@ -57,17 +57,30 @@ def createArticle():
         cursor.execute("INSERT INTO source (article_id, name, author, title, contact, hyperlink) VALUES (?, ?, ?, ?, ?, ?)",
             (article_id, source_name, source_author, source_title, source_contact, source_hyperlink ))        
 
-        # Get paragraph content into database
+        # Insert summary content into database
         for key in request.form.keys():
-            if "paragraph" in key:
+            
+            # Get natural keys from html form name, eg:
+                # "paragraph-2-header"
+                # "paragraph-2-level-1"
 
-                # Get paragraph number from name, eg "paragraph-2-level-1"
-                #    - filter all but the last number
-                paragraph_id = "".join(filter(str.isdigit, key[:-1]))            
+            if "header" in key:
+                paragraph_id = "".join(filter(str.isdigit, key))
+                header = request.form[key].strip()
+                
+                # Insert paragraph content into database
+                cursor.execute("INSERT INTO article_paragraph (article_id, paragraph_id, header) VALUES (?, ?, ?)",
+                    (article_id, paragraph_id, header))
+
+            if "level" in key:          
+ 
+                paragraph_id = "".join(filter(str.isdigit, key[:-1])) 
+                level_id = key[-1]
+                content = request.form[key].strip()
 
                 # Insert summary content into database
-                cursor.execute("INSERT INTO summary (article_id, paragraph, level, name, content) VALUES (?, ?, ?, ?, ?)",
-                    (article_id, paragraph_id, key[-1], key, request.form[key]))
+                cursor.execute("INSERT INTO level (article_id, paragraph_id, level, content) VALUES (?, ?, ?, ?)",
+                    (article_id, paragraph_id, level_id, content))
 
         # Insert category data into databse
         for category in categories:

@@ -184,7 +184,7 @@ customElements.define("create-level", CreateLevel);
 
 
 
-// Create a custom class for each level in the article CMS
+// Create a custom class for each header in the article CMS
 class CreateHeader extends HTMLElement {
     constructor() {
         super();

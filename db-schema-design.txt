@@ -2,8 +2,10 @@ CREATE TABLE article (
     id INTEGER,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
+    image_id INT,
     published TEXT,
     updated TEXT,
+    FOREIGN KEY(image_id) REFERENCES image(id),
     PRIMARY KEY(id)
 );
 
@@ -45,13 +47,31 @@ CREATE TABLE category (
     PRIMARY KEY(id)
 );
 
-CREATE TABLE summary (
+CREATE TABLE image (
+    id INTEGER,
+    alt TEXT NOT NULL,
+    src TEXT NOT NULL,
+    height INT NOT NULL,
+    width INT NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE article_paragraph (
     article_id INTEGER NOT NULL,
-    paragraph INTEGER NOT NULL,
+    paragraph_id INTEGER NOT NULL,
+    header TEXT,
+    image_id INTEGER,
+    FOREIGN KEY(article_id) REFERENCES article(id),
+    FOREIGN KEY(image_id) REFERENCES image(id),
+    PRIMARY KEY(article_id, paragraph_id)
+);
+
+CREATE TABLE level (
+    article_id INTEGER NOT NULL,
+    paragraph_id INTEGER NOT NULL,
     level INTEGER NOT NULL,
-    name TEXT NOT NULL,
-    content TEXT NOT NULL,
-    FOREIGN KEY(article_id) REFERENCES article(id)
+    content NOT NULL,
+    FOREIGN KEY(article_id, paragraph_id) REFERENCES article_paragraph(article_id, paragraph_id)
 );
 
 PRAGMA foreign_keys = ON;
