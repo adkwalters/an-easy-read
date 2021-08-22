@@ -90,13 +90,17 @@ class CreateParagraph extends HTMLElement {
 
         // Add a header to this paragraph    
         addHeaderButton.addEventListener("click", () => {
+            // If there is no current header...
             let currentHeaders = this.querySelector("create-header");
             if (!currentHeaders) {
+                //...create one
                 let header = document.createElement("create-header")
-                let menuLabel = this.querySelector(".add-header");
-                menuLabel.classList.add("unavailable")
                 header.setAttribute("data-paragraph-index", paragraphIndex);
                 li.insertBefore(header, ul)
+                //...set the create header option to unavailable
+                let menuOption = this.querySelector(".add-header");
+                menuOption.classList.add("unavailable")
+                //...hide the delete-paragraph button
                 updateDelParaButton(this, "hide") 
             } else {
                 alert("A header has already been added for this paragraph")
@@ -131,7 +135,7 @@ class CreateParagraph extends HTMLElement {
                 let prevParagraphLevels = prevParagraphUl.childElementCount;
                 let header = prevParagraph.querySelector("create-header");
                 if (prevParagraphLevels === 0 && !header) {
-                    //...show it's delete-paragraph button   
+                    //...show its delete-paragraph button   
                     updateDelParaButton(prevParagraph, "show")
                 }
             }        
@@ -213,8 +217,8 @@ class CreateHeader extends HTMLElement {
         // Delete header
         delHeaderButton.addEventListener("click", () => { 
             // Re-activate add-header option
-            let menuLabel = this.parentNode.querySelector(".add-header");
-            menuLabel.classList.remove("unavailable");
+            let menuOption = this.parentNode.querySelector(".add-header");
+            menuOption.classList.remove("unavailable");
             // If this is the ultimate paragraph
             if (!this.nextElementSibling) {
                 //...show the delete-paragraph button

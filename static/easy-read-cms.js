@@ -66,14 +66,15 @@ const addParagraphButton = document.getElementById("add-paragraph");
 
 
 // N.B.
-// The following function has been put in place to enforce LIFO for paragraph 
-// deletion. If previous paragraphs are deleted otherwise, indexing from html
-// through to SQL will be non-contiguous. 
+// The following function has been put in place to help enforce LIFO for
+// paragraph deletion. If first paragraphs are deleted first, indexing 
+// from html through to SQL will be non-contiguous. 
 
 // Furthermore, the delete-paragraph buttons are hidden, rather than removed
 // from the DOM in order to preserve their event-listeners. In a simple codepen,
 // I can move buttons around with their event listeners. However, when I move
 // a delete-paragraph button to the preceding paragraph, it becomes unclickable.
+// I still don't know why.
 
 // Hide or show delete-paragraph button
 function updateDelParaButton(paragraph, update) {
