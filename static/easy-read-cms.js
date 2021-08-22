@@ -86,12 +86,18 @@ function updateDelParaButton(paragraph, update) {
         //...hide the button
         button.classList.add("hidden");
     } else {
-        //...if this is the ultimate paragraph and is empty...
+        //...if this is the ultimate paragraph and it is empty...
         let nextParagraph = paragraph.nextElementSibling;
-        let paragraphContent = paragraph.querySelector("ul").childElementCount;
-        if (!nextParagraph && paragraphContent === 0) {
-            //...show the button
-            button.classList.remove("hidden");
+        let levels = paragraph.querySelector("ul").childElementCount;
+        let header = paragraph.querySelector(".form-text-header");
+        let image = paragraph.querySelector(".image-upload");
+        if (!nextParagraph && levels === 0) {
+            // N.B. one of these will always exist when this function
+            // is triggered from their delete buttons, so 'or' must be used
+            if (!header || !image) {
+                //...show the button
+                button.classList.remove("hidden");
+            }
         }
     }
 }
