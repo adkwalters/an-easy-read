@@ -112,7 +112,13 @@ class CreateParagraph extends HTMLElement {
                 //...create one 
                 let image = document.createElement("create-image");
                 image.setAttribute("data-paragraph-index", paragraphIndex);
-                this.insertBefore(image, ul)
+                //...ensure it is placed before a paragraph header
+                let header = this.querySelector("create-header");
+                if (header) {
+                    this.insertBefore(image, header)
+                } else {
+                    this.insertBefore(image, ul)
+                }
                 //...set the create image option to unavailable
                 let menuOption = this.querySelector(".add-image");
                 menuOption.classList.add("unavailable")
