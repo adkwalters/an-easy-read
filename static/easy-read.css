@@ -320,6 +320,7 @@
     }
     #article-form textarea.form-text-header {
         font-size: 1.4rem;
+        height: 4rem;
     }
 
 
@@ -374,7 +375,13 @@
     }
     .del-header-button,
     .del-image-button {
-        float: right
+        float: right;
+    }
+    .article-form-image {
+        display: block;
+        padding: 1rem 0;
+        width: 75%;
+        margin: auto;
     }
     #submit-form-button {
         width: max-content;

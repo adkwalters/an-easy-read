@@ -151,8 +151,8 @@ class CreateParagraph extends HTMLElement {
             if (prevParagraph && !nextParagraph) {
                 //...and if the previous paragraph is empty of content
                 let levels = prevParagraph.querySelector("ul").childElementCount;
-                let header = prevParagraph.querySelector(".form-text-header");
-                let image = prevParagraph.querySelector(".image-upload");
+                let header = prevParagraph.querySelector("create-header");
+                let image = prevParagraph.querySelector("create-image");
                 if (levels === 0 && !header && !image) {
                     //...show the previous paragraph's delete-paragraph button
                     let button = prevParagraph.querySelector(".del-para-button");
@@ -257,29 +257,85 @@ class CreateImage extends HTMLElement {
     }
     connectedCallback() {    
 
-        // Generate label name   
+        // Generate label names   
         const paragraphIndex = this.getAttribute("data-paragraph-index");
         const labelName = `paragraph-${paragraphIndex}-image`
+        const altLabelName = `${labelName}-alt`
         
         // Prepare elements       
         const label = document.createElement("label");
         label.setAttribute("for", labelName);
         label.textContent = "Image:" 
 
-        const image = document.createElement("input");
-        image.setAttribute("class", "image-upload")
-        image.setAttribute("type", "file");
-        image.setAttribute("accept", "image/*")
-       
+        const input = document.createElement("input");
+        input.setAttribute("name", labelName);
+        input.setAttribute("class", "image-upload")
+        input.setAttribute("type", "file");
+        input.setAttribute("accept", "image/*")
+
+        const altLabel = document.createElement("label");
+        altLabel.setAttribute("for", altLabelName);
+        altLabel.textContent = "Image description:" 
+        
+        const altInput = document.createElement("input");
+        altInput.setAttribute("name", altLabelName);
+        altInput.setAttribute("class", "image-upload-alt");
+        
         const delImageButton = document.createElement("button");
         delImageButton.setAttribute("class", "button delete del-image-button");
         delImageButton.setAttribute("type", "button");
         delImageButton.textContent = "Delete Image";  
 
         // Attach elements to the DOM
-        this.appendChild(label)
-        this.appendChild(image)
-        this.appendChild(delImageButton)
+        this.appendChild(label);
+        this.appendChild(input);
+        this.appendChild(delImageButton);
+
+
+        // fetch("/add-image", {
+        //     method: "POST", 
+        //     headers: {
+        //         "Content-Type": "application/json" 
+        //     },
+        //     body: JSON.stringify(image)
+        // })
+        // .then(response => response.text()) 
+        // .then(json => {
+        //     console.log(json);
+        // });
+
+        // Add an image
+        input.addEventListener("change", () => {
+            // Get uploaded file
+            let file = this.querySelector(".image-upload").files[0];
+            // Display uploaded file 
+            let img = document.createElement("img");
+            img.setAttribute("class", "article-form-image");
+            img.src = URL.createObjectURL(file);
+            this.insertBefore(img, input);
+            this.removeChild(input);
+            this.removeChild(label);
+            this.insertBefore(altLabel, delImageButton);
+            this.insertBefore(altInput, delImageButton);
+
+
+            // console.log(`File name: ${file.name}`)
+            // console.log(`File name: ${file.lastModified}`)
+
+            // let reader = new FileReader();
+
+            // reader.readAsDataURL(file);
+
+            // reader.onload = () => {
+            //     console.log(reader.result);
+            // };
+
+            // reader.error = () => {
+            //     console.log(reader.error);
+            // };
+
+        });
+
 
         // Delete image
         delImageButton.addEventListener("click", () => { 
