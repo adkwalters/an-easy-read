@@ -292,48 +292,40 @@ class CreateImage extends HTMLElement {
         this.appendChild(delImageButton);
 
 
-        // fetch("/add-image", {
-        //     method: "POST", 
-        //     headers: {
-        //         "Content-Type": "application/json" 
-        //     },
-        //     body: JSON.stringify(image)
-        // })
-        // .then(response => response.text()) 
-        // .then(json => {
-        //     console.log(json);
-        // });
-
         // Add an image
         input.addEventListener("change", () => {
             // Get uploaded file
             let file = this.querySelector(".image-upload").files[0];
-            // Display uploaded file 
-            let img = document.createElement("img");
-            img.setAttribute("class", "article-form-image");
-            img.src = URL.createObjectURL(file);
-            this.insertBefore(img, input);
-            this.removeChild(input);
-            this.removeChild(label);
-            this.insertBefore(altLabel, delImageButton);
-            this.insertBefore(altInput, delImageButton);
-
-
-            // console.log(`File name: ${file.name}`)
-            // console.log(`File name: ${file.lastModified}`)
-
-            // let reader = new FileReader();
-
-            // reader.readAsDataURL(file);
-
-            // reader.onload = () => {
-            //     console.log(reader.result);
-            // };
-
-            // reader.error = () => {
-            //     console.log(reader.error);
-            // };
-
+            // If a file exists...
+            if (file) {
+                //...display it in the form
+                let img = document.createElement("img");
+                img.setAttribute("class", "article-form-image");
+                img.src = URL.createObjectURL(file);
+                //...create form data object 
+                const formData = new FormData();
+                formData.append('file', file);
+                //...and post it to server
+                fetch("/add-image", {
+                    method: "POST", 
+                    body: formData
+                })
+                .then(response => response.json()) 
+                .then(data => {
+                    console.log(data);
+                    // Add elements to DOM
+                    this.insertBefore(img, input);
+                    this.insertBefore(altLabel, delImageButton);
+                    this.insertBefore(altInput, delImageButton);
+                    // Remove superfluous elements
+                    this.removeChild(input);
+                    this.removeChild(label);
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('invalid or incorrect file extension')
+                });
+            }
         });
 
 

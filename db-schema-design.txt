@@ -49,10 +49,8 @@ CREATE TABLE category (
 
 CREATE TABLE image (
     id INTEGER,
-    alt TEXT NOT NULL,
+    alt TEXT,
     src TEXT NOT NULL,
-    height INT NOT NULL,
-    width INT NOT NULL,
     PRIMARY KEY(id)
 );
 

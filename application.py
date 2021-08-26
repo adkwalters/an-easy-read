@@ -2,14 +2,38 @@
 # set FLASK_APP=application.py
 
 # Import libraries
-from flask import Flask, redirect, render_template, request
+import os
 import sqlite3
+import imghdr # for file validation
+import uuid # for file naming
+from flask import Flask, redirect, render_template, request, make_response, abort
+from werkzeug.utils import secure_filename
+from flask.json import jsonify
+
+
+# Set image constants
+UPLOAD_IMAGE_FOLDER = os.path.abspath('static/images')
+ALLOWED_FILE_EXTENSIONS = {'.jpg', '.png', '.gif'}
+
 
 # Configure application
 app = Flask(__name__)
+app.config["TEMPLATES_AUTO_RELOAD"] = True  # Ensure templates are auto-reloaded
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024  # Set maximum file upload size to 1mb
+app.config['UPLOAD_PATH'] = UPLOAD_IMAGE_FOLDER
+app.config['UPLOAD_EXTENSIONS'] = ALLOWED_FILE_EXTENSIONS
 
-# Ensure templates are auto-reloaded
-app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+# Image validation 
+# thanks to Miguel Grinberg @ https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
+def validate_image(stream):
+    header = stream.read(512)
+    stream.seek(0) 
+    format = imghdr.what(None, header)
+    if not format:
+        return None
+    return '.' + (format if format != 'jpeg' else 'jpg')
+
 
 # Connect SQLite database
 connection = sqlite3.connect("easy_read.db", check_same_thread=False) # allows returned connection to be shared between multiple threads
@@ -21,9 +45,43 @@ def index():
 
     return render_template("easy-read-index.html")
 
+@app.route("/add-image", methods=["POST"])
+def add_image():
+    
+    # Get the user uploaded file
+    uploaded_image = request.files['file']
+
+    # If a file is uploaded...
+    if uploaded_image.filename != '':
+
+        #...sanitise its filename
+        filename = secure_filename(uploaded_image.filename)
+        
+        #...get its file extension
+        file_ext = os.path.splitext(filename)[1]   
+
+        # If the file extension is not an accepted format or does not match...
+        if file_ext not in app.config['UPLOAD_EXTENSIONS'] or file_ext != validate_image(uploaded_image.stream):
+            print('invalid or incorrect file extension')
+            abort(400)
+
+        # Save image to file
+        uploaded_image_path = os.path.join(app.config['UPLOAD_PATH'], filename)
+        uploaded_image.save(uploaded_image_path)
+
+        # Insert file path into database
+        image_insert = cursor.execute("INSERT INTO image (src) VALUES (?)", 
+                    (uploaded_image_path,))
+
+        # Get image ID to use as a foreign key in other tables
+        image_id = image_insert.lastrowid
+
+        # Send image ID to client
+        image_response = make_response(jsonify({"message": "OK", "image_id": image_id}), 200)
+        return image_response
 
 @app.route("/create-article", methods=["GET", "POST"])
-def createArticle():
+def create_article():
 
     if request.method == "POST":
 
@@ -40,8 +98,7 @@ def createArticle():
         # categories = request.get_json() # Required for alternative approach using fetch
 
 
-        # For testing request form:
-
+        # # For testing request form:
         # for key in request.form.keys():
         #     print(key, ":", request.form[key])
     
@@ -120,7 +177,7 @@ def createArticle():
 
 
 @app.route("/article")
-def showArticle():
+def show_article():
 
     # cursor.execute()
 
