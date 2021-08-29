@@ -17,10 +17,10 @@ class CreateParagraph extends HTMLElement {
         ul.setAttribute("data-paragraph-index", paragraphIndex);
 
         const div = document.createElement("div");
-        div.setAttribute("class", "article-content-controls")
+        div.setAttribute("class", "article-content-controls");
 
         const divLeft = document.createElement("div");
-        divLeft.setAttribute("class", "article-content-controls-left")
+        divLeft.setAttribute("class", "article-content-controls-left");
 
         const addButton = document.createElement("button");
         addButton.setAttribute("class", "button");
@@ -28,7 +28,7 @@ class CreateParagraph extends HTMLElement {
         addButton.textContent = "Add";
         
         const addMenu = document.createElement("ul");
-        addMenu.setAttribute("class", "button add-menu")
+        addMenu.setAttribute("class", "button add-menu");
         addMenu.textContent = "Add...";  
 
         const addLevelButton = document.createElement("li");
@@ -64,43 +64,44 @@ class CreateParagraph extends HTMLElement {
                     addMenu.appendChild(addImageButton);
             div.appendChild(delParaButton);
  
-
         // Add a level to the this paragraph
         addLevelButton.addEventListener("click", () => {
             let level = document.createElement("create-level"); 
-            let levels = this.getElementsByTagName("create-level")
+            let levels = this.getElementsByTagName("create-level");
             let levelIndex = levels.length + 1; // Non-zero indexing
             level.setAttribute("data-paragraph-index", paragraphIndex);
-            level.setAttribute("data-level-index", levelIndex)
-            level.setAttribute("class", "custom-level")
-            ul.appendChild(level);
-               
+            level.setAttribute("data-level-index", levelIndex);
+            level.setAttribute("class", "custom-level");
+            ul.appendChild(level);                          
+            //...scroll image input into view
+            level.scrollIntoView({block: "center", behavior: "smooth"});
             // If this is the first level...
             if (ul.childElementCount === 1) {
                 //...hide the delete-paragraph button
-                updateDelParaButton(this, "hide")
+                updateDelParaButton(this, "hide");
                 //...add a delete-level button as a first child
                 div.appendChild(delLevelButton); 
             }
         });   
         
-
         // Add a header to this paragraph    
         addHeaderButton.addEventListener("click", () => {
             // If there is no current header...
             let currentHeader = this.querySelector("create-header");
             if (!currentHeader) {
                 //...create one
-                let header = document.createElement("create-header")
+                let header = document.createElement("create-header");
                 header.setAttribute("data-paragraph-index", paragraphIndex);
-                this.insertBefore(header, ul)
+                this.insertBefore(header, ul);
+                //...scroll image input into view
+                header.scrollIntoView({block: "center", behavior: "smooth"});
                 //...set the create header option to unavailable
                 let menuOption = this.querySelector(".add-header");
-                menuOption.classList.add("unavailable")
+                menuOption.classList.add("unavailable");
                 //...hide the delete-paragraph button
-                updateDelParaButton(this, "hide") 
+                updateDelParaButton(this, "hide");
             } else {
-                alert("A header has already been added for this paragraph")
+                alert("A header has already been added for this paragraph");
             }
         });
 
@@ -115,20 +116,21 @@ class CreateParagraph extends HTMLElement {
                 //...ensure it is placed before a paragraph header
                 let header = this.querySelector("create-header");
                 if (header) {
-                    this.insertBefore(image, header)
+                    this.insertBefore(image, header);
                 } else {
-                    this.insertBefore(image, ul)
+                    this.insertBefore(image, ul);
                 }
+                //...scroll image input into view
+                image.scrollIntoView({block: "center", behavior: "smooth"});
                 //...set the create image option to unavailable
                 let menuOption = this.querySelector(".add-image");
-                menuOption.classList.add("unavailable")
+                menuOption.classList.add("unavailable");
                 //...hide the delete-paragraph button
-                updateDelParaButton(this, "hide") 
+                updateDelParaButton(this, "hide");
             } else {
-                alert("An image has already been added for this paragraph")
+                alert("An image has already been added for this paragraph");
             }
         });
-
 
         // Delete the ultimate level from this paragraph 
         delLevelButton.addEventListener("click", () => {
@@ -138,10 +140,9 @@ class CreateParagraph extends HTMLElement {
                 //...remove the delete-level button
                 delLevelButton.remove();
                 // Show the delete-paragraph button
-                updateDelParaButton(this, "show")
+                updateDelParaButton(this, "show");
             }               
         });
-
 
         // Delete this paragraph
         delParaButton.addEventListener("click", () => {            
@@ -213,12 +214,12 @@ class CreateHeader extends HTMLElement {
 
         // Generate label name   
         const paragraphIndex = this.getAttribute("data-paragraph-index");
-        const labelName = `paragraph-${paragraphIndex}-header`
+        const labelName = `paragraph-${paragraphIndex}-header`;
         
         // Prepare elements       
         const label = document.createElement("label");
         label.setAttribute("for", labelName);
-        label.textContent = "Header:" 
+        label.textContent = "Header:";
        
         const textarea = document.createElement("textarea");
         textarea.setAttribute("name", labelName);
@@ -230,9 +231,9 @@ class CreateHeader extends HTMLElement {
         delHeaderButton.textContent = "Delete Header";  
 
         // Attach elements to the DOM
-        this.appendChild(label)
-        this.appendChild(textarea)
-        this.appendChild(delHeaderButton)
+        this.appendChild(label);
+        this.appendChild(textarea);
+        this.appendChild(delHeaderButton);
 
         // Delete header
         delHeaderButton.addEventListener("click", () => { 
@@ -240,7 +241,7 @@ class CreateHeader extends HTMLElement {
             let menuOption = this.parentNode.querySelector(".add-header");
             menuOption.classList.remove("unavailable");
             // Show the delete-paragraph button
-            updateDelParaButton(this.parentNode, "show")
+            updateDelParaButton(this.parentNode, "show");
             // Delete header and delete-header button
             delHeaderButton.remove();
             this.remove();
@@ -259,27 +260,32 @@ class CreateImage extends HTMLElement {
 
         // Generate label names   
         const paragraphIndex = this.getAttribute("data-paragraph-index");
-        const labelName = `paragraph-${paragraphIndex}-image`
-        const altLabelName = `${labelName}-alt`
+        const labelName = `paragraph-${paragraphIndex}-image`;
+        const altLabelName = `${labelName}-alt`;
+        const imageIdName = `${labelName}-id`;
         
         // Prepare elements       
         const label = document.createElement("label");
         label.setAttribute("for", labelName);
-        label.textContent = "Image:" 
+        label.textContent = "Image:";
 
         const input = document.createElement("input");
         input.setAttribute("name", labelName);
-        input.setAttribute("class", "image-upload")
+        input.setAttribute("class", "image-upload");
         input.setAttribute("type", "file");
-        input.setAttribute("accept", "image/*")
+        input.setAttribute("accept", "image/*");
 
         const altLabel = document.createElement("label");
         altLabel.setAttribute("for", altLabelName);
-        altLabel.textContent = "Image description:" 
+        altLabel.textContent = "Image description:";
         
         const altInput = document.createElement("input");
         altInput.setAttribute("name", altLabelName);
         altInput.setAttribute("class", "image-upload-alt");
+
+        const imageId = document.createElement("input");
+        imageId.setAttribute("name", imageIdName);
+        imageId.setAttribute("type", "hidden");
         
         const delImageButton = document.createElement("button");
         delImageButton.setAttribute("class", "button delete del-image-button");
@@ -290,7 +296,6 @@ class CreateImage extends HTMLElement {
         this.appendChild(label);
         this.appendChild(input);
         this.appendChild(delImageButton);
-
 
         // Add an image
         input.addEventListener("change", () => {
@@ -312,9 +317,11 @@ class CreateImage extends HTMLElement {
                 })
                 .then(response => response.json()) 
                 .then(data => {
-                    console.log(data);
+                    // Save image ID as hidden input
+                    imageId.value = data.image_id;
                     // Add elements to DOM
-                    this.insertBefore(img, input);
+                    this.insertBefore(img, input); 
+                    this.insertBefore(imageId, delImageButton); // ID must be parsed first
                     this.insertBefore(altLabel, delImageButton);
                     this.insertBefore(altInput, delImageButton);
                     // Remove superfluous elements
@@ -323,11 +330,10 @@ class CreateImage extends HTMLElement {
                 })
                 .catch(error => {
                     console.error(error);
-                    alert('invalid or incorrect file extension')
+                    alert('invalid or incorrect file extension');
                 });
             }
         });
-
 
         // Delete image
         delImageButton.addEventListener("click", () => { 
@@ -335,7 +341,7 @@ class CreateImage extends HTMLElement {
             let menuOption = this.parentNode.querySelector(".add-image");
             menuOption.classList.remove("unavailable");
             // Show the delete-paragraph button
-            updateDelParaButton(this.parentNode, "show")
+            updateDelParaButton(this.parentNode, "show");
             // Delete image and delete-image button
             delImageButton.remove();
             this.remove();
