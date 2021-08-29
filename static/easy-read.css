@@ -64,6 +64,7 @@
         border-radius: 10px;
     }
     .button {
+        height: max-content;
         padding: 0.4rem 0.8rem;
         background: #fbfdfe;
         border: 1px solid #DDD;
@@ -299,7 +300,7 @@
     #article-form h2, 
     #article-form h3 {
         margin: 0;
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
     }
     #article-form label {
         font-size: 1.1rem;
@@ -357,6 +358,7 @@
         display: flex;
         position: relative;
         min-height: 2.2rem;
+        margin-bottom: 5rem;
     }
     .add-menu {
         position: absolute;
