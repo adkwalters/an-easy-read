@@ -119,43 +119,60 @@ def create_article():
 
         # Insert summary content into database
         for key in request.form.keys():
+
+            if "main-image" in key:
+
+                if "image-id" in key:
+                    image_id = request.form[key]
+
+                    # Update image data for paragraph
+                    cursor.execute("UPDATE article SET image_id = ? WHERE id = ?",
+                        (image_id, article_id))
+
+                if "image-alt" in key: 
+                    image_alt = request.form[key].strip()
+
+                    # Update image data for paragraph
+                    cursor.execute("UPDATE image SET alt = ? WHERE id = ?", (image_alt, image_id))
             
-            # Get natural keys from html form name, eg: "paragraph-2-level-1"
-            paragraph_id = "".join(filter(str.isdigit, key[:-1])) 
+            if "paragraph" in key:
+                    
+                # Get natural keys from html form name, eg: "paragraph-2-level-1"
+                paragraph_id = "".join(filter(str.isdigit, key[:-1])) 
 
-            # For each paragraph, insert a blank (no image or header) entry into database
-            if paragraph_id and paragraph_id in key:
-                cursor.execute("INSERT INTO article_paragraph (article_id, paragraph_id) VALUES (?, ?) ON CONFLICT DO NOTHING",
-                    (article_id, paragraph_id))
+                # For each paragraph, insert a blank (no image or header) entry into database
+                if paragraph_id and paragraph_id in key:
+                    cursor.execute("INSERT INTO article_paragraph (article_id, paragraph_id) VALUES (?, ?) ON CONFLICT DO NOTHING",
+                        (article_id, paragraph_id))
 
-            if "image-id" in key:
-                image_id = request.form[key]
+                if "image-id" in key:
+                    image_id = request.form[key]
 
-                # Update image data for paragraph
-                cursor.execute("UPDATE article_paragraph SET image_id = ? WHERE article_id = ? AND paragraph_id = ?",
-                    (image_id, article_id, paragraph_id))
+                    # Update image data for paragraph
+                    cursor.execute("UPDATE article_paragraph SET image_id = ? WHERE article_id = ? AND paragraph_id = ?",
+                        (image_id, article_id, paragraph_id))
 
-            if "alt" in key: 
-                image_alt = request.form[key].strip()
+                if "image-alt" in key: 
+                    image_alt = request.form[key].strip()
 
-                # Update image data for paragraph
-                cursor.execute("UPDATE image SET alt = ? WHERE id = ?", (image_alt, image_id))
-                        
-            if "header" in key:
-                header = request.form[key].strip()
+                    # Update image data for paragraph
+                    cursor.execute("UPDATE image SET alt = ? WHERE id = ?", (image_alt, image_id))
+                            
+                if "header" in key:
+                    header = request.form[key].strip()
 
-                # Update header content for paragraph
-                cursor.execute("UPDATE article_paragraph SET header = ? WHERE article_id = ? AND paragraph_id = ?",
-                    (header, article_id, paragraph_id))                
+                    # Update header content for paragraph
+                    cursor.execute("UPDATE article_paragraph SET header = ? WHERE article_id = ? AND paragraph_id = ?",
+                        (header, article_id, paragraph_id))                
 
-            if "level" in key:          
-                level_id = key[-1]
-                content = request.form[key].strip()
+                if "level" in key:          
+                    level_id = key[-1]
+                    content = request.form[key].strip()
 
-                # Insert summary content into database
-                cursor.execute("INSERT INTO level (article_id, paragraph_id, level, content) VALUES (?, ?, ?, ?)",
-                    (article_id, paragraph_id, level_id, content))
- 
+                    # Insert summary content into database
+                    cursor.execute("INSERT INTO level (article_id, paragraph_id, level, content) VALUES (?, ?, ?, ?)",
+                        (article_id, paragraph_id, level_id, content))
+    
         # Insert category data into databse
         for category in categories:
 

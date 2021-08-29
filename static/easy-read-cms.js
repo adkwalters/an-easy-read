@@ -1,3 +1,76 @@
+// || Main Image
+
+// Prepare elements
+const articleData = document.querySelector("#article-form-meta");
+const imageLabel = document.querySelector("label[for='article-form-main-image-input']")
+const imageInput = document.querySelector("#article-form-main-image-input");
+const articleTitle = document.querySelector("#article-form-title");
+
+const altLabel = document.createElement("label");
+altLabel.setAttribute("for", "article-form-main-image-alt");
+altLabel.textContent = "Image description:";
+    
+const altInput = document.createElement("input");
+altInput.setAttribute("name", "article-form-main-image-alt");
+altInput.setAttribute("class", "image-upload-alt");
+
+const imageId = document.createElement("input");
+imageId.setAttribute("name", "article-form-main-image-id");
+imageId.setAttribute("type", "hidden");
+
+const delImageButton = document.createElement("button");
+delImageButton.setAttribute("class", "button delete del-image-button");
+delImageButton.setAttribute("type", "button");
+delImageButton.textContent = "Delete Image";  
+
+imageInput.addEventListener("change", () => {
+    // Get uploaded file
+    let file = articleData.querySelector(".image-upload").files[0];
+    // If a file exists...
+    if (file) {
+        //...display it in the form
+        let img = document.createElement("img");
+        img.setAttribute("class", "article-form-image");
+        img.src = URL.createObjectURL(file);
+        //...create form data object 
+        let formData = new FormData();
+        formData.append('file', file);
+        //...and post it to server
+        fetch("/add-image", {
+            method: "POST", 
+            body: formData
+        })
+        .then(response => response.json()) 
+        .then(data => {
+            // Save image ID as hidden input
+            imageId.value = data.image_id;
+            // Add elements to DOM
+            imageLabel.appendChild(delImageButton)
+            imageLabel.insertBefore(img, imageInput);
+            imageLabel.insertBefore(imageId, delImageButton);
+            imageLabel.insertBefore(altLabel, delImageButton);
+            imageLabel.insertBefore(altInput, delImageButton);
+            // Remove superfluous elements
+            imageInput.remove();
+        })
+        .catch(error => {
+            console.error(error);
+            alert('invalid or incorrect file extension');
+        });
+    }
+});
+
+delImageButton.addEventListener("click", () => {
+    let image = articleData.querySelector(".article-form-image");
+    // Remove image elements
+    image.remove();
+    altLabel.remove();
+    altInput.remove();
+    delImageButton.remove();
+    // Add image input back to DOM
+    imageLabel.appendChild(imageInput);
+});
+
 // || Categories
 
 // Initialise a categories array
@@ -5,10 +78,10 @@ const categoriesArray = [];
 
 // Prepare elements
 const articleForm = document.querySelector("#article-form");
-const categoryInput = document.querySelector("[list='article-form-categories-input']")
+const categoryInput = document.querySelector("[list='article-form-categories-input']");
 const addCategoryButton = document.getElementById("article-form-add-category-button");
 const delCategoryButton = document.getElementById("article-form-del-category-button");
-const categoryDisplay = document.getElementById("article-form-categories-selected")
+const categoryDisplay = document.getElementById("article-form-categories-selected");
 
 
 // Clear category input (reset upon click) 
@@ -33,10 +106,10 @@ addCategoryButton.addEventListener("click", () => {
             categoryDisplay.appendChild(newCategory);
 
             //...add a hidden form input to hold its value
-            let hiddenInput = document.createElement("input")
-            hiddenInput.setAttribute("type", "hidden")
-            hiddenInput.setAttribute("name", "article-form-categories-selected")
-            hiddenInput.setAttribute("value", categoryInput.value)
+            let hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "article-form-categories-selected");
+            hiddenInput.setAttribute("value", categoryInput.value);
             hiddenInput.value = categoryInput.value;
             articleForm.appendChild(hiddenInput);
         } 
@@ -108,6 +181,6 @@ addParagraphButton.addEventListener("click", () => {
     // Hide previous paragraph's delete-paragraph button (enforce LIFO)
     let prevParagraph = paragraph.previousElementSibling;
     if (prevParagraph) {
-        updateDelParaButton(prevParagraph, "hide")
+        updateDelParaButton(prevParagraph, "hide");
     }
 });

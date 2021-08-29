@@ -308,7 +308,7 @@ class CreateImage extends HTMLElement {
                 img.setAttribute("class", "article-form-image");
                 img.src = URL.createObjectURL(file);
                 //...create form data object 
-                const formData = new FormData();
+                let formData = new FormData();
                 formData.append('file', file);
                 //...and post it to server
                 fetch("/add-image", {
