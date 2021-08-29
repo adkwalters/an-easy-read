@@ -5,7 +5,6 @@
 import os
 import sqlite3
 import imghdr # for file validation
-import uuid # for file naming
 from flask import Flask, redirect, render_template, request, make_response, abort
 from werkzeug.utils import secure_filename
 from flask.json import jsonify
@@ -73,6 +72,10 @@ def add_image():
         image_insert = cursor.execute("INSERT INTO image (src) VALUES (?)", 
                     (uploaded_image_path,))
 
+        # BUG? The previous insert does not show in the database before the main form is posted
+        #       If an image is deleted and reuploaded, it will be duplicate in the database after main form is posted
+
+
         # Get image ID to use as a foreign key in other tables
         image_id = image_insert.lastrowid
 
@@ -117,28 +120,42 @@ def create_article():
         # Insert summary content into database
         for key in request.form.keys():
             
-            # Get natural keys from html form name, eg:
-                # "paragraph-2-header"
-                # "paragraph-2-level-1"
+            # Get natural keys from html form name, eg: "paragraph-2-level-1"
+            paragraph_id = "".join(filter(str.isdigit, key[:-1])) 
 
+            # For each paragraph, insert a blank (no image or header) entry into database
+            if paragraph_id and paragraph_id in key:
+                cursor.execute("INSERT INTO article_paragraph (article_id, paragraph_id) VALUES (?, ?) ON CONFLICT DO NOTHING",
+                    (article_id, paragraph_id))
+
+            if "image-id" in key:
+                image_id = request.form[key]
+
+                # Update image data for paragraph
+                cursor.execute("UPDATE article_paragraph SET image_id = ? WHERE article_id = ? AND paragraph_id = ?",
+                    (image_id, article_id, paragraph_id))
+
+            if "alt" in key: 
+                image_alt = request.form[key].strip()
+
+                # Update image data for paragraph
+                cursor.execute("UPDATE image SET alt = ? WHERE id = ?", (image_alt, image_id))
+                        
             if "header" in key:
-                paragraph_id = "".join(filter(str.isdigit, key))
                 header = request.form[key].strip()
-                
-                # Insert paragraph content into database
-                cursor.execute("INSERT INTO article_paragraph (article_id, paragraph_id, header) VALUES (?, ?, ?)",
-                    (article_id, paragraph_id, header))
+
+                # Update header content for paragraph
+                cursor.execute("UPDATE article_paragraph SET header = ? WHERE article_id = ? AND paragraph_id = ?",
+                    (header, article_id, paragraph_id))                
 
             if "level" in key:          
- 
-                paragraph_id = "".join(filter(str.isdigit, key[:-1])) 
                 level_id = key[-1]
                 content = request.form[key].strip()
 
                 # Insert summary content into database
                 cursor.execute("INSERT INTO level (article_id, paragraph_id, level, content) VALUES (?, ?, ?, ?)",
                     (article_id, paragraph_id, level_id, content))
-
+ 
         # Insert category data into databse
         for category in categories:
 
@@ -146,7 +163,7 @@ def create_article():
             cursor.execute("SELECT 1 FROM category WHERE category = (?)", 
                 (category,))
             
-            category_id = cursor.fetchone() # Cannot use .lastrowid as it is always truthy
+            category_id = cursor.fetchone() # Cannot use .lastrowid as it always returns true
           
             if category_id is None: 
 
