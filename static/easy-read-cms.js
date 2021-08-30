@@ -23,6 +23,7 @@ delImageButton.setAttribute("class", "button delete del-image-button");
 delImageButton.setAttribute("type", "button");
 delImageButton.textContent = "Delete Image";  
 
+// Add a main image
 imageInput.addEventListener("change", () => {
     // Get uploaded file
     let file = articleData.querySelector(".image-upload").files[0];
@@ -60,6 +61,7 @@ imageInput.addEventListener("change", () => {
     }
 });
 
+// Delete main image
 delImageButton.addEventListener("click", () => {
     let image = articleData.querySelector(".article-form-image");
     // Remove image elements
@@ -69,7 +71,10 @@ delImageButton.addEventListener("click", () => {
     delImageButton.remove();
     // Add image input back to DOM
     imageLabel.appendChild(imageInput);
+    imageInput.value = "";
 });
+
+
 
 // || Categories
 
