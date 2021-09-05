@@ -1,0 +1,37 @@
+{% extends "easy-read-layout.html" %}
+
+
+{% block description %}
+    <meta name="description" content="A page with which to post progressively summarised content">
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="/static/easy-read-header.js" defer></script>
+{% endblock %}
+
+
+{% block main %}
+    <div class="login">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    <div>{{ message | safe }}</div>
+                    <button type="button" class="close-message"><span>&times;</span></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form class="login-form" action="/register" method="post">  
+            <h1>Register</h1>
+            <div class="login-form label-colour">
+                <label id="register-email">Email:<input name="register-email" autocomplete="off" required autofocus></label>
+                <label id="register-password">Password:<input name="register-password" type="password" required></label>
+                <label id="register-password-confirmation">Confirm password:<input name="register-password-confirmation" type="password" required></label>
+            </div>
+            <button class="button big-button" type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="/login">Click to login</a></p>
+    </div>
+{% endblock %}

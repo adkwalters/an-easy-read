@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width", initial-scale=1>
+
+    {% block description %}{% endblock %}
+
+    <!-- Add in other rich data -->
+
+    <!-- Icons and fonts -->
+    <script src="https://kit.fontawesome.com/ab4f2900b6.js" crossorigin="anonymous"></script>  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+
+    <!-- JavaScript --> 
+    {% block scripts %}{% endblock %}
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/easy-read.css" /> 
+</html>
+<body>
+    <header id="header-main">
+        <div id=header-brand>
+            <a href="/" id="brand-logo">
+                <i class="fas fa-book-open"></i> 
+            </a>
+            <h1 id="brand-name">
+                <a href="/">Easy Read</a>
+            </h1>
+        </div>
+        <nav id="header-nav">
+            <i id="header-nav-icon" class="fas fa-bars"></i>
+            <ul id="header-nav-list">    
+                <li><a class="nav-link" href="">About</a></li>
+                <li><a class="nav-link" href="">Categories</a></li>
+                <li><a class="nav-link" href="">Contact</a></li>
+                {% if session.user %}
+                <li><a class="nav-link" href="/logout">Log out</a></li>
+                {% else %}
+                <li><a class="nav-link" href="/login">Log in</a></li>
+                {% endif %}
+            </ul> 
+        </nav>   
+    </header>
+    <main>
+        {% block main %}{% endblock %}
+    </main>  
+</body>

@@ -1,7 +1,11 @@
 // || Navigation
-         
+
+    const navIcon = document.getElementById("header-nav-icon");
+    const flashClose = document.querySelector(".close-message");
+
+
     // Toggle navigation display
-    const showNav = () => {
+    navIcon.addEventListener("click", () => {
         let header = document.getElementById('header-main');
 
         // If the navigation list is displayed, hide it...
@@ -11,24 +15,12 @@
         } else {
             header.classList.add('display-menu');
         }
+    });
+
+
+    // Close flashed message
+    if (flashClose) {
+        flashClose.addEventListener("click", () => {
+            flashClose.parentNode.remove();
+        });
     }
-
-
-
-// || Event Listeners 
-
-    // Add event listeners once DOM is loaded
-    function listenForContentLoaded() {
-
-        // Show navigation when icon is clicked
-        const navIcon = document.getElementById("header-nav-icon");
-        
-        navIcon.addEventListener("click", showNav);
-    }
-
-    
-
-// || Let's gooooOOOoooo
-        
-    // Run event listeners once document content is fully loaded
-    document.addEventListener("DOMContentLoaded", listenForContentLoaded);

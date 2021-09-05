@@ -11,17 +11,16 @@ CREATE TABLE article (
 
 CREATE TABLE article_author (
     article_id INTEGER NOT NULL,
-    author_id INTEGER NOT NULL,
+    author_email INTEGER NOT NULL,
     FOREIGN KEY(article_id) REFERENCES article(id),
-    FOREIGN KEY(author_id) REFERENCES author(id)
+    FOREIGN KEY(author_email) REFERENCES author(email)
 );
 
 CREATE TABLE author (
-    id INTEGER,
-    username TEXT NOT NULL,
     email TEXT NOT NULL,
     password TEXT NOT NULL,
-    PRIMARY KEY(id)
+    username TEXT,
+    PRIMARY KEY(email)
 );
 
 CREATE TABLE source (

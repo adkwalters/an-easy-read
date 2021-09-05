@@ -12,16 +12,24 @@
 
 
 {% block main %}
-    <div id="index">
+    <div class="login">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
                 <div class="alert alert-{{ category }}">{{ message | safe }}
                     <button type="button" class="close-message"><span>&times;</span></button>
-                </div>
-                {% endfor %}
+                </div>                {% endfor %}
             {% endif %}
         {% endwith %}
-        <h1>Welcome to Easy Read</h1>
+        <form class="login-form" action="/login" method="post">
+            <h1>Login</h1>
+            <div class="login-form label-colour">
+                <label id="login-email">Email:<input name="login-email" autocomplete="off" required autofocus></label>
+                <label id="login-password">Password:<input name="login-password" type="password" required></label>
+            </div>
+            
+            <button class="button big-button" type="submit">Log In</button>
+        </form>
+        <p>Don't have an account? <a href="/register">Click to register</a></p>
     </div>
 {% endblock %}

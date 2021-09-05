@@ -182,6 +182,8 @@ addParagraphButton.addEventListener("click", () => {
     let paragraphIndex = paragraphs.length + 1; // Non zero-indexing
     paragraph.setAttribute("data-paragraph-index", paragraphIndex); 
     articleContent.appendChild(paragraph);
+    // Scroll image input into view
+    paragraph.scrollIntoView({block: "center", behavior: "smooth"});
 
     // Hide previous paragraph's delete-paragraph button (enforce LIFO)
     let prevParagraph = paragraph.previousElementSibling;

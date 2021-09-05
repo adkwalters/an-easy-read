@@ -5,26 +5,35 @@
 import os
 import sqlite3
 import imghdr # for file validation
-from flask import Flask, redirect, render_template, request, make_response, abort
+from flask import Flask, redirect, render_template, request, make_response, abort, session, flash
 from werkzeug.utils import secure_filename
+from werkzeug.security import check_password_hash, generate_password_hash
 from flask.json import jsonify
-
-
-# Set image constants
-UPLOAD_IMAGE_FOLDER = os.path.abspath('static/images')
-ALLOWED_FILE_EXTENSIONS = {'.jpg', '.png', '.gif'}
+from tempfile import mkdtemp
+from flask_session import Session
+from functools import wraps
 
 
 # Configure application
 app = Flask(__name__)
-app.config["TEMPLATES_AUTO_RELOAD"] = True  # Ensure templates are auto-reloaded
+app.config['TEMPLATES_AUTO_RELOAD'] = True  # Ensure templates are auto-reloaded
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024  # Set maximum file upload size to 1mb
-app.config['UPLOAD_PATH'] = UPLOAD_IMAGE_FOLDER
-app.config['UPLOAD_EXTENSIONS'] = ALLOWED_FILE_EXTENSIONS
+app.config['UPLOAD_PATH'] = os.path.abspath('static/images') # Set file upload folder
+app.config['UPLOAD_EXTENSIONS'] = {'.jpg', '.png', '.gif'} # Set permitted file types
+
+# Configure session to use filesystem (instead of signed cookies)
+app.config["SESSION_FILE_DIR"] = mkdtemp()
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
+# Connect SQLite database
+connection = sqlite3.connect("easy_read.db", check_same_thread=False) # allows returned connection to be shared between multiple threads
+cursor = connection.cursor()
 
 
 # Image validation 
-# thanks to Miguel Grinberg @ https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
+#   https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
 def validate_image(stream):
     header = stream.read(512)
     stream.seek(0) 
@@ -34,15 +43,110 @@ def validate_image(stream):
     return '.' + (format if format != 'jpeg' else 'jpg')
 
 
-# Connect SQLite database
-connection = sqlite3.connect("easy_read.db", check_same_thread=False) # allows returned connection to be shared between multiple threads
-cursor = connection.cursor()
+# Decorate routes to require login
+#   https://flask.palletsprojects.com/en/2.0.x/patterns/viewdecorators/
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user") is None:
+            return redirect("/login")
+        return f(*args, **kwargs)
+    return decorated_function
 
-# Test index page
+
+# Register user
+@app.route("/register", methods=["GET", "POST"])
+def register():
+
+    if request.method == "POST":
+
+        # Get new user details
+        email = request.form.get("register-email")
+        password = request.form.get("register-password")
+        confirmation = request.form.get("register-password-confirmation")
+
+        # Check passwords match 
+        if confirmation != password:
+            flash("The passwords do not match. Please try again.", "error")
+
+        else:    
+            # Confirm that user does not already exist
+            existing_user = cursor.execute("SELECT 1 from author WHERE email = ?", (email,)).fetchone()
+        
+            if existing_user:
+                flash('The email address entered already exists. Did you want to <a href="/login"><strong>log in</strong></a>?', 'error')
+
+            else:
+                # Insert author into database
+                cursor.execute("INSERT INTO author (email, password) VALUES (?, ?)", 
+                    (email, generate_password_hash(password)))
+
+                # Save user to session
+                session["user"] = email
+
+                # Commit connection to database        
+                connection.commit()
+
+                flash("Welcome", "success")
+                return redirect("/")     
+
+    return render_template("easy-read-register.html")
+    
+
+# Log user in
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    # Start a new session
+    session.clear()
+
+    if request.method == "POST":
+
+        # Get login details
+        email = request.form.get("login-email")
+        password = request.form.get("login-password")
+
+        # Check for user in database
+        user_exists = cursor.execute("SELECT password from author WHERE email = ?", (email,)).fetchone()
+                
+        if user_exists:
+            
+            # Check password hash
+            password_matches = check_password_hash(user_exists[0], password)
+
+            if password_matches:
+            
+                session["user"] = email
+                
+                flash(f"You are successfully logged in. Welcome, {email}", "success")
+                return redirect("/")
+            
+        # Else throw error
+        flash("The email or password is incorrect. Please try again.", "error")
+
+
+    return render_template("easy-read-login.html")
+
+# Log user out
+@app.route("/logout")
+def logout():
+
+    # Clear the session
+    session.clear()
+    
+    flash(f"You are successfully logged out.", "success")
+
+
+    # Return user to index page
+    return redirect("/")
+
+# Index page
 @app.route("/")
 def index():
 
+
     return render_template("easy-read-index.html")
+
 
 @app.route("/add-image", methods=["POST"])
 def add_image():
@@ -50,18 +154,17 @@ def add_image():
     # Get the user uploaded file
     uploaded_image = request.files['file']
 
-    # If a file is uploaded...
+    # Check for file
     if uploaded_image.filename != '':
 
-        #...sanitise its filename
+        # Sanitise filename
         filename = secure_filename(uploaded_image.filename)
         
-        #...get its file extension
+        # Get file extension
         file_ext = os.path.splitext(filename)[1]   
 
-        # If the file extension is not an accepted format or does not match...
+        # Check file type and extension validity
         if file_ext not in app.config['UPLOAD_EXTENSIONS'] or file_ext != validate_image(uploaded_image.stream):
-            print('invalid or incorrect file extension')
             abort(400)
 
         # Save image to file
@@ -73,17 +176,21 @@ def add_image():
                     (uploaded_image_path,))
 
         # BUG? The previous insert does not show in the database before the main form is posted
-        #       If an image is deleted and reuploaded, it will be duplicate in the database after main form is posted
+        # Answer: No - I wasn't commiting the connection
 
 
         # Get image ID to use as a foreign key in other tables
         image_id = image_insert.lastrowid
+
+        # Commit connection to database        
+        connection.commit()
 
         # Send image ID to client
         image_response = make_response(jsonify({"message": "OK", "image_id": image_id}), 200)
         return image_response
 
 @app.route("/create-article", methods=["GET", "POST"])
+@login_required
 def create_article():
 
     if request.method == "POST":
@@ -177,37 +284,34 @@ def create_article():
         for category in categories:
 
             # Check whether category exists
-            cursor.execute("SELECT 1 FROM category WHERE category = (?)", 
-                (category,))
-            
-            category_id = cursor.fetchone() # Cannot use .lastrowid as it always returns true
-          
-            if category_id is None: 
+            category_id = cursor.execute("SELECT 1 FROM category WHERE category = (?)", (category,)).fetchone()
+                      
+            if category_id: 
 
-                # ...insert category into database
+                # Insert it with article ID into database
+                cursor.execute("INSERT INTO article_category (article_id, category_id) VALUES (?, ?)", 
+                    (article_id, category_id[0])) # indexing to get int within tuple
+                
+            else:
+                
+                # Insert category into database
                 cursor.execute("INSERT INTO category (category) VALUES (?)", 
                     (category,))
 
-                # ...get its ID
+                # Get its ID
                 category_id = cursor.lastrowid
 
-                # ...and insert it with article ID into database
+                # Insert it with article ID into database
                 cursor.execute("INSERT INTO article_category (article_id, category_id) VALUES (?, ?)", 
                     (article_id, category_id))
-            else:
-                
-                # ...and insert it with article ID into database
-                cursor.execute("INSERT INTO article_category (article_id, category_id) VALUES (?, ?)", 
-                    (article_id, category_id[0])) # indexing to get int within tuple
 
 
+        # Commit connection to database        
         connection.commit()
-        # connection.close() Not needed?
 
         return redirect("/")
     
-    else:
-        return render_template("easy-read-create-article.html")
+    return render_template("easy-read-create-article.html")
 
 
 @app.route("/article")
