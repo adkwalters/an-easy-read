@@ -312,7 +312,17 @@ def create_article():
 
         return redirect("/")
     
-    return render_template("easy-read-create-article.html")
+    # Author creates new article or edits existing article
+    else:
+
+        # Get artice id from URL parameters
+        article_id = request.args.get("article_id")
+        
+        # Query database for article data
+        article = cursor.execute("SELECT * FROM article WHERE id = (?)", (article_id,)).fetchone()
+
+
+        return render_template("easy-read-create-article.html", article=article)
 
 
 @app.route("/article")

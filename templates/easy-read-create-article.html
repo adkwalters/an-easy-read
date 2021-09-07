@@ -17,6 +17,9 @@
     <!-- Article form -->
     <form id="article-form" action="/create-article" method="post" autocomplete="off">
         <h1>Create Article</h1>
+        {% if article %}
+            <div>{{ article['title'] }}</div>
+        {% endif %}
         <section id="article-form-source" class="label-colour">
             <h2>Source data</h2>
             <label for="article-form-source-name">Source name:<input id="article-form-source-name" name="article-form-source-name" type="text"/></label>
