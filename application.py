@@ -28,7 +28,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Connect SQLite database
-connection = sqlite3.connect("easy_read.db", check_same_thread=False) # allows returned connection to be shared between multiple threads
+connection = sqlite3.connect("easy_read.db", check_same_thread=False) # Allow returned connection to be shared between multiple threads
+connection.row_factory = sqlite3.Row # Allow row access by column name
 cursor = connection.cursor()
 
 
@@ -107,12 +108,12 @@ def login():
         password = request.form.get("login-password")
 
         # Check for user in database
-        user_exists = cursor.execute("SELECT password from author WHERE email = ?", (email,)).fetchone()
-                
-        if user_exists:
+        user = cursor.execute("SELECT password from author WHERE email = ?", (email,)).fetchone()
+        
+        if user:
             
             # Check password hash
-            password_matches = check_password_hash(user_exists[0], password)
+            password_matches = check_password_hash(user['password'], password)
 
             if password_matches:
             
@@ -284,13 +285,13 @@ def create_article():
         for category in categories:
 
             # Check whether category exists
-            category_id = cursor.execute("SELECT 1 FROM category WHERE category = (?)", (category,)).fetchone()
+            category_id = cursor.execute("SELECT * FROM category WHERE category = (?)", (category,)).fetchone()
                       
             if category_id: 
 
                 # Insert it with article ID into database
                 cursor.execute("INSERT INTO article_category (article_id, category_id) VALUES (?, ?)", 
-                    (article_id, category_id[0])) # indexing to get int within tuple
+                    (article_id, category_id['id']))
                 
             else:
                 
