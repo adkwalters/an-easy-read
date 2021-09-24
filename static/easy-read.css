@@ -375,20 +375,20 @@
         max-width: 49rem;
         margin: 7rem auto;
     }
-    #article-form section{
+    #article-form section {
         padding: 1rem;
     }
-    #article-form h2, 
-    #article-form h3 {
+    h2, 
+    h3 {
         margin: 0;
         margin-bottom: 2rem;
     }
-    #article-form label {
+    label {
         font-size: 1.1rem;
     }
-    #article-form input,
-    #article-form select,
-    #article-form textarea {
+    input,
+    select,
+    textarea {
         width: 100%;
         margin: 1rem auto;
         padding: 1rem;
@@ -398,19 +398,15 @@
     }
     .form-text {
         resize: vertical;
-        margin-bottom: 0;
     }
-    #article-form textarea.form-text-header {
+    textarea.form-text-header {
         font-size: 1.4rem;
         height: 3.8rem;
     }
 
 
     /* - Article content */
-    #article-form-content h3 {
-        margin-top: 1rem;
-    }
-    #add-paragraph {
+     #add-paragraph {
         display: block;
         width: 100%;        
         margin-top: 1rem;
@@ -422,6 +418,10 @@
     }
     
     /* - Category control */
+    .article-form-categories-controls {
+        display: flex;
+            justify-content: space-between;
+    }
     #article-form-categories-selected {
         display: flex;
             flex-direction: row;
@@ -431,17 +431,17 @@
     }
 
     /* - Paragraph control */
-    .article-content-controls {
+    .article-form-paragraph-controls {
         display: flex;
             justify-content: space-between;
     }
-    .article-content-controls-left {
+    .article-form-add-menu {
         display: flex;
         position: relative;
         min-height: 2.2rem;
         margin-bottom: 5rem;
     }
-    .add-menu {
+    .add-menu-list {
         position: absolute;
             top: 0; 
             left: 100%;
@@ -449,15 +449,16 @@
             gap: 1.5rem;
             align-content: center;
     }
-    .side-list {
+    .add-menu {
         display: none;
         cursor: pointer;
     }
-    .add-menu:hover .side-list {
+    .add-menu-list:hover .add-menu {
         display: block;
     }
+    .del-image-button,
     .del-header-button,
-    .del-image-button {
+    .del-level-button {
         float: right;
     }
     .article-form-image {

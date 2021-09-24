@@ -18,7 +18,7 @@ from functools import wraps
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True  # Ensure templates are auto-reloaded
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024  # Set maximum file upload size to 1mb
-app.config['UPLOAD_PATH'] = os.path.abspath('static/images') # Set file upload folder
+app.config['UPLOAD_PATH'] = 'static\images' # Set file upload folder
 app.config['UPLOAD_EXTENSIONS'] = {'.jpg', '.png', '.gif'} # Set permitted file types
 
 # Configure session to use filesystem (instead of signed cookies)
@@ -88,7 +88,7 @@ def register():
                 # Commit connection to database        
                 connection.commit()
 
-                flash("Welcome", "success")
+                flash(f"You have successfully registered. Welcome, {email}", "success")
                 return redirect("/")     
 
     return render_template("easy-read-register.html")
@@ -125,7 +125,6 @@ def login():
         # Else throw error
         flash("The email or password is incorrect. Please try again.", "error")
 
-
     return render_template("easy-read-login.html")
 
 # Log user out
@@ -135,7 +134,7 @@ def logout():
     # Clear the session
     session.clear()
     
-    flash(f"You are successfully logged out.", "success")
+    flash("You are successfully logged out.", "success")
 
 
     # Return user to index page
@@ -176,10 +175,6 @@ def add_image():
         image_insert = cursor.execute("INSERT INTO image (src) VALUES (?)", 
                     (uploaded_image_path,))
 
-        # BUG? The previous insert does not show in the database before the main form is posted
-        # Answer: No - I wasn't commiting the connection
-
-
         # Get image ID to use as a foreign key in other tables
         image_id = image_insert.lastrowid
 
@@ -199,7 +194,6 @@ def create_article():
         # Get static form content
         article_title = request.form.get("article-form-title").strip()
         article_description = request.form.get("article-form-description").strip()
-        # article_updated = request.form.get("article-form-date-updated")
         source_name = request.form.get("article-form-source-name").strip()
         source_author = request.form.get("article-form-source-author").strip()
         source_title = request.form.get("article-form-source-title").strip()
@@ -209,9 +203,9 @@ def create_article():
         # categories = request.get_json() # Required for alternative approach using fetch
 
 
-        # # For testing request form:
-        # for key in request.form.keys():
-        #     print(key, ":", request.form[key])
+        # For testing request form:
+        for key in request.form.keys():
+            print(key, ":", request.form[key])
     
 
         # Insert article metadata into database
@@ -228,7 +222,7 @@ def create_article():
         # Insert summary content into database
         for key in request.form.keys():
 
-            if "main-image" in key:
+            if "article-image" in key:
 
                 if "image-id" in key:
                     image_id = request.form[key]
@@ -320,9 +314,14 @@ def create_article():
         
         # Query database for article data
         article = cursor.execute("SELECT * FROM article WHERE id = (?)", (article_id,)).fetchone()
+        source = cursor.execute("SELECT * FROM source WHERE article_id = (?)", (article_id,)).fetchone()
+        article_image = cursor.execute("SELECT * FROM image JOIN article ON image.id = article.image_id WHERE article.id = (?)", (article_id,)).fetchone()
+        categories = cursor.execute("SELECT * FROM category JOIN article_category on category.id = article_category.category_id WHERE article_id = (?)", (article_id,)).fetchall()
+        paragraph_images = cursor.execute("SELECT * FROM image JOIN article_paragraph on image.id = article_paragraph.image_id WHERE article_id = (?)", (article_id,)).fetchall()
+        paragraphs = cursor.execute("SELECT * FROM article_paragraph WHERE article_id = (?)", (article_id,)).fetchall()
+        levels = cursor.execute("SELECT * FROM level WHERE article_id = (?)", (article_id,)).fetchall()
 
-
-        return render_template("easy-read-create-article.html", article=article)
+        return render_template("easy-read-create-article.html", article=article, source=source, article_image=article_image, categories=categories, paragraph_images=paragraph_images, paragraphs=paragraphs, levels=levels)
 
 
 @app.route("/article")

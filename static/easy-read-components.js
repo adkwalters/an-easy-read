@@ -1,5 +1,239 @@
-// Create a custom class for adding paragraphs to the article CMS
-class CreateParagraph extends HTMLElement {
+// !! The following elements use a LIFO system of content deletion
+// in order to preserve content indicies (data-paragraph-index, data-level-index)
+// If the author were to be allowed to delete content out of sequence,
+// content indicies would need to be pulled by the server
+// rather than pushed by the client
+
+// <article-image> 
+class ArticleImage extends HTMLElement {
+    constructor() {
+        super(); 
+    }
+    connectedCallback() {
+        
+        // Attach shadow DOM
+        const shadow = this.attachShadow({mode: "open"});
+
+        // Attach external stylesheet
+        const styleLink = document.createElement("link");
+        styleLink.setAttribute("rel", "stylesheet");
+        styleLink.setAttribute("href", "/static/easy-read.css");
+
+        // Prepare elements 
+        const label = document.createElement("label");
+        label.setAttribute("for", "article-form-main-image-input");
+        label.textContent = "Main image";
+
+        const fileInput = document.createElement("input");
+        fileInput.setAttribute("name", "article-form-main-image-input");
+        fileInput.setAttribute("class", "image-upload");
+        fileInput.setAttribute("type", "file");
+        fileInput.setAttribute("accept", "image/*");
+        
+        const slotImg = document.createElement("slot");
+        slotImg.setAttribute("name", "slot-article-image");
+
+        const img = document.createElement("img");
+        img.setAttribute("class", "article-form-image");
+        img.setAttribute("slot", "slot-article-image");
+        
+        const slotAlt = document.createElement("slot");
+        slotAlt.setAttribute("name", "slot-article-image-alt");
+
+        const altLabel = document.createElement("label");
+        altLabel.setAttribute("for", "article-image-alt");
+        altLabel.textContent = "Image description:";
+        
+        const altInput = document.createElement("input");
+        altInput.setAttribute("name", "article-image-alt");
+        altInput.setAttribute("slot", "slot-article-image-alt");
+
+        const imageId = document.createElement("input");
+        imageId.setAttribute("name", "article-image-id");
+        imageId.setAttribute("type", "hidden");
+        
+        const delImageButton = document.createElement("button");
+        delImageButton.setAttribute("class", "button delete del-image-button");
+        delImageButton.setAttribute("type", "button");
+        delImageButton.textContent = "Delete Image";  
+
+        // Append elements to shadow DOM
+        shadow.appendChild(styleLink);
+        shadow.appendChild(label);
+            label.appendChild(fileInput);
+        shadow.appendChild(slotImg);
+        shadow.appendChild(slotAlt);
+  
+        // Add article image
+        fileInput.addEventListener("change", () => {
+
+            // Get file
+            let file = this.shadowRoot.querySelector(".image-upload").files[0];
+        
+            if (file) {
+        
+                // Create image URL
+                img.src = URL.createObjectURL(file);
+        
+                // Post image to the server asynchronously 
+                postImageAsync(file).then(response => {
+        
+                    // Save image ID to hidden input
+                    imageId.value = response.image_id;
+        
+                    // Append elements to shadow DOM
+                    this.appendChild(imageId);  
+                    this.appendChild(img);
+                    this.appendChild(altInput); 
+                                         
+                });
+            }
+        });
+
+        
+        // Ensure one article image per article 
+        slotImg.addEventListener("slotchange", () => {
+           
+            // Get image
+            let images = slotImg.assignedNodes({flatten: true});
+            
+            // If image exists
+            if (images.length > 0) {
+
+                // Show image-alt header
+                shadow.insertBefore(altLabel, slotAlt);
+
+                // Show image-delete button
+                shadow.appendChild(delImageButton);
+
+                // If image input exists 
+                if (label.contains(fileInput)) {
+
+                    // Remove image input
+                    label.removeChild(fileInput);
+                }
+            }
+        });
+
+
+// Delete content
+
+        // Delete this paragraph
+        delImageButton.addEventListener("click", () => {  
+
+            // Get image content
+            let slottedImage = slotImg.assignedNodes();
+            let slottedAlt = slotAlt.assignedNodes();
+
+            // If image exists
+            if (slottedImage.length > 0) {
+
+                // Remove image elements
+                slottedImage[0].remove();
+                slottedAlt[0].remove();
+                altLabel.remove();
+                delImageButton.remove();
+
+                // !! What about hidden input
+
+                // Re-append image file input
+                label.appendChild(fileInput);
+                fileInput.value = "";    
+            }
+        }); 
+    }
+}
+customElements.define("article-image", ArticleImage);
+
+
+
+// <article-content> 
+class ArticleContent extends HTMLElement {
+    constructor() {
+        super(); 
+    }
+    connectedCallback() {
+        
+        // Attach shadow DOM
+        const shadow = this.attachShadow({mode: "open"});
+
+        // Attach external stylesheet
+        const styleLink = document.createElement("link");
+        styleLink.setAttribute("rel", "stylesheet");
+        styleLink.setAttribute("href", "/static/easy-read.css");
+
+        // Prepare elements    
+        const articleContentHeader = document.createElement("h2");
+        articleContentHeader.setAttribute("class", "article-form-paragraph-header");
+        articleContentHeader.innerHTML = "Article Content"; 
+
+        const slotParagraphs = document.createElement("slot");
+        slotParagraphs.setAttribute("name", "slot-article-paragraphs");
+
+        const delParaButton = document.createElement("button");
+        delParaButton.setAttribute("class", "button delete del-para-button");
+        delParaButton.setAttribute("type", "button");
+        delParaButton.textContent = "Delete Paragraph";
+
+         // Append elements to shadow DOM
+        shadow.appendChild(styleLink);
+        shadow.appendChild(articleContentHeader);
+        shadow.appendChild(slotParagraphs);
+
+// Track content
+
+        // Display delete-paragraph button for last paragraph only (LIFO)
+        slotParagraphs.addEventListener("slotchange", () => {
+            
+            // Get all paragraphs
+            let paragraphs = slotParagraphs.assignedNodes({flatten: true});
+            
+            // Get last paragraph
+            let lastParagraph = paragraphs[paragraphs.length -1];
+
+            for (let paragraph of paragraphs) {
+  
+                // Get paragraph controls
+                let controls = paragraph.shadowRoot.querySelector(".article-form-paragraph-controls");
+                let button = controls.querySelector(".del-para-button");
+
+                // If this is the last paragraph and it is empty 
+                if (paragraph == lastParagraph && paragraph.childElementCount == 0) {
+                    
+                    // If no button exists
+                    if (!controls.contains(button)) {
+
+                        // Append button
+                        controls.appendChild(delParaButton);
+                    }
+                } 
+                else {
+                
+                    // If button exists
+                    if (controls.contains(button)) {
+
+                        // Remove button
+                        controls.removeChild(button);
+                    }
+                }
+            }      
+        });
+
+
+// Delete content
+
+        // Delete this paragraph
+        delParaButton.addEventListener("click", (event) => {  
+            let paragraph = event.target.getRootNode().host; 
+            paragraph.remove();
+        }); 
+    }
+}
+customElements.define("article-content", ArticleContent);
+
+
+// <article-paragraph> 
+class ArticleParagraph extends HTMLElement {
     constructor() {
         super(); 
     }
@@ -8,251 +242,351 @@ class CreateParagraph extends HTMLElement {
         // Get paragraph index from html attribute and set level index counter
         const paragraphIndex = this.getAttribute("data-paragraph-index");
 
+        // Attach shadow DOM
+        const shadow = this.attachShadow({mode: "open"});
+
+        // Attach external stylesheet
+        const styleLink = document.createElement("link");
+        styleLink.setAttribute("rel", "stylesheet");
+        styleLink.setAttribute("href", "/static/easy-read.css");
+
         // Prepare elements    
-        const h3 = document.createElement("h3");
-        h3.setAttribute("class", "paragraph-header");
-        h3.innerHTML = `Paragraph ${paragraphIndex}`; 
+        const paragraphHeader = document.createElement("h3");
+        paragraphHeader.setAttribute("class", "article-form-paragraph-header");
+        paragraphHeader.innerHTML = `Paragraph ${paragraphIndex}`; 
 
-        const ul = document.createElement("ul");
-        ul.setAttribute("data-paragraph-index", paragraphIndex);
+        const slotImage = document.createElement("slot");
+        slotImage.setAttribute("name", "slot-paragraph-image");
 
-        const div = document.createElement("div");
-        div.setAttribute("class", "article-content-controls");
+        const slotHeader = document.createElement("slot");
+        slotHeader.setAttribute("name", "slot-paragraph-header");
 
-        const divLeft = document.createElement("div");
-        divLeft.setAttribute("class", "article-content-controls-left");
+        const slotLevels = document.createElement("slot");
+        slotLevels.setAttribute("name", "slot-paragraph-levels");
 
-        const addButton = document.createElement("button");
-        addButton.setAttribute("class", "button");
-        addButton.setAttribute("type", "button");
-        addButton.textContent = "Add";
+        const paragraphControls = document.createElement("div");
+        paragraphControls.setAttribute("class", "article-form-paragraph-controls");
+
+        const addMenu = document.createElement("div");
+        addMenu.setAttribute("class", "article-form-add-menu");
         
-        const addMenu = document.createElement("ul");
-        addMenu.setAttribute("class", "button add-menu");
-        addMenu.textContent = "Add...";  
+        const addMenuList = document.createElement("ul");
+        addMenuList.setAttribute("class", "button add-menu-list");
+        addMenuList.textContent = "Add...";  
 
         const addLevelButton = document.createElement("li");
-        addLevelButton.setAttribute("class", "side-list add-level");
+        addLevelButton.setAttribute("class", "add-menu add-level");
         addLevelButton.textContent = "level";  
 
         const addHeaderButton = document.createElement("li");
-        addHeaderButton.setAttribute("class", "side-list add-header");
+        addHeaderButton.setAttribute("class", "add-menu add-header");
         addHeaderButton.textContent = "header";  
 
         const addImageButton = document.createElement("li");
-        addImageButton.setAttribute("class", "side-list add-image");
+        addImageButton.setAttribute("class", "add-menu add-image");
         addImageButton.textContent = "image"; 
-         
-        const delLevelButton = document.createElement("button");
-        delLevelButton.setAttribute("class", "button delete del-level-button");
-        delLevelButton.setAttribute("type", "button");
-        delLevelButton.textContent = "Delete Level";   
-        
+                 
         const delParaButton = document.createElement("button");
         delParaButton.setAttribute("class", "button delete del-para-button");
         delParaButton.setAttribute("type", "button");
         delParaButton.textContent = "Delete Paragraph";
 
-        // Attach elements to the DOM
-        this.appendChild(h3);
-        this.appendChild(ul);
-        this.appendChild(div);
-            div.appendChild(divLeft);
-                divLeft.appendChild(addMenu);
-                    addMenu.appendChild(addLevelButton);
-                    addMenu.appendChild(addHeaderButton);
-                    addMenu.appendChild(addImageButton);
-            div.appendChild(delParaButton);
- 
-        // Add a level to the this paragraph
-        addLevelButton.addEventListener("click", () => {
-            let level = document.createElement("create-level"); 
-            let levels = this.getElementsByTagName("create-level");
-            let levelIndex = levels.length + 1; // Non-zero indexing
-            level.setAttribute("data-paragraph-index", paragraphIndex);
-            level.setAttribute("data-level-index", levelIndex);
-            level.setAttribute("class", "custom-level");
-            ul.appendChild(level);                          
-            //...scroll image input into view
-            level.scrollIntoView({block: "center", behavior: "smooth"});
-            // If this is the first level...
-            if (ul.childElementCount === 1) {
-                //...hide the delete-paragraph button
-                updateDelParaButton(this, "hide");
-                //...add a delete-level button as a first child
-                div.appendChild(delLevelButton); 
+        const delLevelButton = document.createElement("button");
+        delLevelButton.setAttribute("class", "button delete del-level-button");
+        delLevelButton.setAttribute("type", "button");
+        delLevelButton.textContent = "Delete Level";   
+
+        // Append elements to shadow DOM
+        shadow.appendChild(styleLink);
+        shadow.appendChild(paragraphHeader);
+        shadow.appendChild(slotImage);
+        shadow.appendChild(slotHeader);
+        shadow.appendChild(slotLevels);
+        shadow.appendChild(paragraphControls);
+            paragraphControls.appendChild(addMenu);
+                addMenu.appendChild(addMenuList);
+                    addMenuList.appendChild(addImageButton);
+                    addMenuList.appendChild(addHeaderButton);
+                    addMenuList.appendChild(addLevelButton);
+            paragraphControls.appendChild(delParaButton);
+
+// Add content
+
+        // Add image to paragraph
+        addImageButton.addEventListener("click", () => {
+
+            // Get image content 
+            let imageSlot = this.shadowRoot.querySelector("[name='slot-paragraph-image']");
+            let imageContent = imageSlot.assignedNodes({flatten: true});
+            
+            // If no image exists
+            if (imageContent.length < 1) {
+
+                // Create image 
+                let image = document.createElement("paragraph-image");
+                image.setAttribute("data-paragraph-index", paragraphIndex);
+                image.setAttribute("slot", "slot-paragraph-image");
+                
+                // Add header to shadow DOM
+                this.appendChild(image);
+
+                // Scroll into view
+                image.scrollIntoView({block: "center", behavior: "smooth"});
             }
-        });   
-        
-        // Add a header to this paragraph    
+            else {
+                
+                // Alert author
+                alert("An image has already been added for this paragraph");
+
+            }
+        });
+
+
+        // Add header to paragraph    
         addHeaderButton.addEventListener("click", () => {
-            // If there is no current header...
-            let currentHeader = this.querySelector("create-header");
-            if (!currentHeader) {
-                //...create one
-                let header = document.createElement("create-header");
+
+            // Get header content
+            let headerSlot = this.shadowRoot.querySelector("[name='slot-paragraph-header']");
+            let headerContent = headerSlot.assignedNodes({flatten: true});
+            
+            // If no header exists
+            if (headerContent.length < 1) {
+
+                // Create header
+                let header = document.createElement("paragraph-header");
                 header.setAttribute("data-paragraph-index", paragraphIndex);
-                this.insertBefore(header, ul);
-                //...scroll image input into view
+                header.setAttribute("slot", "slot-paragraph-header");
+
+                // Attach header to shadow DOM
+                this.appendChild(header);
+
+                // Scroll into view
                 header.scrollIntoView({block: "center", behavior: "smooth"});
-                //...set the create header option to unavailable
-                let menuOption = this.querySelector(".add-header");
-                menuOption.classList.add("unavailable");
-                //...hide the delete-paragraph button
-                updateDelParaButton(this, "hide");
-            } else {
+            } 
+            else {
+
+                // Alert author
                 alert("A header has already been added for this paragraph");
             }
         });
 
-        // Add an image to this paragraph
-        addImageButton.addEventListener("click", () => {
-            // If there is no current image...
-            let currentImage = this.querySelector(".image-upload");
-            if (!currentImage) {
-                //...create one 
-                let image = document.createElement("create-image");
-                image.setAttribute("data-paragraph-index", paragraphIndex);
-                //...ensure it is placed before a paragraph header
-                let header = this.querySelector("create-header");
-                if (header) {
-                    this.insertBefore(image, header);
-                } else {
-                    this.insertBefore(image, ul);
+        
+        // Add level to paragraph
+        addLevelButton.addEventListener("click", () => {
+            
+            // Calculate level index (non-zero)
+            let levels = this.querySelectorAll("paragraph-level");
+            let levelIndex = levels.length + 1; 
+
+            // Create level
+            let level = document.createElement("paragraph-level"); 
+            level.setAttribute("data-paragraph-index", paragraphIndex);
+            level.setAttribute("class", "custom-level");
+            level.setAttribute("data-level-index", levelIndex);
+            level.setAttribute("slot", "slot-paragraph-levels");
+                
+            // Add level to shadow DOM
+            this.appendChild(level);       
+
+            // Scroll into view
+            level.scrollIntoView({block: "center", behavior: "smooth"});
+        });   
+
+
+// Delete Content
+
+        // Initialise delete-paragraph criteria
+        let imageSlotEmpty = true;
+        let headerSlotEmpty = true;
+        let levelsSlotEmpty = true;
+
+        // Add or remove delete-paragraph button
+        const updateDelParaButton = () => {
+            
+            // If this is the last paragraph and it is empty
+            if (!this.nextElementSibling && imageSlotEmpty && headerSlotEmpty && levelsSlotEmpty) {
+                
+                // Display button
+                paragraphControls.appendChild(delParaButton);
+            } 
+            else {
+           
+                // If button already exists
+                if (paragraphControls.contains(delParaButton)) {
+                    
+                    // Remove button
+                    paragraphControls.removeChild(delParaButton);
                 }
-                //...scroll image input into view
-                image.scrollIntoView({block: "center", behavior: "smooth"});
-                //...set the create image option to unavailable
-                let menuOption = this.querySelector(".add-image");
-                menuOption.classList.add("unavailable");
-                //...hide the delete-paragraph button
-                updateDelParaButton(this, "hide");
-            } else {
-                alert("An image has already been added for this paragraph");
             }
-        });
+        }
+        // Update button
+        updateDelParaButton();
 
-        // Delete the ultimate level from this paragraph 
-        delLevelButton.addEventListener("click", () => {
-            ul.removeChild(ul.lastChild); 
-            // If no level exists in this paragraph...
-            if (ul.childElementCount === 0) {               
-                //...remove the delete-level button
-                delLevelButton.remove();
-                // Show the delete-paragraph button
-                updateDelParaButton(this, "show");
-            }               
-        });
-
+        
         // Delete this paragraph
-        delParaButton.addEventListener("click", () => {            
-            // If this is the ultimate paragraph       
-            let prevParagraph = this.previousElementSibling
-            let nextParagraph = this.nextElementSibling;
-            if (prevParagraph && !nextParagraph) {
-                //...and if the previous paragraph is empty of content
-                let levels = prevParagraph.querySelector("ul").childElementCount;
-                let header = prevParagraph.querySelector("create-header");
-                let image = prevParagraph.querySelector("create-image");
-                if (levels === 0 && !header && !image) {
-                    //...show the previous paragraph's delete-paragraph button
-                    let button = prevParagraph.querySelector(".del-para-button");
-                    button.classList.remove("hidden");
-                }                
-            }        
-            // Remove this paragraph
+        delParaButton.addEventListener("click", () => {   
+
+            // Update previous paragraph's button
+            updateDelParaButton(); 
+
+            // Delete paragraph
             this.remove();
         }); 
-    }
-}
-customElements.define("create-paragraph", CreateParagraph);
 
 
+        // Delete last level (LIFO)
+        delLevelButton.addEventListener("click", () => {
+            
+            // Get last level
+            let levelsSlot = this.shadowRoot.querySelector("[name='slot-paragraph-levels']");
+            let levels = levelsSlot.assignedNodes({flatten: true});
+            let lastLevel = levels[levels.length -1];
+            
+            // Delete last level
+            lastLevel.remove();
+        })
 
-// Create a custom class for adding levels to the article CMS
-class CreateLevel extends HTMLElement {
-    constructor() {
-        super();
-    }
-    connectedCallback() {
 
-        // Get paragraph and level indices from html attributes
-        const paragraphIndex = this.getAttribute("data-paragraph-index");
-        const levelIndex = this.getAttribute("data-level-index");
+// Track content           
 
-        // Generate id to be used in name attribute
-        const levelId = `paragraph-${paragraphIndex}-level-${levelIndex}`;
-                
-        // Prepare elements
-        const li = document.createElement("li");
+        // Mark image as empty or filled
+        slotImage.addEventListener("slotchange", () => {
+            
+            // Get image content
+            let content = slotImage.assignedNodes({flatten: true});
+            
+            // If no image exists
+            if (content.length < 1) {
+
+                // Mark slot as empty
+                imageSlotEmpty = true;
+
+                // Display menu option
+                addImageButton.classList.remove("unavailable");
+            }         
+            else {
+
+                // Mark slot as not empty
+                imageSlotEmpty = false;
+
+                // Hide menu option
+                addImageButton.classList.add("unavailable");
+            }
+
+            // Update button
+            updateDelParaButton();
+        });
+
         
-        const label = document.createElement("label");
-        label.setAttribute("for", levelId);
-        label.textContent = `Level ${levelIndex}:`; 
-       
-        const textarea = document.createElement("textarea");
-        textarea.setAttribute("id", levelId);
-        textarea.setAttribute("name", levelId);
-        textarea.setAttribute("class", "form-text");
+        // Mark header as empty or filled
+        slotHeader.addEventListener("slotchange", () => {
+            
+            // Get header content
+            let content = slotHeader.assignedNodes({flatten: true});
 
-        // Attach elements to the DOM
-        this.appendChild(li);
-            li.appendChild(label);
-                label.appendChild(textarea);
-    }
-}
-customElements.define("create-level", CreateLevel);
+            // If no header exists
+            if (content.length < 1) {
 
+                // Mark slot as empty
+                headerSlotEmpty = true;
 
+                // Display menu option
+                addHeaderButton.classList.remove("unavailable");
+            } 
+            else {
 
-// Create a custom class for adding headers to the article CMS
-class CreateHeader extends HTMLElement {
-    constructor() {
-        super();
-    }
-    connectedCallback() {    
+                // Mark slot as not empty
+                headerSlotEmpty = false;
 
-        // Generate label name   
-        const paragraphIndex = this.getAttribute("data-paragraph-index");
-        const labelName = `paragraph-${paragraphIndex}-header`;
+                // Hide menu option
+                addHeaderButton.classList.add("unavailable");
+            }
+
+            // Update button
+            updateDelParaButton();   
+        });
+
         
-        // Prepare elements       
-        const label = document.createElement("label");
-        label.setAttribute("for", labelName);
-        label.textContent = "Header:";
-       
-        const textarea = document.createElement("textarea");
-        textarea.setAttribute("name", labelName);
-        textarea.setAttribute("class", "form-text form-text-header");
+        // Mark level as empty or filled
+        slotLevels.addEventListener("slotchange", () => {
 
-        const delHeaderButton = document.createElement("button");
-        delHeaderButton.setAttribute("class", "button delete del-header-button");
-        delHeaderButton.setAttribute("type", "button");
-        delHeaderButton.textContent = "Delete Header";  
+            // Get level content
+            let levels = slotLevels.assignedNodes({flatten: true});
 
-        // Attach elements to the DOM
-        this.appendChild(label);
-        this.appendChild(textarea);
-        this.appendChild(delHeaderButton);
+            // If no level exists
+            if (levels.length < 1) {     
 
-        // Delete header
-        delHeaderButton.addEventListener("click", () => { 
-            // Re-activate add-header option
-            let menuOption = this.parentNode.querySelector(".add-header");
-            menuOption.classList.remove("unavailable");
-            // Show the delete-paragraph button
-            updateDelParaButton(this.parentNode, "show");
-            // Delete header and delete-header button
-            delHeaderButton.remove();
-            this.remove();
+                // Mark slot as empty
+                levelsSlotEmpty = true;
+            } 
+            else {
+
+                // Mark slot as not empty
+                levelsSlotEmpty = false;
+            } 
+ 
+            // Update button
+            updateDelParaButton(); 
+        });
+
+
+        // Display delete-level button for last level only (LIFO)
+        slotLevels.addEventListener("slotchange", () => {
+
+            // Get levels
+            let levels = slotLevels.assignedNodes({flatten: true});
+
+            // Get last level
+            let lastLevel = levels[levels.length - 1];
+
+            // If no level exists
+            if (levels.length < 1) {  
+
+                // If button exists
+                if (paragraphControls.contains(delLevelButton)) {
+
+                    // Remove button
+                    paragraphControls.removeChild(delLevelButton);
+                }
+            }
+            else {
+
+                // Update delete-level buttons
+                for (let level of levels) {
+
+                    // If level is last level in paragraph
+                    if (level == lastLevel) {
+                        
+                        // If no button exists
+                        if (!paragraphControls.contains(delLevelButton)) {
+
+                            // Append button 
+                            paragraphControls.appendChild(delLevelButton);
+                        }        
+                    } 
+                    else {
+
+                        // If button exists
+                        if (paragraphControls.contains(delLevelButton)) {
+
+                            // Remove button
+                            paragraphControls.removeChild(delLevelButton);
+                        }
+                    }
+                }  
+            }
+    
+            // Update button
+            updateDelParaButton(); 
         });
     }
 }
-customElements.define("create-header", CreateHeader);
+customElements.define("article-paragraph", ArticleParagraph);
 
 
-// Create a custom class for adding images to the article CMS
-class CreateImage extends HTMLElement {
+
+// <paragraph-image>
+class ParagraphImage extends HTMLElement {
     constructor() {
         super();
     }
@@ -263,17 +597,35 @@ class CreateImage extends HTMLElement {
         const labelName = `paragraph-${paragraphIndex}-image`;
         const altLabelName = `${labelName}-alt`;
         const imageIdName = `${labelName}-id`;
-        
+                        
+        // Attach shadow DOM
+        const shadow = this.attachShadow({mode: "open"});
+
+        // Attach external stylesheet
+        const styleLink = document.createElement("link");
+        styleLink.setAttribute("rel", "stylesheet");
+        styleLink.setAttribute("href", "/static/easy-read.css");
+
         // Prepare elements       
         const label = document.createElement("label");
         label.setAttribute("for", labelName);
         label.textContent = "Image:";
 
-        const input = document.createElement("input");
-        input.setAttribute("name", labelName);
-        input.setAttribute("class", "image-upload");
-        input.setAttribute("type", "file");
-        input.setAttribute("accept", "image/*");
+        const fileInput = document.createElement("input");
+        fileInput.setAttribute("name", labelName);
+        fileInput.setAttribute("class", "image-upload");
+        fileInput.setAttribute("type", "file");
+        fileInput.setAttribute("accept", "image/*");
+        
+        const slotImg = document.createElement("slot");
+        slotImg.setAttribute("name", "slot-paragraph-image-src");
+
+        const img = document.createElement("img");
+        img.setAttribute("class", "article-form-image");
+        img.setAttribute("slot", "slot-paragraph-image-src");
+        
+        const slotAlt = document.createElement("slot");
+        slotAlt.setAttribute("name", "slot-paragraph-image-alt");
 
         const altLabel = document.createElement("label");
         altLabel.setAttribute("for", altLabelName);
@@ -281,7 +633,7 @@ class CreateImage extends HTMLElement {
         
         const altInput = document.createElement("input");
         altInput.setAttribute("name", altLabelName);
-        altInput.setAttribute("class", "image-upload-alt");
+        altInput.setAttribute("slot", "slot-paragraph-image-alt");
 
         const imageId = document.createElement("input");
         imageId.setAttribute("name", imageIdName);
@@ -292,63 +644,189 @@ class CreateImage extends HTMLElement {
         delImageButton.setAttribute("type", "button");
         delImageButton.textContent = "Delete Image";  
 
-        // Attach elements to the DOM
-        this.appendChild(label);
-        this.appendChild(input);
-        this.appendChild(delImageButton);
+        // Append elements to shadow DOM
+        shadow.appendChild(styleLink);
+        shadow.appendChild(label);
+            label.appendChild(fileInput);
+        shadow.appendChild(slotImg);
+        shadow.appendChild(slotAlt);
+        shadow.appendChild(delImageButton);
 
-        // Add an image
-        input.addEventListener("change", () => {
-            // Get uploaded file
-            let file = this.querySelector(".image-upload").files[0];
-            // If a file exists...
+
+// Add content
+
+        // Add image
+        fileInput.addEventListener("change", () => {
+
+            // Get file
+            let file = this.shadowRoot.querySelector(".image-upload").files[0];
+
             if (file) {
-                //...display it in the form
-                let img = document.createElement("img");
-                img.setAttribute("class", "article-form-image");
+
+                // Create image URL
                 img.src = URL.createObjectURL(file);
-                //...create form data object 
-                let formData = new FormData();
-                formData.append('file', file);
-                //...and post it to server
-                fetch("/add-image", {
-                    method: "POST", 
-                    body: formData
+
+                // Post image to the server asynchronously 
+                postImageAsync(file).then(response => {
+                    
+                    // Save image ID to hidden input
+                    imageId.value = response.image_id;
+
+                    // Append elements to shadow DOM
+                    this.appendChild(imageId); // !! TEST deleting this and not reinputting 
+                    this.appendChild(img);
+                    this.appendChild(altInput); 
                 })
-                .then(response => response.json()) 
-                .then(data => {
-                    // Save image ID as hidden input
-                    imageId.value = data.image_id;
-                    // Add elements to DOM
-                    this.insertBefore(img, input); 
-                    this.insertBefore(imageId, delImageButton); // ID must be parsed first
-                    this.insertBefore(altLabel, delImageButton);
-                    this.insertBefore(altInput, delImageButton);
-                    // Remove superfluous elements
-                    this.removeChild(input);
-                    this.removeChild(label);
-                })
-                .catch(error => {
-                    console.error(error);
-                    alert('invalid or incorrect file extension');
-                });
+            }
+        });
+    
+
+        // Ensure one image per paragraph
+        slotImg.addEventListener("slotchange", () => {
+            
+            // Get image
+            let images = slotImg.assignedNodes({flatten: true});
+            
+            // If image exists
+            if (images.length > 0) {
+
+                // Show image alt label
+                shadow.insertBefore(altLabel, slotAlt);
+
+                // If image input exists
+                if (label.contains(fileInput)) {
+
+                    // Remove image input
+                    label.removeChild(fileInput);
+                }
             }
         });
 
+
+// Delete content
+
         // Delete image
-        delImageButton.addEventListener("click", () => { 
-            // Re-activate add-image option
-            let menuOption = this.parentNode.querySelector(".add-image");
-            menuOption.classList.remove("unavailable");
-            // Show the delete-paragraph button
-            updateDelParaButton(this.parentNode, "show");
-            // Delete image and delete-image button
-            delImageButton.remove();
+        delImageButton.addEventListener("click", () => {  
             this.remove();
         });
     }
 }
-customElements.define("create-image", CreateImage);
+customElements.define("paragraph-image", ParagraphImage);
+
+
+
+// <paragraph-header>
+class ParagraphHeader extends HTMLElement {
+    constructor() {
+        super();
+    }
+    connectedCallback() {    
+
+        // Generate label name   
+        const paragraphIndex = this.getAttribute("data-paragraph-index");
+        const labelName = `paragraph-${paragraphIndex}-header`;
+                
+        // Attach shadow DOM
+        const shadow = this.attachShadow({mode: "open"});
+
+        // Attach external stylesheet
+        const styleLink = document.createElement("link");
+        styleLink.setAttribute("rel", "stylesheet");
+        styleLink.setAttribute("href", "/static/easy-read.css");
+
+        // Prepare elements       
+        const label = document.createElement("label");
+        label.setAttribute("for", labelName);
+        label.textContent = "Header:";
+
+        const slotHeaderText = document.createElement("slot");
+        slotHeaderText.setAttribute("name", "slot-header-text");
+
+        const textarea = document.createElement("textarea");
+        textarea.setAttribute("name", labelName);
+        textarea.setAttribute("class", "form-text form-text-header");
+        textarea.setAttribute("slot", "slot-header-text")
+
+        const delHeaderButton = document.createElement("button");
+        delHeaderButton.setAttribute("class", "button delete del-header-button");
+        delHeaderButton.setAttribute("type", "button");
+        delHeaderButton.textContent = "Delete Header";  
+
+        // Append elements to shadow DOM
+        shadow.appendChild(styleLink);
+        shadow.appendChild(label);
+            label.appendChild(slotHeaderText);
+                // slotHeaderText.appendChild(textarea); // !! This stops saving to db. I want it to work as fallback
+        shadow.appendChild(delHeaderButton);
+        this.appendChild(textarea); // !! This saves to db but the fallback is included with the slotted elements
+
+
+
+        // Delete header
+        delHeaderButton.addEventListener("click", () => { 
+            this.remove();
+        });
+    }
+}
+customElements.define("paragraph-header", ParagraphHeader);
+
+
+
+// <paragraph-level>
+class ParagraphLevel extends HTMLElement {
+    constructor() {
+        super();
+    }
+    connectedCallback() {
+
+        // Get paragraph and level indices from html attributes
+        const paragraphIndex = this.getAttribute("data-paragraph-index");
+        const levelIndex = this.getAttribute("data-level-index");
+
+        // Generate id to be used as name attribute
+        const levelId = `paragraph-${paragraphIndex}-level-${levelIndex}`;
+        
+        // Attach shadow DOM
+        const shadow = this.attachShadow({mode: "open"});
+
+        // Attach external stylesheet
+        const styleLink = document.createElement("link");
+        styleLink.setAttribute("rel", "stylesheet");
+        styleLink.setAttribute("href", "/static/easy-read.css");
+        
+        // Prepare elements     
+        const label = document.createElement("label");
+        label.setAttribute("for", levelId);
+        label.textContent = `Level ${levelIndex}:`; 
+
+        const slotLevelText = document.createElement("slot");
+        slotLevelText.setAttribute("name", "slot-level-text");
+       
+        const textarea = document.createElement("textarea");
+        textarea.setAttribute("id", levelId);
+        textarea.setAttribute("name", levelId);
+        textarea.setAttribute("class", "form-text");
+        // textarea.setAttribute("slot", "slot-level-text");
+
+        const delLevelButton = document.createElement("button");
+        delLevelButton.setAttribute("class", "button delete del-level-button");
+        delLevelButton.setAttribute("type", "button");
+        delLevelButton.textContent = "Delete Level";   
+
+        // Append elements to shadow DOM
+        shadow.appendChild(styleLink);
+        shadow.appendChild(label);
+            label.appendChild(slotLevelText);
+                slotLevelText.append(textarea); // !! This stops saving to db. I want it to work as fallback
+        // this.appendChild(textarea); // !! This saves to db but the fallback is included with the slotted elements
+        
+        // Delete level
+        delLevelButton.addEventListener("click", () => { 
+            this.remove();
+        });
+    }
+}
+customElements.define("paragraph-level", ParagraphLevel);
 
 
 
@@ -370,10 +848,8 @@ customElements.define("create-image", CreateImage);
 
 
 
-
-
-
-
+// The following is code which I have yet to update
+// This will be done following completion of the CMS
 
 
 // Create a custom class for the summary paragraphs

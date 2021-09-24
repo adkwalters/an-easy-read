@@ -17,26 +17,42 @@
     <!-- Article form -->
     <form id="article-form" action="/create-article" method="post" autocomplete="off">
         <h1>Create Article</h1>
-        {% if article %}
-            <div>{{ article['title'] }}</div>
-        {% endif %}
         <section id="article-form-source" class="label-colour">
             <h2>Source data</h2>
-            <label for="article-form-source-name">Source name:<input id="article-form-source-name" name="article-form-source-name" type="text"/></label>
-            <label for="article-form-source-author">Source author:<input id="article-form-source-author" name="article-form-source-author" type="text"/></label>
-            <label for="article-form-source-title">Source title:<input id="article-form-source-title" name="article-form-source-title" type="text"/></label>
-            <label for="article-form-source-contact">Source contact:<input id="article-form-source-contact" name="article-form-source-contact" type="text"/></label>
-            <label for="article-form-source-hyperlink">Source link:<input id="article-form-source-hyperlink" name="article-form-source-hyperlink" type="text"/></label>
+            {% if source is not none %}
+                <label for="article-form-source-name">Source name:<input id="article-form-source-name" name="article-form-source-name" type="text" value="{{ source['name'] }}"/></label>
+                <label for="article-form-source-author">Source author:<input id="article-form-source-author" name="article-form-source-author" type="text" value="{{ source['author'] }}"/></label>
+                <label for="article-form-source-title">Source title:<input id="article-form-source-title" name="article-form-source-title" type="text" value="{{ source['title'] }}"/></label>
+                <label for="article-form-source-contact">Source contact:<input id="article-form-source-contact" name="article-form-source-contact" type="text" value="{{ source['contact'] }}"/></label>
+                <label for="article-form-source-hyperlink">Source link:<input id="article-form-source-hyperlink" name="article-form-source-hyperlink" type="text" value="{{ source['hyperlink'] }}"/></label> 
+            {% else %}
+                <label for="article-form-source-name">Source name:<input id="article-form-source-name" name="article-form-source-name" type="text"/></label>
+                <label for="article-form-source-author">Source author:<input id="article-form-source-author" name="article-form-source-author" type="text"/></label>
+                <label for="article-form-source-title">Source title:<input id="article-form-source-title" name="article-form-source-title" type="text"/></label>
+                <label for="article-form-source-contact">Source contact:<input id="article-form-source-contact" name="article-form-source-contact" type="text"/></label>
+                <label for="article-form-source-hyperlink">Source link:<input id="article-form-source-hyperlink" name="article-form-source-hyperlink" type="text"/></label>
+            {% endif %}
         </section>
         <section id="article-form-meta" class="label-colour">
             <h2>Article data</h2>
-            <label for="article-form-main-image-input">Main image:<input id="article-form-main-image-input" name="article-form-main-image-input" type="file" accept="image/*" class="image-upload"></label>
-            <label for="article-form-title">Title:<input id="article-form-title" name="article-form-title" type="text" required/></label>
-            <label for="article-form-description">Description:<input id="article-form-description" name="article-form-description" type="text" required/></label>
-            <!-- <label for="article-form-date-updated">Date updated:<input id="article-form-date-updated" name="article-form-date-updated" type="text"></label> -->
+            {% if article_image is not none %}
+                <article-image>
+                    <img slot="slot-article-image" class="article-form-image" src="{{ article_image['src'] }}">
+                    <input slot="slot-article-image-alt" value="{{ article_image['alt'] }}">
+                </article-image>
+            {% else %}
+                <article-image></article-image>
+            {% endif %}
+            </label>
+            {% if article is not none %}
+                <label for="article-form-title">Article title:<input id="article-form-title" name="article-form-title" type="text" required value="{{ article['title'] }}"/></label>
+                <label for="article-form-description">Article description:<input id="article-form-description" name="article-form-description" type="text" required value="{{ article['description'] }}"/></label>
+            {% else %}
+                <label for="article-form-title">Article title:<input id="article-form-title" name="article-form-title" type="text" required/></label>
+                <label for="article-form-description">Article description:<input id="article-form-description" name="article-form-description" type="text" required/></label>
+            {% endif %}
             <label for="article-form-categories">Categories:
-                <!-- <input id="article-form-categories" name="article-form-categories" type="text" maxlength="15"/> -->
-                <input list="article-form-categories-input"> <!-- Remove name to stop form being input -->
+                <input list="article-form-categories-input"> <!-- Remove name to stop input being submitted with form -->
                 <datalist id="article-form-categories-input"> 
                     <option value="Technology"></option>
                     <option value="Science"></option>
@@ -44,17 +60,54 @@
                     <option value="Culture"></option>
                     <option value="Language"></option>
                 </datalist>
-                <div class="article-content-controls">
+                <div class="article-form-categories-controls">
                     <button id="article-form-add-category-button" type="button" class="button">Add Category</button>
                     <button id="article-form-del-category-button" type="button" class="button delete">Delete Category</button>
                 </div>
                 <ul id="article-form-categories-selected">
+                {% if categories is not none %} 
+                    {% for category in categories %}   
+                        <li class="label-size label-colour">{{ category['category'] }}</li>
+                    {% endfor %}
+                {% endif %}
                 </ul>
             </label>
         </section>
         <section class="label-colour">
-            <h2>Article Content</h2>
-            <ul id="article-form-content"></ul>
+            <article-content>
+
+            {% if paragraphs is not none %}
+                {% for paragraph in paragraphs %}
+                    <article-paragraph slot="slot-article-paragraphs" data-paragraph-index="{{ paragraph['paragraph_id'] }}">
+                    {% if paragraph_images is not none %}
+                        {% for image in paragraph_images %}
+                            {% if image['id'] == paragraph['image_id'] %}
+                                <paragraph-image slot="slot-paragraph-image" data-paragraph-index="{{ paragraph['paragraph_id'] }}">
+                                    <img slot="slot-paragraph-image-src" class="article-form-image" src="{{ image['src'] }}">
+                                    <input slot="slot-paragraph-image-alt" value="{{ image['alt'] }}">
+                                </paragraph-image>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    {% if paragraph['header'] is not none %}
+                        <paragraph-header slot="slot-paragraph-header" data-paragraph-index="{{ paragraph['paragraph_id'] }}">
+                            <textarea slot="slot-header-text" class="form-text form-text-header">{{ paragraph['header'] }}</textarea>
+                        </paragraph-header>
+                    {% endif %}
+                    {% if levels is not none %}
+                        {% for level in levels %}
+                            {% if level['paragraph_id'] == paragraph['paragraph_id'] %}
+                                <paragraph-level slot="slot-paragraph-levels" data-level-index="{{ level['level'] }}">
+                                    <textarea slot="slot-level-text">{{ level['content'] }}</textarea>
+                                </paragraph-level>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    </article-paragraph>
+                {% endfor %}
+            {% endif %}
+
+            </article-content>   
             <button id="add-paragraph" type="button">Add Paragraph</button>
         </section>
         <button id="submit-form-button" class="button big-button" type="submit">Create Article</button>
