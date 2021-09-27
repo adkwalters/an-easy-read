@@ -1,8 +1,19 @@
-// !! The following elements use a LIFO system of content deletion
+// n.b. The following elements use a LIFO system of content deletion
 // in order to preserve content indicies (data-paragraph-index, data-level-index)
 // If the author were to be allowed to delete content out of sequence,
 // content indicies would need to be pulled by the server
 // rather than pushed by the client
+
+// !! Editing a paragraph image changes the main image
+// The paragraph image alt is overwritten as null
+// Maybe it's the same issue as the header and levels - the element is doubled
+// but why would this change a different image?
+
+// Main image didn't update when changed
+//    - image ID doesn't change so old image rendered
+//    - new image alt rendered correctly - alt has been *updated* for old image 
+//    - new image saved to db but with no alt
+// I think the problem is with the database update commands in paragraphs table
 
 // <article-image> 
 class ArticleImage extends HTMLElement {
@@ -82,10 +93,9 @@ class ArticleImage extends HTMLElement {
                     imageId.value = response.image_id;
         
                     // Append elements to shadow DOM
-                    this.appendChild(imageId);  
+                    this.appendChild(imageId); // Must go first for db UPDATE                                     
                     this.appendChild(img);
                     this.appendChild(altInput); 
-                                         
                 });
             }
         });
@@ -98,47 +108,55 @@ class ArticleImage extends HTMLElement {
             let images = slotImg.assignedNodes({flatten: true});
             
             // If image exists
-            if (images.length > 0) {
+            if (images[0]) {
 
-                // Show image-alt header
+                // Display image-alt header
                 shadow.insertBefore(altLabel, slotAlt);
 
-                // Show image-delete button
+                // Display image-delete button
                 shadow.appendChild(delImageButton);
 
-                // If image input exists 
-                if (label.contains(fileInput)) {
+                // Remove image input
+                label.removeChild(fileInput);
+            }
+            else {
+                
+                // Remove image-alt header
+                shadow.removeChild(altLabel);
 
-                    // Remove image input
-                    label.removeChild(fileInput);
-                }
+                // Remove image-delete button
+                shadow.removeChild(delImageButton);
+
+                // Display empty image input
+                label.appendChild(fileInput)
+                fileInput.value = ""; 
             }
         });
 
 
 // Delete content
 
-        // Delete this paragraph
+        // Delete image
         delImageButton.addEventListener("click", () => {  
 
             // Get image content
-            let slottedImage = slotImg.assignedNodes();
-            let slottedAlt = slotAlt.assignedNodes();
+            let images = slotImg.assignedNodes();
+            let imageAlts = slotAlt.assignedNodes();
 
             // If image exists
-            if (slottedImage.length > 0) {
+            if (images[0]) {
 
-                // Remove image elements
-                slottedImage[0].remove();
-                slottedAlt[0].remove();
-                altLabel.remove();
-                delImageButton.remove();
+                // Remove image
+                images[0].remove();
 
-                // !! What about hidden input
+                // Remove image alt
+                imageAlts[0].remove();
 
-                // Re-append image file input
-                label.appendChild(fileInput);
-                fileInput.value = "";    
+                // Remove hidden ID
+                imageId.remove();
+            
+                // // Scroll into view
+                // fileInput.scrollIntoView({block: "center", behavior: "smooth"});
             }
         }); 
     }
@@ -673,7 +691,7 @@ class ParagraphImage extends HTMLElement {
                     imageId.value = response.image_id;
 
                     // Append elements to shadow DOM
-                    this.appendChild(imageId); // !! TEST deleting this and not reinputting 
+                    this.appendChild(imageId); // Must go first for db UPDATE
                     this.appendChild(img);
                     this.appendChild(altInput); 
                 })
@@ -688,9 +706,9 @@ class ParagraphImage extends HTMLElement {
             let images = slotImg.assignedNodes({flatten: true});
             
             // If image exists
-            if (images.length > 0) {
+            if (images[0]) {
 
-                // Show image alt label
+                // Display image alt label
                 shadow.insertBefore(altLabel, slotAlt);
 
                 // If image input exists
@@ -756,9 +774,55 @@ class ParagraphHeader extends HTMLElement {
         shadow.appendChild(styleLink);
         shadow.appendChild(label);
             label.appendChild(slotHeaderText);
-                // slotHeaderText.appendChild(textarea); // !! This stops saving to db. I want it to work as fallback
+                // slotHeaderText.appendChild(textarea); // Renders in create but doesn't save to db
         shadow.appendChild(delHeaderButton);
-        this.appendChild(textarea); // !! This saves to db but the fallback is included with the slotted elements
+        this.appendChild(textarea); // Saves to db but renders in edit with 2 textarea inputs
+ 
+        // n.b. The following listeners functions as a fallback for author-
+        // designated content. Although slots provide fallback functionality,
+        // I am unable to post data from the shadow DOM. I have attempted to use 
+        // form-associated custom elements but so far have been unsuccessful.   
+
+        // Overwrite fallback header
+        slotHeaderText.addEventListener("slotchange", () => {
+
+            // Get all headers (fallback and intended)
+            let headers = slotHeaderText.assignedNodes({flatten: true});
+
+            // If intended header exists
+            if (headers.length > 1) {
+
+                // Remove fallback header
+                headers[0].remove();
+            }
+        });
+
+        // !! Take notes before committing 
+
+        // If I append fallback to slot, with or without slot="",
+        // it doesn't save to db. I think this is because of shadow DOM.
+        // If I force the content into db, it renders properly in edit.
+
+        // if I remove slot="" from fallback and append to 'this' (lightDOM)
+        // the fallback textarea doesn't render, so I can't create.
+
+        // If I keep slot="" on fallback and append to 'this' (lightDOM)
+        // the fallback renders in create, but renders in edit twice:
+        // once for the fallback and once for the slotted element.
+        // If the edit is then saved, the empty fallback is saved to db.
+
+        
+        // Conclusion
+
+        // I'm meant to append fallback to slot without slot=""
+        // However, it isn't received by the server.
+        // If I force the content into the database, it renders without issue
+        // I think this is because my custom elements are not form-associated
+        // Basically, when I enter data into the textarea in the shadowDOM, 
+        // it isn't picked up by the form
+        // Maybe skip the fallback and use Jinja instead?
+        // or maybe there's a way to remove the fallback if an element is given?
+        // basically hack my own fallback
 
 
 
@@ -806,7 +870,7 @@ class ParagraphLevel extends HTMLElement {
         textarea.setAttribute("id", levelId);
         textarea.setAttribute("name", levelId);
         textarea.setAttribute("class", "form-text");
-        // textarea.setAttribute("slot", "slot-level-text");
+        textarea.setAttribute("slot", "slot-level-text"); 
 
         const delLevelButton = document.createElement("button");
         delLevelButton.setAttribute("class", "button delete del-level-button");
@@ -817,8 +881,23 @@ class ParagraphLevel extends HTMLElement {
         shadow.appendChild(styleLink);
         shadow.appendChild(label);
             label.appendChild(slotLevelText);
-                slotLevelText.append(textarea); // !! This stops saving to db. I want it to work as fallback
-        // this.appendChild(textarea); // !! This saves to db but the fallback is included with the slotted elements
+                // slotLevelText.append(textarea); 
+        this.appendChild(textarea);
+
+
+        slotLevelText.addEventListener("slotchange", () => {
+
+            // Get all levels (fallback and designated)
+            let levels = slotLevelText.assignedNodes();
+                 
+            // If designated level exists
+            if (levels[1]) {
+         
+                // Remove fallback level
+                levels[0].remove();
+            }
+        });
+
         
         // Delete level
         delLevelButton.addEventListener("click", () => { 

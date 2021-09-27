@@ -39,6 +39,7 @@
                 <article-image>
                     <img slot="slot-article-image" class="article-form-image" src="{{ article_image['src'] }}">
                     <input slot="slot-article-image-alt" value="{{ article_image['alt'] }}">
+                    <input name="article-image-id" value="{{ article_image['id'] }}" hidden>
                 </article-image>
             {% else %}
                 <article-image></article-image>
@@ -76,6 +77,8 @@
         <section class="label-colour">
             <article-content>
 
+   
+
             {% if paragraphs is not none %}
                 {% for paragraph in paragraphs %}
                     <article-paragraph slot="slot-article-paragraphs" data-paragraph-index="{{ paragraph['paragraph_id'] }}">
@@ -85,20 +88,21 @@
                                 <paragraph-image slot="slot-paragraph-image" data-paragraph-index="{{ paragraph['paragraph_id'] }}">
                                     <img slot="slot-paragraph-image-src" class="article-form-image" src="{{ image['src'] }}">
                                     <input slot="slot-paragraph-image-alt" value="{{ image['alt'] }}">
+                                    <input name="paragraph-{{ paragraph['paragraph_id'] }}-image-id" value="{{ image['id'] }}" hidden>
                                 </paragraph-image>
                             {% endif %}
                         {% endfor %}
                     {% endif %}
                     {% if paragraph['header'] is not none %}
                         <paragraph-header slot="slot-paragraph-header" data-paragraph-index="{{ paragraph['paragraph_id'] }}">
-                            <textarea slot="slot-header-text" class="form-text form-text-header">{{ paragraph['header'] }}</textarea>
+                            <textarea slot="slot-header-text" name="paragraph-{{ paragraph['paragraph_id'] }}-header" class="form-text form-text-header">{{ paragraph['header'] }}</textarea>
                         </paragraph-header>
                     {% endif %}
                     {% if levels is not none %}
                         {% for level in levels %}
                             {% if level['paragraph_id'] == paragraph['paragraph_id'] %}
                                 <paragraph-level slot="slot-paragraph-levels" data-level-index="{{ level['level'] }}">
-                                    <textarea slot="slot-level-text">{{ level['content'] }}</textarea>
+                                    <textarea slot="slot-level-text" name="paragraph-{{ paragraph['paragraph_id'] }}-level-{{ level['level'] }}">{{ level['content'] }}</textarea>
                                 </paragraph-level>
                             {% endif %}
                         {% endfor %}

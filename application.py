@@ -78,14 +78,14 @@ def register():
                 flash('The email address entered already exists. Did you want to <a href="/login"><strong>log in</strong></a>?', 'error')
 
             else:
-                # Insert author into database
+                # Insert author
                 cursor.execute("INSERT INTO author (email, password) VALUES (?, ?)", 
                     (email, generate_password_hash(password)))
 
                 # Save user to session
                 session["user"] = email
 
-                # Commit connection to database        
+                # Commit database connection        
                 connection.commit()
 
                 flash(f"You have successfully registered. Welcome, {email}", "success")
@@ -98,7 +98,7 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
-    # Start a new session
+    # Start new session
     session.clear()
 
     if request.method == "POST":
@@ -107,7 +107,7 @@ def login():
         email = request.form.get("login-email")
         password = request.form.get("login-password")
 
-        # Check for user in database
+        # Check for user
         user = cursor.execute("SELECT password from author WHERE email = ?", (email,)).fetchone()
         
         if user:
@@ -131,7 +131,7 @@ def login():
 @app.route("/logout")
 def logout():
 
-    # Clear the session
+    # Clear session
     session.clear()
     
     flash("You are successfully logged out.", "success")
@@ -151,7 +151,7 @@ def index():
 @app.route("/add-image", methods=["POST"])
 def add_image():
     
-    # Get the user uploaded file
+    # Get user uploaded file
     uploaded_image = request.files['file']
 
     # Check for file
@@ -171,14 +171,14 @@ def add_image():
         uploaded_image_path = os.path.join(app.config['UPLOAD_PATH'], filename)
         uploaded_image.save(uploaded_image_path)
 
-        # Insert file path into database
+        # Insert file path
         image_insert = cursor.execute("INSERT INTO image (src) VALUES (?)", 
                     (uploaded_image_path,))
 
-        # Get image ID to use as a foreign key in other tables
+        # Get image ID
         image_id = image_insert.lastrowid
 
-        # Commit connection to database        
+        # Commit database connection    
         connection.commit()
 
         # Send image ID to client
@@ -208,73 +208,17 @@ def create_article():
             print(key, ":", request.form[key])
     
 
-        # Insert article metadata into database
+        # Insert article metadata
         article_insert = cursor.execute("INSERT INTO article (title, description, published) VALUES (?, ?, datetime('now'))", 
             (article_title, article_description))
 
-        # Get article ID primary key to use as a foreign key in other tables
+        # Get article ID
         article_id = article_insert.lastrowid
 
-        # Insert source metadata into database
+        # Insert source data
         cursor.execute("INSERT INTO source (article_id, name, author, title, contact, hyperlink) VALUES (?, ?, ?, ?, ?, ?)",
-            (article_id, source_name, source_author, source_title, source_contact, source_hyperlink ))        
+            (article_id, source_name, source_author, source_title, source_contact, source_hyperlink ))     
 
-        # Insert summary content into database
-        for key in request.form.keys():
-
-            if "article-image" in key:
-
-                if "image-id" in key:
-                    image_id = request.form[key]
-
-                    # Update image data for paragraph
-                    cursor.execute("UPDATE article SET image_id = ? WHERE id = ?",
-                        (image_id, article_id))
-
-                if "image-alt" in key: 
-                    image_alt = request.form[key].strip()
-
-                    # Update image data for paragraph
-                    cursor.execute("UPDATE image SET alt = ? WHERE id = ?", (image_alt, image_id))
-            
-            if "paragraph" in key:
-                    
-                # Get natural keys from html form name, eg: "paragraph-2-level-1"
-                paragraph_id = "".join(filter(str.isdigit, key[:-1])) 
-
-                # For each paragraph, insert a blank (no image or header) entry into database
-                if paragraph_id and paragraph_id in key:
-                    cursor.execute("INSERT INTO article_paragraph (article_id, paragraph_id) VALUES (?, ?) ON CONFLICT DO NOTHING",
-                        (article_id, paragraph_id))
-
-                if "image-id" in key:
-                    image_id = request.form[key]
-
-                    # Update image data for paragraph
-                    cursor.execute("UPDATE article_paragraph SET image_id = ? WHERE article_id = ? AND paragraph_id = ?",
-                        (image_id, article_id, paragraph_id))
-
-                if "image-alt" in key: 
-                    image_alt = request.form[key].strip()
-
-                    # Update image data for paragraph
-                    cursor.execute("UPDATE image SET alt = ? WHERE id = ?", (image_alt, image_id))
-                            
-                if "header" in key:
-                    header = request.form[key].strip()
-
-                    # Update header content for paragraph
-                    cursor.execute("UPDATE article_paragraph SET header = ? WHERE article_id = ? AND paragraph_id = ?",
-                        (header, article_id, paragraph_id))                
-
-                if "level" in key:          
-                    level_id = key[-1]
-                    content = request.form[key].strip()
-
-                    # Insert summary content into database
-                    cursor.execute("INSERT INTO level (article_id, paragraph_id, level, content) VALUES (?, ?, ?, ?)",
-                        (article_id, paragraph_id, level_id, content))
-    
         # Insert category data into databse
         for category in categories:
 
@@ -283,25 +227,80 @@ def create_article():
                       
             if category_id: 
 
-                # Insert it with article ID into database
+                # Insert category ID with article ID
                 cursor.execute("INSERT INTO article_category (article_id, category_id) VALUES (?, ?)", 
                     (article_id, category_id['id']))
                 
             else:
                 
-                # Insert category into database
+                # Insert category
                 cursor.execute("INSERT INTO category (category) VALUES (?)", 
                     (category,))
 
-                # Get its ID
+                # Get category ID
                 category_id = cursor.lastrowid
 
-                # Insert it with article ID into database
+                # Insert category ID with article ID
                 cursor.execute("INSERT INTO article_category (article_id, category_id) VALUES (?, ?)", 
-                    (article_id, category_id))
+                    (article_id, category_id))   
 
+        # Insert summary content
+        for key in request.form.keys():
 
-        # Commit connection to database        
+            if "article-image" in key:
+
+                if "image-id" in key:
+                    image_id = request.form[key]
+
+                    # Update image ID for paragraph
+                    cursor.execute("UPDATE article SET image_id = ? WHERE id = ?",
+                        (image_id, article_id))
+
+                if "image-alt" in key: 
+                    image_alt = request.form[key].strip()
+
+                    # Update image alt for paragraph
+                    cursor.execute("UPDATE image SET alt = ? WHERE id = ?", (image_alt, image_id))
+            
+            if "paragraph" in key:
+                    
+                # Get natural keys from html form name, eg: "paragraph-2-level-1"
+                paragraph_id = "".join(filter(str.isdigit, key[:-1])) 
+
+                # For each paragraph, insert placeholder to be updated
+                if paragraph_id and paragraph_id in key:
+                    cursor.execute("INSERT INTO article_paragraph (article_id, paragraph_id) VALUES (?, ?) ON CONFLICT DO NOTHING",
+                        (article_id, paragraph_id))
+
+                if "image-id" in key:
+                    image_id = request.form[key]
+
+                    # Update image ID
+                    cursor.execute("UPDATE article_paragraph SET image_id = ? WHERE article_id = ? AND paragraph_id = ?",
+                        (image_id, article_id, paragraph_id))
+
+                if "image-alt" in key: 
+                    image_alt = request.form[key].strip()
+
+                    # Update image alt
+                    cursor.execute("UPDATE image SET alt = ? WHERE id = ?", (image_alt, image_id))
+                            
+                if "header" in key:
+                    header = request.form[key].strip()
+
+                    # Update header
+                    cursor.execute("UPDATE article_paragraph SET header = ? WHERE article_id = ? AND paragraph_id = ?",
+                        (header, article_id, paragraph_id))                
+
+                if "level" in key:          
+                    level_id = key[-1]
+                    content = request.form[key].strip()
+
+                    # Insert summary
+                    cursor.execute("INSERT INTO level (article_id, paragraph_id, level, content) VALUES (?, ?, ?, ?)",
+                        (article_id, paragraph_id, level_id, content))
+
+        # Commit database connection      
         connection.commit()
 
         return redirect("/")

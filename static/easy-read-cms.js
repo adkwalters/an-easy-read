@@ -1,4 +1,4 @@
-// !! The following function reduces repetition in image upload
+// n.b. The following function reduces repetition in image upload
 // However, the nature of fetch means that image data (id, src) is stored 
 // when the article is not submitted. I worry this will create too much junk data
 
@@ -30,12 +30,20 @@ function postImageAsync(file) {
 
 // || Categories
 
-// Prepare elements
-const articleForm = document.querySelector("#article-form");
+// Get category elements
+const categoryLabel = document.querySelector("[for='article-form-categories']");
 const categoryInput = document.querySelector("[list='article-form-categories-input']");
 const addCategoryButton = document.getElementById("article-form-add-category-button");
 const delCategoryButton = document.getElementById("article-form-del-category-button");
 const categoryDisplay = document.getElementById("article-form-categories-selected");
+
+// Prepare elements
+const categoryDisplayItem = document.createElement("li");
+categoryDisplayItem.setAttribute("class", "label-size label-colour");
+
+const hiddenInput = document.createElement("input");
+hiddenInput.setAttribute("type", "hidden");
+hiddenInput.setAttribute("name", "article-form-categories-selected");
 
 // Reset input upon click 
 categoryInput.addEventListener("focus", function() { // Non-arrow func for this. binding
@@ -43,60 +51,64 @@ categoryInput.addEventListener("focus", function() { // Non-arrow func for this.
 });
 
 
-// Initialise categories array to hold selected categories
-const categoriesArray = [];
-
 // Add category
 addCategoryButton.addEventListener("click", () => {
 
-    // If author enters or selects category
+    // Get selected categories
+    let categories = categoryDisplay.querySelectorAll("li");
+
+    // Initialise categories array
+    let categoryValues = [];
+
+    // Push category values to array
+    categories.forEach(category => categoryValues.push(category.textContent));
+
+    // IF the author inputs a category
     if (categoryInput.value) {
 
-        // If category is not already selected
-        if (!categoriesArray.includes(categoryInput.value)) {
+        // If category has not been previously selected
+        if (categoryValues.indexOf(categoryInput.value) < 0) {
 
-            // Select category
-            categoriesArray.push(categoryInput.value);
+            // Display value in display area
+            categoryDisplayItem.textContent = categoryInput.value;
+            categoryDisplay.appendChild(categoryDisplayItem);
 
-            // Display category in display area
-            let newCategory = document.createElement("li");
-            newCategory.setAttribute("class", "label-size label-colour");
-            newCategory.textContent = categoryInput.value;
-            categoryDisplay.appendChild(newCategory);
-
-            // Add hidden form input to hold category value
-            let hiddenInput = document.createElement("input");
-            hiddenInput.setAttribute("type", "hidden");
-            hiddenInput.setAttribute("name", "article-form-categories-selected");
-            hiddenInput.setAttribute("value", categoryInput.value);
+            // Append hidden value to form 
             hiddenInput.value = categoryInput.value;
-            articleForm.appendChild(hiddenInput);          
+            categoryLabel.appendChild(hiddenInput); 
         } 
         else {
-
+                        
             // Alert author        
             alert(`${categoryInput.value} has already been selected.`);
-        }; 
+        }
     }
-})
+    else {
+        
+        // Alert author
+        alert("Please select or enter a category.");
+    }
+});
 
 
 // Delete last category (LIFO)
 delCategoryButton.addEventListener("click", () => {
 
+    // Get selected categories
+    let categories = categoryDisplay.querySelectorAll("li");
+
     // If a category exists
-    if (categoryDisplay.firstChild) {
-        
-        // Deselect last category
-        categoriesArray.pop(); 
-        
-        // Remove from display area
-        categoryDisplay.lastChild.remove(); 
-        
-         // Remove hidden input from article form
-        articleForm.lastChild.remove();
+    if (categories.length > 0) {
+
+        // Remove the last category
+        categories[categories.length -1].remove();
     }
-})
+    else {
+        // Alert author        
+        alert("There are no categories to delete.");
+
+    }
+});
 
 
 
