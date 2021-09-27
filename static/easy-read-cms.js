@@ -1,6 +1,9 @@
-// n.b. The following function reduces repetition in image upload
-// However, the nature of fetch means that image data (id, src) is stored 
-// when the article is not submitted. I worry this will create too much junk data
+// || Article Image
+
+// n.b. The following function reduces repetition of image upload code
+// However, the asynchronous nature of fetch means that image data (id, src) 
+// is saved before the article is submitted, if the article is submitted at all.
+// Perhaps this will create too much junk data.
 
 // Post image to server asynchronously
 function postImageAsync(file) {
@@ -63,7 +66,7 @@ addCategoryButton.addEventListener("click", () => {
     // Push category values to array
     categories.forEach(category => categoryValues.push(category.textContent));
 
-    // IF the author inputs a category
+    // If author inputs a category
     if (categoryInput.value) {
 
         // If category has not been previously selected
@@ -75,7 +78,7 @@ addCategoryButton.addEventListener("click", () => {
 
             // Append hidden value to form 
             hiddenInput.value = categoryInput.value;
-            categoryLabel.appendChild(hiddenInput); 
+            categoryDisplay.appendChild(hiddenInput); 
         } 
         else {
                         
@@ -98,12 +101,13 @@ delCategoryButton.addEventListener("click", () => {
     let categories = categoryDisplay.querySelectorAll("li");
 
     // If a category exists
-    if (categories.length > 0) {
+    if (categories[0]) {
 
         // Remove the last category
         categories[categories.length -1].remove();
     }
     else {
+
         // Alert author        
         alert("There are no categories to delete.");
 
@@ -122,7 +126,7 @@ const addParagraphButton = document.getElementById("add-paragraph");
 // Add paragraph to article
 addParagraphButton.addEventListener("click", () => {
 
-    // Calculate paragraph index (non-zero)
+    // Generate paragraph index (non-zero)
     let paragraphIndex = document.querySelectorAll("article-paragraph").length + 1;
 
     // Create paragraph
@@ -130,7 +134,7 @@ addParagraphButton.addEventListener("click", () => {
     newParagraph.setAttribute("data-paragraph-index", paragraphIndex); 
     newParagraph.setAttribute("slot", "slot-article-paragraphs");
     
-    // Add paragraph to DOM
+    // Append paragraph to DOM
     articleContent.appendChild(newParagraph);
 
     // Scroll into view

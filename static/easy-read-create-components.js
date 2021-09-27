@@ -2,18 +2,7 @@
 // in order to preserve content indicies (data-paragraph-index, data-level-index)
 // If the author were to be allowed to delete content out of sequence,
 // content indicies would need to be pulled by the server
-// rather than pushed by the client
-
-// !! Editing a paragraph image changes the main image
-// The paragraph image alt is overwritten as null
-// Maybe it's the same issue as the header and levels - the element is doubled
-// but why would this change a different image?
-
-// Main image didn't update when changed
-//    - image ID doesn't change so old image rendered
-//    - new image alt rendered correctly - alt has been *updated* for old image 
-//    - new image saved to db but with no alt
-// I think the problem is with the database update commands in paragraphs table
+// rather than pushed by the client. 
 
 // <article-image> 
 class ArticleImage extends HTMLElement {
@@ -25,7 +14,7 @@ class ArticleImage extends HTMLElement {
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
-        // Attach external stylesheet
+        // Prepare external stylesheet
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
         styleLink.setAttribute("href", "/static/easy-read.css");
@@ -92,8 +81,8 @@ class ArticleImage extends HTMLElement {
                     // Save image ID to hidden input
                     imageId.value = response.image_id;
         
-                    // Append elements to shadow DOM
-                    this.appendChild(imageId); // Must go first for db UPDATE                                     
+                    // Append elements to light DOM
+                    this.appendChild(imageId); // Must be first in db UPDATE                                     
                     this.appendChild(img);
                     this.appendChild(altInput); 
                 });
@@ -101,14 +90,14 @@ class ArticleImage extends HTMLElement {
         });
 
         
-        // Ensure one article image per article 
+        // Update image inputs 
         slotImg.addEventListener("slotchange", () => {
            
-            // Get image
-            let images = slotImg.assignedNodes({flatten: true});
-            
+            // Get article image
+            let image = slotImg.assignedNodes({flatten: true});
+
             // If image exists
-            if (images[0]) {
+            if (image[0]) {
 
                 // Display image-alt header
                 shadow.insertBefore(altLabel, slotAlt);
@@ -134,29 +123,25 @@ class ArticleImage extends HTMLElement {
         });
 
 
-// Delete content
-
         // Delete image
         delImageButton.addEventListener("click", () => {  
 
             // Get image content
-            let images = slotImg.assignedNodes();
-            let imageAlts = slotAlt.assignedNodes();
+            let image = slotImg.assignedNodes();
+            let imageAlt = slotAlt.assignedNodes();
+            let imageId = document.querySelector("[name='article-image-id']")
 
             // If image exists
-            if (images[0]) {
+            if (image[0]) {
 
                 // Remove image
-                images[0].remove();
+                image[0].remove();
 
                 // Remove image alt
-                imageAlts[0].remove();
+                imageAlt[0].remove();
 
                 // Remove hidden ID
                 imageId.remove();
-            
-                // // Scroll into view
-                // fileInput.scrollIntoView({block: "center", behavior: "smooth"});
             }
         }); 
     }
@@ -175,7 +160,7 @@ class ArticleContent extends HTMLElement {
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
-        // Attach external stylesheet
+        // Prepare external stylesheet
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
         styleLink.setAttribute("href", "/static/easy-read.css");
@@ -197,8 +182,6 @@ class ArticleContent extends HTMLElement {
         shadow.appendChild(styleLink);
         shadow.appendChild(articleContentHeader);
         shadow.appendChild(slotParagraphs);
-
-// Track content
 
         // Display delete-paragraph button for last paragraph only (LIFO)
         slotParagraphs.addEventListener("slotchange", () => {
@@ -238,9 +221,7 @@ class ArticleContent extends HTMLElement {
         });
 
 
-// Delete content
-
-        // Delete this paragraph
+        // Delete paragraph
         delParaButton.addEventListener("click", (event) => {  
             let paragraph = event.target.getRootNode().host; 
             paragraph.remove();
@@ -257,13 +238,13 @@ class ArticleParagraph extends HTMLElement {
     }
     connectedCallback() {
 
-        // Get paragraph index from html attribute and set level index counter
+        // Get paragraph index from html attribute
         const paragraphIndex = this.getAttribute("data-paragraph-index");
 
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
-        // Attach external stylesheet
+        // Prepare external stylesheet
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
         styleLink.setAttribute("href", "/static/easy-read.css");
@@ -328,8 +309,6 @@ class ArticleParagraph extends HTMLElement {
                     addMenuList.appendChild(addLevelButton);
             paragraphControls.appendChild(delParaButton);
 
-// Add content
-
         // Add image to paragraph
         addImageButton.addEventListener("click", () => {
 
@@ -345,7 +324,7 @@ class ArticleParagraph extends HTMLElement {
                 image.setAttribute("data-paragraph-index", paragraphIndex);
                 image.setAttribute("slot", "slot-paragraph-image");
                 
-                // Add header to shadow DOM
+                // Append header to light DOM
                 this.appendChild(image);
 
                 // Scroll into view
@@ -375,7 +354,7 @@ class ArticleParagraph extends HTMLElement {
                 header.setAttribute("data-paragraph-index", paragraphIndex);
                 header.setAttribute("slot", "slot-paragraph-header");
 
-                // Attach header to shadow DOM
+                // Append header to light DOM
                 this.appendChild(header);
 
                 // Scroll into view
@@ -396,14 +375,14 @@ class ArticleParagraph extends HTMLElement {
             let levels = this.querySelectorAll("paragraph-level");
             let levelIndex = levels.length + 1; 
 
-            // Create level
+            // Prepare level
             let level = document.createElement("paragraph-level"); 
             level.setAttribute("data-paragraph-index", paragraphIndex);
             level.setAttribute("class", "custom-level");
             level.setAttribute("data-level-index", levelIndex);
             level.setAttribute("slot", "slot-paragraph-levels");
                 
-            // Add level to shadow DOM
+            // Append level to light DOM
             this.appendChild(level);       
 
             // Scroll into view
@@ -411,14 +390,12 @@ class ArticleParagraph extends HTMLElement {
         });   
 
 
-// Delete Content
-
         // Initialise delete-paragraph criteria
         let imageSlotEmpty = true;
         let headerSlotEmpty = true;
         let levelsSlotEmpty = true;
 
-        // Add or remove delete-paragraph button
+        // Display or remove delete-paragraph button
         const updateDelParaButton = () => {
             
             // If this is the last paragraph and it is empty
@@ -441,7 +418,7 @@ class ArticleParagraph extends HTMLElement {
         updateDelParaButton();
 
         
-        // Delete this paragraph
+        // Delete paragraph
         delParaButton.addEventListener("click", () => {   
 
             // Update previous paragraph's button
@@ -465,9 +442,7 @@ class ArticleParagraph extends HTMLElement {
         })
 
 
-// Track content           
-
-        // Mark image as empty or filled
+        // Mark image slot as empty or filled
         slotImage.addEventListener("slotchange", () => {
             
             // Get image content
@@ -496,7 +471,7 @@ class ArticleParagraph extends HTMLElement {
         });
 
         
-        // Mark header as empty or filled
+        // Mark header slot as empty or filled
         slotHeader.addEventListener("slotchange", () => {
             
             // Get header content
@@ -525,7 +500,7 @@ class ArticleParagraph extends HTMLElement {
         });
 
         
-        // Mark level as empty or filled
+        // Mark level slot as empty or filled
         slotLevels.addEventListener("slotchange", () => {
 
             // Get level content
@@ -569,10 +544,8 @@ class ArticleParagraph extends HTMLElement {
             }
             else {
 
-                // Update delete-level buttons
                 for (let level of levels) {
 
-                    // If level is last level in paragraph
                     if (level == lastLevel) {
                         
                         // If no button exists
@@ -610,8 +583,10 @@ class ParagraphImage extends HTMLElement {
     }
     connectedCallback() {    
 
-        // Generate label names   
+        // Get paragraph index from html attribute 
         const paragraphIndex = this.getAttribute("data-paragraph-index");
+
+        // Generate labels
         const labelName = `paragraph-${paragraphIndex}-image`;
         const altLabelName = `${labelName}-alt`;
         const imageIdName = `${labelName}-id`;
@@ -619,7 +594,7 @@ class ParagraphImage extends HTMLElement {
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
-        // Attach external stylesheet
+        // Prepare external stylesheet
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
         styleLink.setAttribute("href", "/static/easy-read.css");
@@ -670,9 +645,6 @@ class ParagraphImage extends HTMLElement {
         shadow.appendChild(slotAlt);
         shadow.appendChild(delImageButton);
 
-
-// Add content
-
         // Add image
         fileInput.addEventListener("change", () => {
 
@@ -691,7 +663,7 @@ class ParagraphImage extends HTMLElement {
                     imageId.value = response.image_id;
 
                     // Append elements to shadow DOM
-                    this.appendChild(imageId); // Must go first for db UPDATE
+                    this.appendChild(imageId); // Must be first in db UPDATE
                     this.appendChild(img);
                     this.appendChild(altInput); 
                 })
@@ -699,7 +671,7 @@ class ParagraphImage extends HTMLElement {
         });
     
 
-        // Ensure one image per paragraph
+        // Update image inputs
         slotImg.addEventListener("slotchange", () => {
             
             // Get image
@@ -708,20 +680,14 @@ class ParagraphImage extends HTMLElement {
             // If image exists
             if (images[0]) {
 
-                // Display image alt label
+                // Display image-alt label
                 shadow.insertBefore(altLabel, slotAlt);
 
-                // If image input exists
-                if (label.contains(fileInput)) {
-
-                    // Remove image input
-                    label.removeChild(fileInput);
-                }
+                // Remove image input
+                label.removeChild(fileInput);
             }
         });
 
-
-// Delete content
 
         // Delete image
         delImageButton.addEventListener("click", () => {  
@@ -740,14 +706,16 @@ class ParagraphHeader extends HTMLElement {
     }
     connectedCallback() {    
 
-        // Generate label name   
+        // Get paragraph index from html attribute 
         const paragraphIndex = this.getAttribute("data-paragraph-index");
+
+        // Generate label
         const labelName = `paragraph-${paragraphIndex}-header`;
                 
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
-        // Attach external stylesheet
+        // Prepare external stylesheet
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
         styleLink.setAttribute("href", "/static/easy-read.css");
@@ -774,57 +742,29 @@ class ParagraphHeader extends HTMLElement {
         shadow.appendChild(styleLink);
         shadow.appendChild(label);
             label.appendChild(slotHeaderText);
-                // slotHeaderText.appendChild(textarea); // Renders in create but doesn't save to db
         shadow.appendChild(delHeaderButton);
-        this.appendChild(textarea); // Saves to db but renders in edit with 2 textarea inputs
  
         // n.b. The following listeners functions as a fallback for author-
         // designated content. Although slots provide fallback functionality,
         // I am unable to post data from the shadow DOM. I have attempted to use 
-        // form-associated custom elements but so far have been unsuccessful.   
+        // form-associated custom elements but so far have been unsuccessful.  
+        
+        // Append fallback to light DOM
+        this.appendChild(textarea); 
 
-        // Overwrite fallback header
+        // Overwrite header fallback
         slotHeaderText.addEventListener("slotchange", () => {
 
             // Get all headers (fallback and intended)
             let headers = slotHeaderText.assignedNodes({flatten: true});
 
             // If intended header exists
-            if (headers.length > 1) {
+            if (headers[1]) {
 
                 // Remove fallback header
                 headers[0].remove();
             }
         });
-
-        // !! Take notes before committing 
-
-        // If I append fallback to slot, with or without slot="",
-        // it doesn't save to db. I think this is because of shadow DOM.
-        // If I force the content into db, it renders properly in edit.
-
-        // if I remove slot="" from fallback and append to 'this' (lightDOM)
-        // the fallback textarea doesn't render, so I can't create.
-
-        // If I keep slot="" on fallback and append to 'this' (lightDOM)
-        // the fallback renders in create, but renders in edit twice:
-        // once for the fallback and once for the slotted element.
-        // If the edit is then saved, the empty fallback is saved to db.
-
-        
-        // Conclusion
-
-        // I'm meant to append fallback to slot without slot=""
-        // However, it isn't received by the server.
-        // If I force the content into the database, it renders without issue
-        // I think this is because my custom elements are not form-associated
-        // Basically, when I enter data into the textarea in the shadowDOM, 
-        // it isn't picked up by the form
-        // Maybe skip the fallback and use Jinja instead?
-        // or maybe there's a way to remove the fallback if an element is given?
-        // basically hack my own fallback
-
-
 
         // Delete header
         delHeaderButton.addEventListener("click", () => { 
@@ -847,28 +787,28 @@ class ParagraphLevel extends HTMLElement {
         const paragraphIndex = this.getAttribute("data-paragraph-index");
         const levelIndex = this.getAttribute("data-level-index");
 
-        // Generate id to be used as name attribute
-        const levelId = `paragraph-${paragraphIndex}-level-${levelIndex}`;
+        // Generate label
+        const labelName = `paragraph-${paragraphIndex}-level-${levelIndex}`;
         
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
-        // Attach external stylesheet
+        // Prepare external stylesheet
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
         styleLink.setAttribute("href", "/static/easy-read.css");
         
         // Prepare elements     
         const label = document.createElement("label");
-        label.setAttribute("for", levelId);
+        label.setAttribute("for", labelName);
         label.textContent = `Level ${levelIndex}:`; 
 
         const slotLevelText = document.createElement("slot");
         slotLevelText.setAttribute("name", "slot-level-text");
        
         const textarea = document.createElement("textarea");
-        textarea.setAttribute("id", levelId);
-        textarea.setAttribute("name", levelId);
+        textarea.setAttribute("id", labelName);
+        textarea.setAttribute("name", labelName);
         textarea.setAttribute("class", "form-text");
         textarea.setAttribute("slot", "slot-level-text"); 
 
@@ -881,10 +821,11 @@ class ParagraphLevel extends HTMLElement {
         shadow.appendChild(styleLink);
         shadow.appendChild(label);
             label.appendChild(slotLevelText);
-                // slotLevelText.append(textarea); 
+
+        // Append fallback to light DOM
         this.appendChild(textarea);
 
-
+        // Overwrite level fallback
         slotLevelText.addEventListener("slotchange", () => {
 
             // Get all levels (fallback and designated)
@@ -906,132 +847,3 @@ class ParagraphLevel extends HTMLElement {
     }
 }
 customElements.define("paragraph-level", ParagraphLevel);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// The following is code which I have yet to update
-// This will be done following completion of the CMS
-
-
-// Create a custom class for the summary paragraphs
-class SummaryParagraph extends HTMLElement {
-    constructor() {
-        super();
-    }
-        connectedCallback() {
-    
-        // Note, this constructor seems to demand a shadow DOM.
-        // When I removed the shadow DOM, an error was throw
-        // saying that the custom element should not have children.
-        
-        // Create a shadow root
-        const shadow = this.attachShadow({mode: "open"});
-
-        // Bind 'this' keyword to custom element, 
-        // not the object that triggers the callback
-        this.increase = this.increase.bind(this);
-        this.decrease = this.decrease.bind(this);
-
-        // Prepare elements
-        const wrapper = document.createElement("div");
-        wrapper.setAttribute("class", "summary-paragraph label-colour");
-
-        const summaryUL = document.createElement("ul");
-
-        const summaryLevel1 = document.createElement("li");
-        summaryLevel1.setAttribute("class", "summary level-1");
-
-        const summaryLevel2 = document.createElement("li");
-        summaryLevel2.setAttribute("class", "summary level-2");
-
-        const summaryLevel3 = document.createElement("li");
-        summaryLevel3.setAttribute("class", "summary level-3");
-
-        const incButton = document.createElement("button");
-        incButton.setAttribute("class", "prev");
-        incButton.innerHTML = "&#10094;";
-        incButton.addEventListener("click", this.increase);
-
-        const decButton = document.createElement("button");
-        decButton.setAttribute("class", "next");
-        decButton.innerHTML = "&#10095;";
-        decButton.addEventListener("click", this.decrease);
-
-        // Get templates and content
-        const templateSummary = document.getElementById("summary-paragraph-text");
-        const templateSummaryContent = templateSummary.content;
-
-        // Apply external styles to the shadow DOM
-        const styleLink = document.createElement("link");
-        styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read.css");
-
-        // Attach elements to the shadow DOM
-        shadow.appendChild(styleLink);
-        shadow.appendChild(wrapper);
-            wrapper.appendChild(incButton);
-            wrapper.appendChild(decButton);
-            wrapper.appendChild(summaryUL);
-                summaryUL.appendChild(summaryLevel1);
-                summaryUL.appendChild(summaryLevel2);
-                summaryUL.appendChild(summaryLevel3);
-                    summaryLevel1.appendChild(templateSummaryContent.cloneNode(true));
-    }
-    // Is this the proper way to define methods? 
-    // It's not allowing function or this keywords to be declared
-    increase() {  
-        console.log("increase this summary");
-        console.log(this);
-    }
-
-    decrease() {
-        console.log("decrease this summary");
-        console.log(this);
-    }
-}
-customElements.define("summary-paragraph", SummaryParagraph);
-
-
-// Create a custom class for the summary headers
-class SummaryHeader extends HTMLElement {
-    constructor() {
-        super();
-    }
-    connectedCallback() {
-
-        // Note, this constructor seems to demand not to be put 
-        // in a connectedCallback(). If it is, the slot default
-        // values are shown along the custom values
-
-        // Prepare elements
-        const header = document.createElement("h2");
-        header.setAttribute("class", "summary-header");
-
-        // Get template and content
-        const templateHeader = document.getElementById("summary-paragraph-header");
-        const templateHeaderContent = templateHeader.content;
-
-        // Attach elements to the shadow DOM
-        this.appendChild(header);
-            header.appendChild(templateHeaderContent.cloneNode(true));
-    }
-}
-customElements.define("summary-header", SummaryHeader);

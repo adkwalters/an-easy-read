@@ -1,24 +1,24 @@
 {% extends "easy-read-layout.html" %}
 
-
+<!-- Page metadata -->
 {% block description %}
     <meta name="description" content="A page with which to post progressively summarised content">
 {% endblock %}
 
-
+<!-- Scripts -->
 {% block scripts %}
     <script src="/static/easy-read-header.js" defer></script>
     <script src="/static/easy-read-components.js"></script> 
     <script src="/static/easy-read-cms.js" defer></script> <!-- deferred to allow custom element attribute to be read -->    
 {% endblock %}
 
-
+<!-- Main -->
 {% block main %}
-    <!-- Article form -->
     <form id="article-form" action="/create-article" method="post" autocomplete="off">
         <h1>Create Article</h1>
         <section id="article-form-source" class="label-colour">
             <h2>Source data</h2>
+            <!-- Article Source Data -->
             {% if source is not none %}
                 <label for="article-form-source-name">Source name:<input id="article-form-source-name" name="article-form-source-name" type="text" value="{{ source['name'] }}"/></label>
                 <label for="article-form-source-author">Source author:<input id="article-form-source-author" name="article-form-source-author" type="text" value="{{ source['author'] }}"/></label>
@@ -35,6 +35,7 @@
         </section>
         <section id="article-form-meta" class="label-colour">
             <h2>Article data</h2>
+            <!-- Article Image -->
             {% if article_image is not none %}
                 <article-image>
                     <img slot="slot-article-image" class="article-form-image" src="{{ article_image['src'] }}">
@@ -45,6 +46,7 @@
                 <article-image></article-image>
             {% endif %}
             </label>
+            <!-- Article data -->
             {% if article is not none %}
                 <label for="article-form-title">Article title:<input id="article-form-title" name="article-form-title" type="text" required value="{{ article['title'] }}"/></label>
                 <label for="article-form-description">Article description:<input id="article-form-description" name="article-form-description" type="text" required value="{{ article['description'] }}"/></label>
@@ -53,7 +55,7 @@
                 <label for="article-form-description">Article description:<input id="article-form-description" name="article-form-description" type="text" required/></label>
             {% endif %}
             <label for="article-form-categories">Categories:
-                <input list="article-form-categories-input"> <!-- Remove name to stop input being submitted with form -->
+                <input list="article-form-categories-input"> 
                 <datalist id="article-form-categories-input"> 
                     <option value="Technology"></option>
                     <option value="Science"></option>
@@ -66,9 +68,11 @@
                     <button id="article-form-del-category-button" type="button" class="button delete">Delete Category</button>
                 </div>
                 <ul id="article-form-categories-selected">
+                <!-- Article Categories -->
                 {% if categories is not none %} 
                     {% for category in categories %}   
                         <li class="label-size label-colour">{{ category['category'] }}</li>
+                        <input name="article-form-categories-selected" type="hidden" value="{{ category['category'] }}">
                     {% endfor %}
                 {% endif %}
                 </ul>
@@ -76,12 +80,12 @@
         </section>
         <section class="label-colour">
             <article-content>
-
-   
-
+            <!-- Article Content -->
             {% if paragraphs is not none %}
+                <!-- Paragraphs -->
                 {% for paragraph in paragraphs %}
                     <article-paragraph slot="slot-article-paragraphs" data-paragraph-index="{{ paragraph['paragraph_id'] }}">
+                    <!-- Image -->
                     {% if paragraph_images is not none %}
                         {% for image in paragraph_images %}
                             {% if image['id'] == paragraph['image_id'] %}
@@ -93,11 +97,13 @@
                             {% endif %}
                         {% endfor %}
                     {% endif %}
+                    <!-- Header -->
                     {% if paragraph['header'] is not none %}
                         <paragraph-header slot="slot-paragraph-header" data-paragraph-index="{{ paragraph['paragraph_id'] }}">
                             <textarea slot="slot-header-text" name="paragraph-{{ paragraph['paragraph_id'] }}-header" class="form-text form-text-header">{{ paragraph['header'] }}</textarea>
                         </paragraph-header>
                     {% endif %}
+                    <!-- Levels -->
                     {% if levels is not none %}
                         {% for level in levels %}
                             {% if level['paragraph_id'] == paragraph['paragraph_id'] %}
@@ -110,7 +116,6 @@
                     </article-paragraph>
                 {% endfor %}
             {% endif %}
-
             </article-content>   
             <button id="add-paragraph" type="button">Add Paragraph</button>
         </section>

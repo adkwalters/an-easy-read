@@ -59,6 +59,7 @@ def login_required(f):
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
+    # If user requests to register account
     if request.method == "POST":
 
         # Get new user details
@@ -66,15 +67,17 @@ def register():
         password = request.form.get("register-password")
         confirmation = request.form.get("register-password-confirmation")
 
-        # Check passwords match 
+        # If passwords match 
         if confirmation != password:
             flash("The passwords do not match. Please try again.", "error")
 
         else:    
-            # Confirm that user does not already exist
+            # Confirm user does not already exist
             existing_user = cursor.execute("SELECT 1 from author WHERE email = ?", (email,)).fetchone()
         
             if existing_user:
+
+                # Alert user
                 flash('The email address entered already exists. Did you want to <a href="/login"><strong>log in</strong></a>?', 'error')
 
             else:
@@ -88,9 +91,13 @@ def register():
                 # Commit database connection        
                 connection.commit()
 
+                # Notify user
                 flash(f"You have successfully registered. Welcome, {email}", "success")
+
+                # Redirect to homepage
                 return redirect("/")     
 
+    # Else, render user registration page
     return render_template("easy-read-register.html")
     
 
@@ -101,13 +108,14 @@ def login():
     # Start new session
     session.clear()
 
+    # If user requests to log in
     if request.method == "POST":
 
         # Get login details
         email = request.form.get("login-email")
         password = request.form.get("login-password")
 
-        # Check for user
+        # Query database for user
         user = cursor.execute("SELECT password from author WHERE email = ?", (email,)).fetchone()
         
         if user:
@@ -117,15 +125,21 @@ def login():
 
             if password_matches:
             
+                # Save user to session
                 session["user"] = email
                 
+                # Notify user
                 flash(f"You are successfully logged in. Welcome, {email}", "success")
+
+                # Redirect to homepage
                 return redirect("/")
             
         # Else throw error
         flash("The email or password is incorrect. Please try again.", "error")
 
+    # Else, render user login page
     return render_template("easy-read-login.html")
+
 
 # Log user out
 @app.route("/logout")
@@ -134,16 +148,18 @@ def logout():
     # Clear session
     session.clear()
     
+    # Notify user
     flash("You are successfully logged out.", "success")
 
-
-    # Return user to index page
+    # Redirect to index page
     return redirect("/")
+
 
 # Index page
 @app.route("/")
 def index():
-
+    
+    # !! TODO
 
     return render_template("easy-read-index.html")
 
@@ -154,7 +170,7 @@ def add_image():
     # Get user uploaded file
     uploaded_image = request.files['file']
 
-    # Check for file
+    # If file exists
     if uploaded_image.filename != '':
 
         # Sanitise filename
@@ -163,8 +179,10 @@ def add_image():
         # Get file extension
         file_ext = os.path.splitext(filename)[1]   
 
-        # Check file type and extension validity
+        # If file type is not accepted or file extension is not valid
         if file_ext not in app.config['UPLOAD_EXTENSIONS'] or file_ext != validate_image(uploaded_image.stream):
+            
+            # Abort operation
             abort(400)
 
         # Save image to file
@@ -181,17 +199,21 @@ def add_image():
         # Commit database connection    
         connection.commit()
 
-        # Send image ID to client
+        # Attach image ID to response
         image_response = make_response(jsonify({"message": "OK", "image_id": image_id}), 200)
+
+        # Send image ID to client
         return image_response
+
 
 @app.route("/create-article", methods=["GET", "POST"])
 @login_required
 def create_article():
 
+    # If user requests to create article
     if request.method == "POST":
 
-        # Get static form content
+        # Get source data and article metadata
         article_title = request.form.get("article-form-title").strip()
         article_description = request.form.get("article-form-description").strip()
         source_name = request.form.get("article-form-source-name").strip()
@@ -200,10 +222,9 @@ def create_article():
         source_contact = request.form.get("article-form-source-contact").strip()
         source_hyperlink = request.form.get("article-form-source-hyperlink").strip()
         categories = request.form.getlist("article-form-categories-selected")
-        # categories = request.get_json() # Required for alternative approach using fetch
 
 
-        # For testing request form:
+        # !! For testing request form:
         for key in request.form.keys():
             print(key, ":", request.form[key])
     
@@ -219,28 +240,28 @@ def create_article():
         cursor.execute("INSERT INTO source (article_id, name, author, title, contact, hyperlink) VALUES (?, ?, ?, ?, ?, ?)",
             (article_id, source_name, source_author, source_title, source_contact, source_hyperlink ))     
 
-        # Insert category data into databse
+        # Insert category data
         for category in categories:
 
-            # Check whether category exists
+            # Query database for category ID
             category_id = cursor.execute("SELECT * FROM category WHERE category = (?)", (category,)).fetchone()
-                      
+
             if category_id: 
 
-                # Insert category ID with article ID
+                # Join category to article via intermediary table
                 cursor.execute("INSERT INTO article_category (article_id, category_id) VALUES (?, ?)", 
                     (article_id, category_id['id']))
                 
             else:
                 
-                # Insert category
+                # Insert new category
                 cursor.execute("INSERT INTO category (category) VALUES (?)", 
                     (category,))
 
                 # Get category ID
                 category_id = cursor.lastrowid
 
-                # Insert category ID with article ID
+                # Join category to article via intermediary table
                 cursor.execute("INSERT INTO article_category (article_id, category_id) VALUES (?, ?)", 
                     (article_id, category_id))   
 
@@ -250,68 +271,84 @@ def create_article():
             if "article-image" in key:
 
                 if "image-id" in key:
+
+                    # Get image ID
                     image_id = request.form[key]
 
-                    # Update image ID for paragraph
+                    # Update article with image ID 
                     cursor.execute("UPDATE article SET image_id = ? WHERE id = ?",
                         (image_id, article_id))
 
                 if "image-alt" in key: 
+
+                    # Get image alt
                     image_alt = request.form[key].strip()
 
-                    # Update image alt for paragraph
+                    # Update image with alt
                     cursor.execute("UPDATE image SET alt = ? WHERE id = ?", (image_alt, image_id))
             
             if "paragraph" in key:
-                    
-                # Get natural keys from html form name, eg: "paragraph-2-level-1"
+
+                # Get paragraph ID from key (eg. "paragraph-2-level-1")
                 paragraph_id = "".join(filter(str.isdigit, key[:-1])) 
 
-                # For each paragraph, insert placeholder to be updated
-                if paragraph_id and paragraph_id in key:
+                if paragraph_id in key:
+
+                    # Insert placeholder for paragraph 
                     cursor.execute("INSERT INTO article_paragraph (article_id, paragraph_id) VALUES (?, ?) ON CONFLICT DO NOTHING",
                         (article_id, paragraph_id))
 
                 if "image-id" in key:
+
+                    # Get image ID
                     image_id = request.form[key]
 
-                    # Update image ID
+                    # Update placeholder with image ID 
                     cursor.execute("UPDATE article_paragraph SET image_id = ? WHERE article_id = ? AND paragraph_id = ?",
                         (image_id, article_id, paragraph_id))
 
                 if "image-alt" in key: 
+
+                    # Get image alt
                     image_alt = request.form[key].strip()
 
-                    # Update image alt
+                    # Update placeholder with image alt
                     cursor.execute("UPDATE image SET alt = ? WHERE id = ?", (image_alt, image_id))
                             
                 if "header" in key:
+
+                    # Get header content
                     header = request.form[key].strip()
 
-                    # Update header
+                    # Update placeholder with header
                     cursor.execute("UPDATE article_paragraph SET header = ? WHERE article_id = ? AND paragraph_id = ?",
                         (header, article_id, paragraph_id))                
+         
+            if "level" in key:   
 
-                if "level" in key:          
-                    level_id = key[-1]
-                    content = request.form[key].strip()
+                # Get level ID from key (eg. "paragraph-2-level-1")
+                level_id = key[-1]
 
-                    # Insert summary
-                    cursor.execute("INSERT INTO level (article_id, paragraph_id, level, content) VALUES (?, ?, ?, ?)",
-                        (article_id, paragraph_id, level_id, content))
+                # Get summary content
+                content = request.form[key].strip()
+
+                # Insert summary
+                cursor.execute("INSERT INTO level (article_id, paragraph_id, level, content) VALUES (?, ?, ?, ?)",
+                    (article_id, paragraph_id, level_id, content))
 
         # Commit database connection      
         connection.commit()
 
+        # Redirect to homepage
         return redirect("/")
     
-    # Author creates new article or edits existing article
+    # User requests to create new article or edit existing article
     else:
 
-        # Get artice id from URL parameters
+        # Get artice UD from URL parameters
         article_id = request.args.get("article_id")
         
-        # Query database for article data
+        # Query database for article
         article = cursor.execute("SELECT * FROM article WHERE id = (?)", (article_id,)).fetchone()
         source = cursor.execute("SELECT * FROM source WHERE article_id = (?)", (article_id,)).fetchone()
         article_image = cursor.execute("SELECT * FROM image JOIN article ON image.id = article.image_id WHERE article.id = (?)", (article_id,)).fetchone()
@@ -320,15 +357,14 @@ def create_article():
         paragraphs = cursor.execute("SELECT * FROM article_paragraph WHERE article_id = (?)", (article_id,)).fetchall()
         levels = cursor.execute("SELECT * FROM level WHERE article_id = (?)", (article_id,)).fetchall()
 
+        # Render new article form or render existing article if it exists  
         return render_template("easy-read-create-article.html", article=article, source=source, article_image=article_image, categories=categories, paragraph_images=paragraph_images, paragraphs=paragraphs, levels=levels)
 
 
 @app.route("/article")
 def show_article():
 
-    # cursor.execute()
-
-    # Read data from db to article
+    # !! TODO
 
     return render_template("easy-read-article-para-social-relationships.html")
 
