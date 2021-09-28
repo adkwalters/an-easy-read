@@ -236,9 +236,13 @@ def create_article():
         # Get article ID
         article_id = article_insert.lastrowid
 
+        # Join author to article via intermediary table
+        cursor.execute("INSERT INTO article_author (article_id, author_email) VALUES (?, ?)", 
+            (article_id, session["user"]))
+
         # Insert source data
         cursor.execute("INSERT INTO source (article_id, name, author, title, contact, hyperlink) VALUES (?, ?, ?, ?, ?, ?)",
-            (article_id, source_name, source_author, source_title, source_contact, source_hyperlink ))     
+            (article_id, source_name, source_author, source_title, source_contact, source_hyperlink))     
 
         # Insert category data
         for category in categories:
