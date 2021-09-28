@@ -25,17 +25,17 @@ class ArticleImage extends HTMLElement {
         label.textContent = "Main image";
 
         const fileInput = document.createElement("input");
+        fileInput.setAttribute("type", "file");
         fileInput.setAttribute("name", "article-form-main-image-input");
         fileInput.setAttribute("class", "image-upload");
-        fileInput.setAttribute("type", "file");
         fileInput.setAttribute("accept", "image/*");
         
         const slotImg = document.createElement("slot");
         slotImg.setAttribute("name", "slot-article-image");
 
         const img = document.createElement("img");
-        img.setAttribute("class", "article-form-image");
         img.setAttribute("slot", "slot-article-image");
+        img.setAttribute("class", "article-form-image");
         
         const slotAlt = document.createElement("slot");
         slotAlt.setAttribute("name", "slot-article-image-alt");
@@ -45,16 +45,16 @@ class ArticleImage extends HTMLElement {
         altLabel.textContent = "Image description:";
         
         const altInput = document.createElement("input");
-        altInput.setAttribute("name", "article-image-alt");
         altInput.setAttribute("slot", "slot-article-image-alt");
+        altInput.setAttribute("name", "article-image-alt");
 
         const imageId = document.createElement("input");
-        imageId.setAttribute("name", "article-image-id");
         imageId.setAttribute("type", "hidden");
+        imageId.setAttribute("name", "article-image-id");
         
         const delImageButton = document.createElement("button");
-        delImageButton.setAttribute("class", "button delete del-image-button");
         delImageButton.setAttribute("type", "button");
+        delImageButton.setAttribute("class", "button delete del-image-button");
         delImageButton.textContent = "Delete Image";  
 
         // Append elements to shadow DOM
@@ -174,8 +174,8 @@ class ArticleContent extends HTMLElement {
         slotParagraphs.setAttribute("name", "slot-article-paragraphs");
 
         const delParaButton = document.createElement("button");
-        delParaButton.setAttribute("class", "button delete del-para-button");
         delParaButton.setAttribute("type", "button");
+        delParaButton.setAttribute("class", "button delete del-para-button");
         delParaButton.textContent = "Delete Paragraph";
 
          // Append elements to shadow DOM
@@ -286,13 +286,13 @@ class ArticleParagraph extends HTMLElement {
         addImageButton.textContent = "image"; 
                  
         const delParaButton = document.createElement("button");
-        delParaButton.setAttribute("class", "button delete del-para-button");
         delParaButton.setAttribute("type", "button");
+        delParaButton.setAttribute("class", "button delete del-para-button");
         delParaButton.textContent = "Delete Paragraph";
 
         const delLevelButton = document.createElement("button");
-        delLevelButton.setAttribute("class", "button delete del-level-button");
         delLevelButton.setAttribute("type", "button");
+        delLevelButton.setAttribute("class", "button delete del-level-button");
         delLevelButton.textContent = "Delete Level";   
 
         // Append elements to shadow DOM
@@ -321,8 +321,8 @@ class ArticleParagraph extends HTMLElement {
 
                 // Create image 
                 let image = document.createElement("paragraph-image");
-                image.setAttribute("data-paragraph-index", paragraphIndex);
                 image.setAttribute("slot", "slot-paragraph-image");
+                image.setAttribute("data-paragraph-index", paragraphIndex);
                 
                 // Append header to light DOM
                 this.appendChild(image);
@@ -351,8 +351,8 @@ class ArticleParagraph extends HTMLElement {
 
                 // Create header
                 let header = document.createElement("paragraph-header");
-                header.setAttribute("data-paragraph-index", paragraphIndex);
                 header.setAttribute("slot", "slot-paragraph-header");
+                header.setAttribute("data-paragraph-index", paragraphIndex);
 
                 // Append header to light DOM
                 this.appendChild(header);
@@ -377,10 +377,10 @@ class ArticleParagraph extends HTMLElement {
 
             // Prepare level
             let level = document.createElement("paragraph-level"); 
-            level.setAttribute("data-paragraph-index", paragraphIndex);
-            level.setAttribute("class", "custom-level");
-            level.setAttribute("data-level-index", levelIndex);
             level.setAttribute("slot", "slot-paragraph-levels");
+            level.setAttribute("data-paragraph-index", paragraphIndex);
+            level.setAttribute("data-level-index", levelIndex);
+            level.setAttribute("class", "custom-level");
                 
             // Append level to light DOM
             this.appendChild(level);       
@@ -605,17 +605,17 @@ class ParagraphImage extends HTMLElement {
         label.textContent = "Image:";
 
         const fileInput = document.createElement("input");
+        fileInput.setAttribute("type", "file");
         fileInput.setAttribute("name", labelName);
         fileInput.setAttribute("class", "image-upload");
-        fileInput.setAttribute("type", "file");
         fileInput.setAttribute("accept", "image/*");
         
         const slotImg = document.createElement("slot");
         slotImg.setAttribute("name", "slot-paragraph-image-src");
 
         const img = document.createElement("img");
-        img.setAttribute("class", "article-form-image");
         img.setAttribute("slot", "slot-paragraph-image-src");
+        img.setAttribute("class", "article-form-image");
         
         const slotAlt = document.createElement("slot");
         slotAlt.setAttribute("name", "slot-paragraph-image-alt");
@@ -625,16 +625,16 @@ class ParagraphImage extends HTMLElement {
         altLabel.textContent = "Image description:";
         
         const altInput = document.createElement("input");
-        altInput.setAttribute("name", altLabelName);
         altInput.setAttribute("slot", "slot-paragraph-image-alt");
+        altInput.setAttribute("name", altLabelName);
 
         const imageId = document.createElement("input");
-        imageId.setAttribute("name", imageIdName);
         imageId.setAttribute("type", "hidden");
+        imageId.setAttribute("name", imageIdName);
         
         const delImageButton = document.createElement("button");
-        delImageButton.setAttribute("class", "button delete del-image-button");
         delImageButton.setAttribute("type", "button");
+        delImageButton.setAttribute("class", "button delete del-image-button");
         delImageButton.textContent = "Delete Image";  
 
         // Append elements to shadow DOM
@@ -729,9 +729,9 @@ class ParagraphHeader extends HTMLElement {
         slotHeaderText.setAttribute("name", "slot-header-text");
 
         const textarea = document.createElement("textarea");
+        textarea.setAttribute("slot", "slot-header-text")
         textarea.setAttribute("name", labelName);
         textarea.setAttribute("class", "form-text form-text-header");
-        textarea.setAttribute("slot", "slot-header-text")
 
         const delHeaderButton = document.createElement("button");
         delHeaderButton.setAttribute("class", "button delete del-header-button");
@@ -807,14 +807,14 @@ class ParagraphLevel extends HTMLElement {
         slotLevelText.setAttribute("name", "slot-level-text");
        
         const textarea = document.createElement("textarea");
-        textarea.setAttribute("id", labelName);
-        textarea.setAttribute("name", labelName);
-        textarea.setAttribute("class", "form-text");
         textarea.setAttribute("slot", "slot-level-text"); 
+        textarea.setAttribute("name", labelName);
+        textarea.setAttribute("id", labelName);
+        textarea.setAttribute("class", "form-text");
 
         const delLevelButton = document.createElement("button");
-        delLevelButton.setAttribute("class", "button delete del-level-button");
         delLevelButton.setAttribute("type", "button");
+        delLevelButton.setAttribute("class", "button delete del-level-button");
         delLevelButton.textContent = "Delete Level";   
 
         // Append elements to shadow DOM

@@ -131,8 +131,8 @@ addParagraphButton.addEventListener("click", () => {
 
     // Create paragraph
     let newParagraph = document.createElement("article-paragraph");
-    newParagraph.setAttribute("data-paragraph-index", paragraphIndex); 
     newParagraph.setAttribute("slot", "slot-article-paragraphs");
+    newParagraph.setAttribute("data-paragraph-index", paragraphIndex); 
     
     // Append paragraph to DOM
     articleContent.appendChild(newParagraph);
