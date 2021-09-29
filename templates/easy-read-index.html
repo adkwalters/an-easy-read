@@ -1,16 +1,23 @@
 {% extends "easy-read-layout.html" %}
 
-
+<!-- Page metadata -->
 {% block description %}
-    <meta name="description" content="A page with which to post progressively summarised content">
+    <meta name="description" content="A place to read progressively summarised content">
 {% endblock %}
 
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/easy-read-navigation.css"/>  
+    <link rel="stylesheet" href="/static/easy-read-general.css"/> 
+    <link rel="stylesheet" href="/static/easy-read-article.css"/> 
+{% endblock %}
 
+<!-- JavaScript --> 
 {% block scripts %}
     <script src="/static/easy-read-header.js" defer></script>
 {% endblock %}
 
-
+<!-- Main -->
 {% block main %}
     <div id="index">
         {% with messages = get_flashed_messages(with_categories=true) %}

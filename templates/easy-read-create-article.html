@@ -2,10 +2,17 @@
 
 <!-- Page metadata -->
 {% block description %}
-    <meta name="description" content="A page with which to post progressively summarised content">
+    <meta name="description" content="">
 {% endblock %}
 
-<!-- Scripts -->
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/easy-read-navigation.css"/>  
+    <link rel="stylesheet" href="/static/easy-read-general.css"/> 
+    <link rel="stylesheet" href="/static/easy-read-article.css"/> 
+{% endblock %}
+
+<!-- JavaScript -->
 {% block scripts %}
     <script src="/static/easy-read-header.js" defer></script>
     <script src="/static/easy-read-create-components.js"></script> 
@@ -16,23 +23,6 @@
 {% block main %}
     <form id="article-form" action="/create-article" method="post" autocomplete="off">
         <h1>Create Article</h1>
-        <section id="article-form-source" class="label-colour">
-            <h2>Source data</h2>
-            <!-- Article Source Data -->
-            {% if source is not none %}
-                <label for="article-form-source-name">Source name:<input type="text" name="article-form-source-name" id="article-form-source-name" value="{{ source['name'] }}"/></label>
-                <label for="article-form-source-author">Source author:<input type="text" name="article-form-source-author" id="article-form-source-author" value="{{ source['author'] }}"/></label>
-                <label for="article-form-source-title">Source title:<input type="text" name="article-form-source-title" id="article-form-source-title" value="{{ source['title'] }}"/></label>
-                <label for="article-form-source-contact">Source contact:<input type="text" name="article-form-source-contact" id="article-form-source-contact" value="{{ source['contact'] }}"/></label>
-                <label for="article-form-source-hyperlink">Source link:<input type="text"name="article-form-source-hyperlink" id="article-form-source-hyperlink" value="{{ source['hyperlink'] }}"/></label> 
-            {% else %}
-                <label for="article-form-source-name">Source name:<input type="text" name="article-form-source-name" id="article-form-source-name"/></label>
-                <label for="article-form-source-author">Source author:<input type="text" name="article-form-source-author" id="article-form-source-author"/></label>
-                <label for="article-form-source-title">Source title:<input type="text" name="article-form-source-title" id="article-form-source-title"/></label>
-                <label for="article-form-source-contact">Source contact:<input type="text" name="article-form-source-contact" id="article-form-source-contact"/></label>
-                <label for="article-form-source-hyperlink">Source link:<input type="text" name="article-form-source-hyperlink" id="article-form-source-hyperlink"/></label>
-            {% endif %}
-        </section>
         <section id="article-form-meta" class="label-colour">
             <h2>Article data</h2>
             <!-- Article Image -->
@@ -77,6 +67,23 @@
                 {% endif %}
                 </ul>
             </label>
+        </section>
+        <section id="article-form-source" class="label-colour">
+            <h2>Source data</h2>
+            <!-- Article Source Data -->
+            {% if source is not none %}
+                <label for="article-form-source-name">Source name:<input type="text" name="article-form-source-name" id="article-form-source-name" value="{{ source['name'] }}"/></label>
+                <label for="article-form-source-author">Source author:<input type="text" name="article-form-source-author" id="article-form-source-author" value="{{ source['author'] }}"/></label>
+                <label for="article-form-source-title">Source title:<input type="text" name="article-form-source-title" id="article-form-source-title" value="{{ source['title'] }}"/></label>
+                <label for="article-form-source-contact">Source contact:<input type="text" name="article-form-source-contact" id="article-form-source-contact" value="{{ source['contact'] }}"/></label>
+                <label for="article-form-source-hyperlink">Source link:<input type="text"name="article-form-source-hyperlink" id="article-form-source-hyperlink" value="{{ source['hyperlink'] }}"/></label> 
+            {% else %}
+                <label for="article-form-source-name">Source name:<input type="text" name="article-form-source-name" id="article-form-source-name"/></label>
+                <label for="article-form-source-author">Source author:<input type="text" name="article-form-source-author" id="article-form-source-author"/></label>
+                <label for="article-form-source-title">Source title:<input type="text" name="article-form-source-title" id="article-form-source-title"/></label>
+                <label for="article-form-source-contact">Source contact:<input type="text" name="article-form-source-contact" id="article-form-source-contact"/></label>
+                <label for="article-form-source-hyperlink">Source link:<input type="text" name="article-form-source-hyperlink" id="article-form-source-hyperlink"/></label>
+            {% endif %}
         </section>
         <section class="label-colour">
             <article-content>

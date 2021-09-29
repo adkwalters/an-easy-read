@@ -1,0 +1,168 @@
+/* Property order (https://webdesign.tutsplus.com/articles/outside-in-ordering-css-properties-by-importance--cms-21685)
+    - layout (position, display)
+    - box model (outside-in)
+    - visual (colour, background, border)
+    - text
+    - other */
+
+
+/* || Base reset ||  */
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+
+
+/* || General Styles || */
+
+    html {
+        font-size: 100%;
+    }
+    body, 
+    input, 
+    textarea, 
+    button {
+        background-color: #fbfdfe;
+        font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+    }
+    h1 {
+        font-size: 2.5rem;
+    }
+    h2 {
+        margin: 2rem 0 1.5rem 1rem;
+        font-size: 1.4rem;
+    }
+    h3 {
+        font-size: 1.2rem;
+    }
+    p {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+    }
+    a {
+        color: inherit;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    ul {
+        list-style: none;
+    }
+
+
+
+/* || Utility classes || */
+
+    .label-size {
+        width: max-content;
+        margin: 0.2rem 0.1rem;
+        padding: 0.3rem 0.6rem;
+        font-size: 1rem;
+    }
+    .label-colour {
+        background: #EEE;
+        border-radius: 10px;
+    }
+    .button {
+        width: max-content;
+        height: max-content;
+        padding: 0.4rem 0.8rem;
+        background: #fbfdfe;
+        border: 1px solid #DDD;
+        border-radius: 10px;
+        font-size: 1.1rem;
+    }
+    .big-button {
+        margin: 0rem auto;
+        padding: 0.8rem 1.2rem;
+        font-size: 1.5rem;
+        background: #EEE;
+        border: 2px solid #EEE;
+        border-radius: 10px;
+        font-size: 1.3rem;
+    }
+    .big-button:hover {
+        background: #DDD;
+    }
+    .grey-out {
+        color: #DDD;
+    }
+    .grey-out:hover {
+        color: black;
+    }
+    .delete {
+        color: #DDD;        
+    }
+    .delete:hover {
+        color: red;
+    }
+    .hidden {
+        visibility: hidden;
+    }
+    .alert {
+        display: flex;
+            align-items: center;
+        max-width: max-content;
+        margin: auto;
+        padding: 0.4rem 0.8rem;
+        border-radius: 10px;
+        font-size: 1rem;
+        text-align: center;
+    }
+    .alert-success { 
+        background: #def0d8;
+        border: 1px solid #567c526b;
+        color: #567c52;
+    }
+    /* .alert-warning {
+        color: #e6dac9;
+        background: #fbfae3;
+        border: 1px solid #e6dac96b;
+    } */
+    .alert-error {
+        color: #9a4141;
+        background: #f3dbdb;
+        border: 1px solid #9a41416b;
+    }
+    .close-message {
+        color: inherit;
+        background: inherit;
+        border: none;
+        margin-left: 1rem;
+        font-size: 1.3rem;
+    }
+
+
+
+/* || Responsive design || */
+
+    /* - large portrait (280px and above) 
+            - show header-name */
+
+    @media (min-width: 17.5rem) {
+        #brand-name {
+            display: inline-block;
+        }
+    }
+
+    /* - small landscape (640px and above)
+            - Expand navigation*/
+            
+    @media (min-width: 40rem) {
+        #header-nav {
+            align-self: center;
+        }
+        #header-nav-list {
+            display: flex;
+                flex-direction: row;
+                gap: 2rem;
+            margin: 0;
+        }
+        #header-nav-icon {
+            font-size: 0; /* hide icon */
+        }
+    }

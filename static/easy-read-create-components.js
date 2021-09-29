@@ -17,7 +17,9 @@ class ArticleImage extends HTMLElement {
         // Prepare external stylesheet
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read.css");
+        styleLink.setAttribute("href", "/static/easy-read-general.css");
+        styleLink.setAttribute("href", "/static/easy-read-article.css");
+
 
         // Prepare elements 
         const label = document.createElement("label");
@@ -163,11 +165,12 @@ class ArticleContent extends HTMLElement {
         // Prepare external stylesheet
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read.css");
+        styleLink.setAttribute("href", "/static/easy-read-general.css");
+        styleLink.setAttribute("href", "/static/easy-read-article.css");
 
         // Prepare elements    
         const articleContentHeader = document.createElement("h2");
-        articleContentHeader.setAttribute("class", "article-form-paragraph-header");
+        articleContentHeader.setAttribute("class", "article-form-content-header");
         articleContentHeader.innerHTML = "Article Content"; 
 
         const slotParagraphs = document.createElement("slot");
@@ -247,7 +250,8 @@ class ArticleParagraph extends HTMLElement {
         // Prepare external stylesheet
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read.css");
+        styleLink.setAttribute("href", "/static/easy-read-general.css");
+        styleLink.setAttribute("href", "/static/easy-read-article.css");
 
         // Prepare elements    
         const paragraphHeader = document.createElement("h3");
@@ -266,47 +270,53 @@ class ArticleParagraph extends HTMLElement {
         const paragraphControls = document.createElement("div");
         paragraphControls.setAttribute("class", "article-form-paragraph-controls");
 
-        const addMenu = document.createElement("div");
-        addMenu.setAttribute("class", "article-form-add-menu");
+        const imageControls = document.createElement("div");
+        imageControls.setAttribute("class", "article-form-paragraph-controls-image");
+
+        const headerControls = document.createElement("div");
+        headerControls.setAttribute("class", "article-form-paragraph-controls-header");
+
+        const levelControls = document.createElement("div");
+        levelControls.setAttribute("class", "article-form-paragraph-controls-levels");
+
+        const addImageButton = document.createElement("button");
+        addImageButton.setAttribute("type", "button");
+        addImageButton.setAttribute("class", "content-placeholder grey-out"); 
+        addImageButton.textContent = "Add Image";
         
-        const addMenuList = document.createElement("ul");
-        addMenuList.setAttribute("class", "button add-menu-list");
-        addMenuList.textContent = "Add...";  
+        const addHeaderButton = document.createElement("button");
+        addHeaderButton.setAttribute("type", "button");
+        addHeaderButton.setAttribute("class", "content-placeholder grey-out");
+        addHeaderButton.textContent = "Add Header";
 
-        const addLevelButton = document.createElement("li");
-        addLevelButton.setAttribute("class", "add-menu add-level");
-        addLevelButton.textContent = "level";  
-
-        const addHeaderButton = document.createElement("li");
-        addHeaderButton.setAttribute("class", "add-menu add-header");
-        addHeaderButton.textContent = "header";  
-
-        const addImageButton = document.createElement("li");
-        addImageButton.setAttribute("class", "add-menu add-image");
-        addImageButton.textContent = "image"; 
+        const addLevelButton = document.createElement("button");
+        addLevelButton.setAttribute("type", "button");
+        addLevelButton.setAttribute("class", "content-placeholder button grey-out");
+        addLevelButton.textContent = "Add Level";    
                  
         const delParaButton = document.createElement("button");
         delParaButton.setAttribute("type", "button");
-        delParaButton.setAttribute("class", "button delete del-para-button");
+        delParaButton.setAttribute("class", "del-para-button button delete");
         delParaButton.textContent = "Delete Paragraph";
 
         const delLevelButton = document.createElement("button");
         delLevelButton.setAttribute("type", "button");
-        delLevelButton.setAttribute("class", "button delete del-level-button");
+        delLevelButton.setAttribute("class", "button del-level-button delete"); 
         delLevelButton.textContent = "Delete Level";   
 
         // Append elements to shadow DOM
         shadow.appendChild(styleLink);
         shadow.appendChild(paragraphHeader);
-        shadow.appendChild(slotImage);
-        shadow.appendChild(slotHeader);
-        shadow.appendChild(slotLevels);
         shadow.appendChild(paragraphControls);
-            paragraphControls.appendChild(addMenu);
-                addMenu.appendChild(addMenuList);
-                    addMenuList.appendChild(addImageButton);
-                    addMenuList.appendChild(addHeaderButton);
-                    addMenuList.appendChild(addLevelButton);
+            paragraphControls.appendChild(slotImage);
+            paragraphControls.appendChild(imageControls);
+                imageControls.appendChild(addImageButton);
+            paragraphControls.appendChild(slotHeader);
+            paragraphControls.appendChild(headerControls);
+                headerControls.appendChild(addHeaderButton);
+            paragraphControls.appendChild(slotLevels);
+            paragraphControls.appendChild(levelControls);
+                levelControls.appendChild(addLevelButton);   
             paragraphControls.appendChild(delParaButton);
 
         // Add image to paragraph
@@ -328,7 +338,7 @@ class ArticleParagraph extends HTMLElement {
                 this.appendChild(image);
 
                 // Scroll into view
-                image.scrollIntoView({block: "center", behavior: "smooth"});
+                // image.scrollIntoView({block: "center", behavior: "smooth"});
             }
             else {
                 
@@ -358,7 +368,7 @@ class ArticleParagraph extends HTMLElement {
                 this.appendChild(header);
 
                 // Scroll into view
-                header.scrollIntoView({block: "center", behavior: "smooth"});
+                // header.scrollIntoView({block: "center", behavior: "smooth"});
             } 
             else {
 
@@ -386,7 +396,7 @@ class ArticleParagraph extends HTMLElement {
             this.appendChild(level);       
 
             // Scroll into view
-            level.scrollIntoView({block: "center", behavior: "smooth"});
+            // level.scrollIntoView({block: "center", behavior: "smooth"});
         });   
 
 
@@ -454,16 +464,16 @@ class ArticleParagraph extends HTMLElement {
                 // Mark slot as empty
                 imageSlotEmpty = true;
 
-                // Display menu option
-                addImageButton.classList.remove("unavailable");
+                // Display add-image button
+                imageControls.appendChild(addImageButton);
             }         
             else {
 
                 // Mark slot as not empty
                 imageSlotEmpty = false;
 
-                // Hide menu option
-                addImageButton.classList.add("unavailable");
+                // Remove add-image button
+                imageControls.removeChild(addImageButton);
             }
 
             // Update button
@@ -483,16 +493,16 @@ class ArticleParagraph extends HTMLElement {
                 // Mark slot as empty
                 headerSlotEmpty = true;
 
-                // Display menu option
-                addHeaderButton.classList.remove("unavailable");
+                // Display add-header button
+                headerControls.appendChild(addHeaderButton)
             } 
             else {
 
                 // Mark slot as not empty
                 headerSlotEmpty = false;
 
-                // Hide menu option
-                addHeaderButton.classList.add("unavailable");
+                // Remove add-header button
+                headerControls.removeChild(addHeaderButton)
             }
 
             // Update button
@@ -511,11 +521,18 @@ class ArticleParagraph extends HTMLElement {
 
                 // Mark slot as empty
                 levelsSlotEmpty = true;
+
+                // Display placeholder
+                addLevelButton.classList.add("content-placeholder");
             } 
             else {
 
                 // Mark slot as not empty
                 levelsSlotEmpty = false;
+
+                // Remove placeholder
+                addLevelButton.classList.remove("content-placeholder");
+
             } 
  
             // Update button
@@ -536,10 +553,10 @@ class ArticleParagraph extends HTMLElement {
             if (levels.length < 1) {  
 
                 // If button exists
-                if (paragraphControls.contains(delLevelButton)) {
+                if (levelControls.contains(delLevelButton)) {  
 
                     // Remove button
-                    paragraphControls.removeChild(delLevelButton);
+                    levelControls.removeChild(delLevelButton);
                 }
             }
             else {
@@ -549,19 +566,19 @@ class ArticleParagraph extends HTMLElement {
                     if (level == lastLevel) {
                         
                         // If no button exists
-                        if (!paragraphControls.contains(delLevelButton)) {
+                        if (!levelControls.contains(delLevelButton)) {
 
                             // Append button 
-                            paragraphControls.appendChild(delLevelButton);
+                            levelControls.appendChild(delLevelButton);
                         }        
                     } 
                     else {
 
                         // If button exists
-                        if (paragraphControls.contains(delLevelButton)) {
+                        if (levelControls.contains(delLevelButton)) {
 
                             // Remove button
-                            paragraphControls.removeChild(delLevelButton);
+                            levelControls.removeChild(delLevelButton);
                         }
                     }
                 }  
@@ -597,7 +614,8 @@ class ParagraphImage extends HTMLElement {
         // Prepare external stylesheet
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read.css");
+        styleLink.setAttribute("href", "/static/easy-read-general.css");
+        styleLink.setAttribute("href", "/static/easy-read-article.css");
 
         // Prepare elements       
         const label = document.createElement("label");
@@ -643,7 +661,7 @@ class ParagraphImage extends HTMLElement {
             label.appendChild(fileInput);
         shadow.appendChild(slotImg);
         shadow.appendChild(slotAlt);
-        shadow.appendChild(delImageButton);
+        shadow.appendChild(delImageButton); 
 
         // Add image
         fileInput.addEventListener("change", () => {
@@ -718,7 +736,8 @@ class ParagraphHeader extends HTMLElement {
         // Prepare external stylesheet
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read.css");
+        styleLink.setAttribute("href", "/static/easy-read-general.css");
+        styleLink.setAttribute("href", "/static/easy-read-article.css");
 
         // Prepare elements       
         const label = document.createElement("label");
@@ -796,7 +815,8 @@ class ParagraphLevel extends HTMLElement {
         // Prepare external stylesheet
         const styleLink = document.createElement("link");
         styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read.css");
+        styleLink.setAttribute("href", "/static/easy-read-general.css");
+        styleLink.setAttribute("href", "/static/easy-read-article.css");
         
         // Prepare elements     
         const label = document.createElement("label");
@@ -812,15 +832,16 @@ class ParagraphLevel extends HTMLElement {
         textarea.setAttribute("id", labelName);
         textarea.setAttribute("class", "form-text");
 
-        const delLevelButton = document.createElement("button");
-        delLevelButton.setAttribute("type", "button");
-        delLevelButton.setAttribute("class", "button delete del-level-button");
-        delLevelButton.textContent = "Delete Level";   
+        // const delLevelButton = document.createElement("button");
+        // delLevelButton.setAttribute("type", "button");
+        // delLevelButton.setAttribute("class", "button delete del-level-button");
+        // delLevelButton.textContent = "Delete Level";   
 
         // Append elements to shadow DOM
         shadow.appendChild(styleLink);
         shadow.appendChild(label);
             label.appendChild(slotLevelText);
+        // shadow.appendChild(delLevelButton)
 
         // Append fallback to light DOM
         this.appendChild(textarea);
@@ -840,10 +861,10 @@ class ParagraphLevel extends HTMLElement {
         });
 
         
-        // Delete level
-        delLevelButton.addEventListener("click", () => { 
-            this.remove();
-        });
+        // // Delete level
+        // delLevelButton.addEventListener("click", () => { 
+        //     this.remove();
+        // });
     }
 }
 customElements.define("paragraph-level", ParagraphLevel);

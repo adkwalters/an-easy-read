@@ -13,11 +13,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&family=Source+Sans+Pro&display=swap" rel="stylesheet">
 
+    <!-- CSS -->
+    {% block stylesheets%}{% endblock %}
+    
     <!-- JavaScript --> 
     {% block scripts %}{% endblock %}
     
-    <!-- CSS -->
-    <link rel="stylesheet" href="/static/easy-read.css" /> 
 </html>
 <body>
     <header id="header-main">
@@ -32,18 +33,23 @@
         <nav id="header-nav">
             <i id="header-nav-icon" class="fas fa-bars"></i>
             <ul id="header-nav-list">    
-                <li><a class="nav-link" href="">About</a></li>
-                <li><a class="nav-link" href="">Categories</a></li>
-                <li><a class="nav-link" href="">Contact</a></li>
                 {% if session.user %}
+                <li><a class="nav-link" href="/author-articles">Write</a></li>
+                <li><a class="nav-link" href="">Read</a></li>                
+                <li><a class="nav-link" href="">About</a></li>
+                <li><a class="nav-link" href="">Contact</a></li>
                 <li><a class="nav-link" href="/logout">Log out</a></li>
                 {% else %}
+                <li><a class="nav-link" href="">Read</a></li>
+                <li><a class="nav-link" href="">About</a></li>
+                <li><a class="nav-link" href="">Contact</a></li>
                 <li><a class="nav-link" href="/login">Log in</a></li>
                 {% endif %}
             </ul> 
         </nav>   
     </header>
     <main>
+        <!-- Main -->
         {% block main %}{% endblock %}
     </main>  
 </body>

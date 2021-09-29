@@ -73,7 +73,8 @@ def register():
 
         else:    
             # Confirm user does not already exist
-            existing_user = cursor.execute("SELECT 1 from author WHERE email = ?", (email,)).fetchone()
+            existing_user = cursor.execute("SELECT 1 from author WHERE email = ?", 
+                (email,)).fetchone()
         
             if existing_user:
 
@@ -116,7 +117,8 @@ def login():
         password = request.form.get("login-password")
 
         # Query database for user
-        user = cursor.execute("SELECT password from author WHERE email = ?", (email,)).fetchone()
+        user = cursor.execute("SELECT password from author WHERE email = ?", 
+            (email,)).fetchone()
         
         if user:
             
@@ -248,7 +250,8 @@ def create_article():
         for category in categories:
 
             # Query database for category ID
-            category_id = cursor.execute("SELECT * FROM category WHERE category = (?)", (category,)).fetchone()
+            category_id = cursor.execute("SELECT * FROM category WHERE category = (?)", 
+                (category,)).fetchone()
 
             if category_id: 
 
@@ -289,7 +292,8 @@ def create_article():
                     image_alt = request.form[key].strip()
 
                     # Update image with alt
-                    cursor.execute("UPDATE image SET alt = ? WHERE id = ?", (image_alt, image_id))
+                    cursor.execute("UPDATE image SET alt = ? WHERE id = ?", 
+                        (image_alt, image_id))
             
             if "paragraph" in key:
 
@@ -317,7 +321,8 @@ def create_article():
                     image_alt = request.form[key].strip()
 
                     # Update placeholder with image alt
-                    cursor.execute("UPDATE image SET alt = ? WHERE id = ?", (image_alt, image_id))
+                    cursor.execute("UPDATE image SET alt = ? WHERE id = ?", 
+                        (image_alt, image_id))
                             
                 if "header" in key:
 
@@ -352,17 +357,49 @@ def create_article():
         # Get artice UD from URL parameters
         article_id = request.args.get("article_id")
         
-        # Query database for article
-        article = cursor.execute("SELECT * FROM article WHERE id = (?)", (article_id,)).fetchone()
-        source = cursor.execute("SELECT * FROM source WHERE article_id = (?)", (article_id,)).fetchone()
-        article_image = cursor.execute("SELECT * FROM image JOIN article ON image.id = article.image_id WHERE article.id = (?)", (article_id,)).fetchone()
-        categories = cursor.execute("SELECT * FROM category JOIN article_category on category.id = article_category.category_id WHERE article_id = (?)", (article_id,)).fetchall()
-        paragraph_images = cursor.execute("SELECT * FROM image JOIN article_paragraph on image.id = article_paragraph.image_id WHERE article_id = (?)", (article_id,)).fetchall()
-        paragraphs = cursor.execute("SELECT * FROM article_paragraph WHERE article_id = (?)", (article_id,)).fetchall()
-        levels = cursor.execute("SELECT * FROM level WHERE article_id = (?)", (article_id,)).fetchall()
+        # Query database for article data 
+        article = cursor.execute("SELECT * FROM article WHERE id = (?)", 
+            (article_id,)).fetchone()
+
+        source = cursor.execute("SELECT * FROM source WHERE article_id = (?)", 
+            (article_id,)).fetchone()
+
+        article_image = cursor.execute("SELECT * FROM image JOIN article ON image.id = article.image_id WHERE article.id = (?)", 
+            (article_id,)).fetchone()
+
+        categories = cursor.execute("SELECT * FROM category JOIN article_category ON category.id = article_category.category_id WHERE article_id = (?)", 
+            (article_id,)).fetchall()
+
+        paragraph_images = cursor.execute("SELECT * FROM image JOIN article_paragraph ON image.id = article_paragraph.image_id WHERE article_id = (?)", 
+            (article_id,)).fetchall()
+
+        paragraphs = cursor.execute("SELECT * FROM article_paragraph WHERE article_id = (?)", 
+            (article_id,)).fetchall()
+
+        levels = cursor.execute("SELECT * FROM level WHERE article_id = (?)", 
+            (article_id,)).fetchall()
 
         # Render new article form or render existing article if it exists  
         return render_template("easy-read-create-article.html", article=article, source=source, article_image=article_image, categories=categories, paragraph_images=paragraph_images, paragraphs=paragraphs, levels=levels)
+
+
+@app.route("/author-articles", methods=["GET", "POST"])
+@login_required
+def author_articles():
+
+    # Author requests ??
+    if request.method == "POST":
+
+        return
+    
+    # Author requests to view thier articles
+    else:
+
+        # Query database for author's articles
+        articles = cursor.execute("SELECT * FROM article JOIN article_author ON article.id = article_author.article_id WHERE author_email = (?)", 
+            (session["user"],))
+
+        return render_template("easy-read-author-articles.html", articles=articles)
 
 
 @app.route("/article")
