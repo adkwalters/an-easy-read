@@ -73,7 +73,7 @@ def register():
 
         else:    
             # Confirm user does not already exist
-            existing_user = cursor.execute("SELECT 1 from author WHERE email = ?", 
+            existing_user = cursor.execute("SELECT 1 FROM author WHERE email = ?", 
                 (email,)).fetchone()
         
             if existing_user:
@@ -117,7 +117,7 @@ def login():
         password = request.form.get("login-password")
 
         # Query database for user
-        user = cursor.execute("SELECT password from author WHERE email = ?", 
+        user = cursor.execute("SELECT password FROM author WHERE email = ?", 
             (email,)).fetchone()
         
         if user:
@@ -229,24 +229,52 @@ def create_article():
         # !! For testing request form:
         for key in request.form.keys():
             print(key, ":", request.form[key])
-    
+        
+        # If article ID exists (via article edit)
+        if request.form["article-id"]:
 
-        # Insert article metadata
-        article_insert = cursor.execute("INSERT INTO article (title, description, published) VALUES (?, ?, datetime('now'))", 
-            (article_title, article_description))
+            # Get article ID
+            article_id = request.form["article-id"]
 
-        # Get article ID
-        article_id = article_insert.lastrowid
+            # Update article metadata
+            cursor.execute("UPDATE article SET title = ?, description = ?, published = datetime('now') WHERE id = ?",
+                (article_title, article_description, article_id))
+
+        # New article
+        else:
+
+            # Insert article metadata
+            article_insert = cursor.execute("INSERT INTO article (title, description, published) VALUES (?, ?, datetime('now'))", 
+                (article_title, article_description))
+
+            # Get article ID
+            article_id = article_insert.lastrowid
 
         # Join author to article via intermediary table
-        cursor.execute("INSERT INTO article_author (article_id, author_email) VALUES (?, ?)", 
-            (article_id, session["user"]))
+        cursor.execute("INSERT OR REPLACE INTO article_author (article_id, author_email) VALUES (?, ?)", 
+            (article_id, session["user"]))            
 
         # Insert source data
-        cursor.execute("INSERT INTO source (article_id, name, author, title, contact, hyperlink) VALUES (?, ?, ?, ?, ?, ?)",
+        cursor.execute("INSERT OR REPLACE INTO source (article_id, name, author, title, contact, hyperlink) VALUES (?, ?, ?, ?, ?, ?)",
             (article_id, source_name, source_author, source_title, source_contact, source_hyperlink))     
 
-        # Insert category data
+        # Here, I clear the existing article data entirely before re-instertion
+        # I do this instead of INSERT OR REPLACE because it allows me to
+        # effectively make deletions of dynamicly created elements.
+        # How can I trigger the removal of content from the database otherwise,
+        # when the signal is a lack of input data?
+
+        # Clear existing article data
+        cursor.execute("DELETE FROM article_category WHERE article_id = (?)",
+            (article_id,))
+
+        cursor.execute("DELETE FROM article_paragraph WHERE article_id = (?)",
+            (article_id,))
+
+        cursor.execute("DELETE FROM level WHERE article_id = (?)",
+            (article_id,))
+
+        # Insert category data 
         for category in categories:
 
             # Query database for category ID
@@ -379,7 +407,7 @@ def create_article():
         levels = cursor.execute("SELECT * FROM level WHERE article_id = (?)", 
             (article_id,)).fetchall()
 
-        # Render new article form or render existing article if it exists  
+        # Render article form
         return render_template("easy-read-create-article.html", article=article, source=source, article_image=article_image, categories=categories, paragraph_images=paragraph_images, paragraphs=paragraphs, levels=levels)
 
 

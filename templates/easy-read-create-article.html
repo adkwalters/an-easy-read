@@ -25,6 +25,11 @@
         <h1>Create Article</h1>
         <section id="article-form-meta" class="label-colour">
             <h2>Article data</h2>
+            {% if article is not none %}
+                <input type="hidden" name="article-id" id="article-id" value="{{ article['id'] }}">
+            {% else %}
+                <input type="hidden" name="article-id" id="article-id" value="">
+            {% endif %}
             <!-- Article Image -->
             {% if article_image is not none %}
                 <article-image>

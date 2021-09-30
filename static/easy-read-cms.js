@@ -36,47 +36,44 @@ function postImageAsync(file) {
 // Get category elements
 const categoryLabel = document.querySelector("[for='article-form-categories']");
 const categoryInput = document.querySelector("[list='article-form-categories-input']");
+const categoryDisplay = document.getElementById("article-form-categories-selected");
 const addCategoryButton = document.getElementById("article-form-add-category-button");
 const delCategoryButton = document.getElementById("article-form-del-category-button");
-const categoryDisplay = document.getElementById("article-form-categories-selected");
 
-// Prepare elements
-const categoryDisplayItem = document.createElement("li");
-categoryDisplayItem.setAttribute("class", "label-size label-colour");
+// Initialise categories array
+const categoryArray = []; 
 
-const hiddenInput = document.createElement("input");
-hiddenInput.setAttribute("type", "hidden");
-hiddenInput.setAttribute("name", "article-form-categories-selected");
+// Get current categories
+let categoriesSelected = categoryDisplay.querySelectorAll("li");
 
-// Reset input upon click 
-categoryInput.addEventListener("focus", function() { // Non-arrow func for this. binding
-    this.value = "";
+// Push current category values to categories array
+categoriesSelected.forEach(category => {
+    categoryArray.push(category.textContent);
 });
 
 
 // Add category
 addCategoryButton.addEventListener("click", () => {
 
-    // Get selected categories
-    let categories = categoryDisplay.querySelectorAll("li");
-
-    // Initialise categories array
-    let categoryValues = [];
-
-    // Push category values to array
-    categories.forEach(category => categoryValues.push(category.textContent));
-
     // If author inputs a category
     if (categoryInput.value) {
+            
+        // If input category has not been previously selected
+        if (categoryArray.indexOf(categoryInput.value) < 0) {
 
-        // If category has not been previously selected
-        if (categoryValues.indexOf(categoryInput.value) < 0) {
+            // Add category to array
+            categoryArray.push(categoryInput.value);
 
-            // Display value in display area
+            // Display category in display area
+            let categoryDisplayItem = document.createElement("li");
+            categoryDisplayItem.setAttribute("class", "label-size label-colour");
             categoryDisplayItem.textContent = categoryInput.value;
             categoryDisplay.appendChild(categoryDisplayItem);
 
-            // Append hidden value to form 
+            // Append hidden input to form 
+            let hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "article-form-categories-selected");
             hiddenInput.value = categoryInput.value;
             categoryDisplay.appendChild(hiddenInput); 
         } 
@@ -97,21 +94,31 @@ addCategoryButton.addEventListener("click", () => {
 // Delete last category (LIFO)
 delCategoryButton.addEventListener("click", () => {
 
-    // Get selected categories
-    let categories = categoryDisplay.querySelectorAll("li");
-
     // If a category exists
-    if (categories[0]) {
+    if (categoryArray[0]) {
 
-        // Remove the last category
-        categories[categories.length -1].remove();
+        // Remove last category from array
+        categoryArray.pop();
+
+        // Remove last category from display area
+        categoriesSelected = categoryDisplay.querySelectorAll("li");
+        categoriesSelected[categoriesSelected.length -1].remove();
+
+        // Remove hidden input from form 
+        let categoryHiddenInputs = categoryDisplay.querySelectorAll("[name='article-form-categories-selected']");
+        categoryHiddenInputs[categoryHiddenInputs.length -1].remove();
     }
     else {
 
         // Alert author        
         alert("There are no categories to delete.");
-
     }
+});
+
+
+// Reset input upon click 
+categoryInput.addEventListener("focus", function() { // Non-arrow func for this. binding
+    this.value = "";
 });
 
 

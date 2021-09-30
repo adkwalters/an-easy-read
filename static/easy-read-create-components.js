@@ -15,11 +15,13 @@ class ArticleImage extends HTMLElement {
         const shadow = this.attachShadow({mode: "open"});
 
         // Prepare external stylesheet
-        const styleLink = document.createElement("link");
-        styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read-general.css");
-        styleLink.setAttribute("href", "/static/easy-read-article.css");
+        const generalStyles = document.createElement("link");
+        generalStyles.setAttribute("rel", "stylesheet");
+        generalStyles.setAttribute("href", "/static/easy-read-general.css");
 
+        const articleStyles = document.createElement("link");
+        articleStyles.setAttribute("rel", "stylesheet");
+        articleStyles.setAttribute("href", "/static/easy-read-article.css");
 
         // Prepare elements 
         const label = document.createElement("label");
@@ -60,7 +62,8 @@ class ArticleImage extends HTMLElement {
         delImageButton.textContent = "Delete Image";  
 
         // Append elements to shadow DOM
-        shadow.appendChild(styleLink);
+        shadow.appendChild(generalStyles);
+        shadow.appendChild(articleStyles);
         shadow.appendChild(label);
             label.appendChild(fileInput);
         shadow.appendChild(slotImg);
@@ -163,10 +166,13 @@ class ArticleContent extends HTMLElement {
         const shadow = this.attachShadow({mode: "open"});
 
         // Prepare external stylesheet
-        const styleLink = document.createElement("link");
-        styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read-general.css");
-        styleLink.setAttribute("href", "/static/easy-read-article.css");
+        const generalStyles = document.createElement("link");
+        generalStyles.setAttribute("rel", "stylesheet");
+        generalStyles.setAttribute("href", "/static/easy-read-general.css");
+
+        const articleStyles = document.createElement("link");
+        articleStyles.setAttribute("rel", "stylesheet");
+        articleStyles.setAttribute("href", "/static/easy-read-article.css");
 
         // Prepare elements    
         const articleContentHeader = document.createElement("h2");
@@ -182,7 +188,8 @@ class ArticleContent extends HTMLElement {
         delParaButton.textContent = "Delete Paragraph";
 
          // Append elements to shadow DOM
-        shadow.appendChild(styleLink);
+        shadow.appendChild(generalStyles);
+        shadow.appendChild(articleStyles);
         shadow.appendChild(articleContentHeader);
         shadow.appendChild(slotParagraphs);
 
@@ -248,10 +255,13 @@ class ArticleParagraph extends HTMLElement {
         const shadow = this.attachShadow({mode: "open"});
 
         // Prepare external stylesheet
-        const styleLink = document.createElement("link");
-        styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read-general.css");
-        styleLink.setAttribute("href", "/static/easy-read-article.css");
+        const generalStyles = document.createElement("link");
+        generalStyles.setAttribute("rel", "stylesheet");
+        generalStyles.setAttribute("href", "/static/easy-read-general.css");
+
+        const articleStyles = document.createElement("link");
+        articleStyles.setAttribute("rel", "stylesheet");
+        articleStyles.setAttribute("href", "/static/easy-read-article.css");
 
         // Prepare elements    
         const paragraphHeader = document.createElement("h3");
@@ -305,7 +315,8 @@ class ArticleParagraph extends HTMLElement {
         delLevelButton.textContent = "Delete Level";   
 
         // Append elements to shadow DOM
-        shadow.appendChild(styleLink);
+        shadow.appendChild(generalStyles);
+        shadow.appendChild(articleStyles);
         shadow.appendChild(paragraphHeader);
         shadow.appendChild(paragraphControls);
             paragraphControls.appendChild(slotImage);
@@ -612,10 +623,13 @@ class ParagraphImage extends HTMLElement {
         const shadow = this.attachShadow({mode: "open"});
 
         // Prepare external stylesheet
-        const styleLink = document.createElement("link");
-        styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read-general.css");
-        styleLink.setAttribute("href", "/static/easy-read-article.css");
+        const generalStyles = document.createElement("link");
+        generalStyles.setAttribute("rel", "stylesheet");
+        generalStyles.setAttribute("href", "/static/easy-read-general.css");
+
+        const articleStyles = document.createElement("link");
+        articleStyles.setAttribute("rel", "stylesheet");
+        articleStyles.setAttribute("href", "/static/easy-read-article.css");
 
         // Prepare elements       
         const label = document.createElement("label");
@@ -656,7 +670,8 @@ class ParagraphImage extends HTMLElement {
         delImageButton.textContent = "Delete Image";  
 
         // Append elements to shadow DOM
-        shadow.appendChild(styleLink);
+        shadow.appendChild(generalStyles);
+        shadow.appendChild(articleStyles);
         shadow.appendChild(label);
             label.appendChild(fileInput);
         shadow.appendChild(slotImg);
@@ -734,10 +749,13 @@ class ParagraphHeader extends HTMLElement {
         const shadow = this.attachShadow({mode: "open"});
 
         // Prepare external stylesheet
-        const styleLink = document.createElement("link");
-        styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read-general.css");
-        styleLink.setAttribute("href", "/static/easy-read-article.css");
+        const generalStyles = document.createElement("link");
+        generalStyles.setAttribute("rel", "stylesheet");
+        generalStyles.setAttribute("href", "/static/easy-read-general.css");
+
+        const articleStyles = document.createElement("link");
+        articleStyles.setAttribute("rel", "stylesheet");
+        articleStyles.setAttribute("href", "/static/easy-read-article.css");
 
         // Prepare elements       
         const label = document.createElement("label");
@@ -758,7 +776,8 @@ class ParagraphHeader extends HTMLElement {
         delHeaderButton.textContent = "Delete Header";  
 
         // Append elements to shadow DOM
-        shadow.appendChild(styleLink);
+        shadow.appendChild(generalStyles);
+        shadow.appendChild(articleStyles);
         shadow.appendChild(label);
             label.appendChild(slotHeaderText);
         shadow.appendChild(delHeaderButton);
@@ -813,10 +832,13 @@ class ParagraphLevel extends HTMLElement {
         const shadow = this.attachShadow({mode: "open"});
 
         // Prepare external stylesheet
-        const styleLink = document.createElement("link");
-        styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/static/easy-read-general.css");
-        styleLink.setAttribute("href", "/static/easy-read-article.css");
+        const generalStyles = document.createElement("link");
+        generalStyles.setAttribute("rel", "stylesheet");
+        generalStyles.setAttribute("href", "/static/easy-read-general.css");
+
+        const articleStyles = document.createElement("link");
+        articleStyles.setAttribute("rel", "stylesheet");
+        articleStyles.setAttribute("href", "/static/easy-read-article.css");
         
         // Prepare elements     
         const label = document.createElement("label");
@@ -838,7 +860,8 @@ class ParagraphLevel extends HTMLElement {
         // delLevelButton.textContent = "Delete Level";   
 
         // Append elements to shadow DOM
-        shadow.appendChild(styleLink);
+        shadow.appendChild(generalStyles);
+        shadow.appendChild(articleStyles);
         shadow.appendChild(label);
             label.appendChild(slotLevelText);
         // shadow.appendChild(delLevelButton)

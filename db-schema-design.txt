@@ -13,7 +13,8 @@ CREATE TABLE article_author (
     article_id INTEGER NOT NULL,
     author_email INTEGER NOT NULL,
     FOREIGN KEY(article_id) REFERENCES article(id),
-    FOREIGN KEY(author_email) REFERENCES author(email)
+    FOREIGN KEY(author_email) REFERENCES author(email),
+    PRIMARY KEY(article_id)
 );
 
 CREATE TABLE author (
@@ -30,14 +31,16 @@ CREATE TABLE source (
     title TEXT, 
     contact TEXT,
     hyperlink TEXT,
-    FOREIGN KEY(article_id) REFERENCES article(id)
+    FOREIGN KEY(article_id) REFERENCES article(id),
+    PRIMARY KEY(article_id)
 );
 
 CREATE TABLE article_category (
     article_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL,
     FOREIGN KEY(article_id) REFERENCES article(id),
-    FOREIGN KEY(category_id) REFERENCES category(id)
+    FOREIGN KEY(category_id) REFERENCES category(id),
+    PRIMARY KEY(article_id, category_id)
 );
 
 CREATE TABLE category (
@@ -68,7 +71,8 @@ CREATE TABLE level (
     paragraph_id INTEGER NOT NULL,
     level INTEGER NOT NULL,
     content NOT NULL,
-    FOREIGN KEY(article_id, paragraph_id) REFERENCES article_paragraph(article_id, paragraph_id)
+    FOREIGN KEY(article_id, paragraph_id) REFERENCES article_paragraph(article_id, paragraph_id),
+    PRIMARY KEY(article_id, paragraph_id, level)
 );
 
 PRAGMA foreign_keys = ON;
