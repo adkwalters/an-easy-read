@@ -126,14 +126,18 @@
         visibility: hidden;
     }
     .alert {
+        position: absolute;
+            bottom: 3rem;
+            right: 1rem;
         display: flex;
             align-items: center;
-        max-width: max-content;
         margin: auto;
+        margin-left: 1rem;
         padding: 0.4rem 0.8rem;
         border-radius: 10px;
         font-size: 1rem;
         text-align: center;
+
     }
     .alert-success { 
         background: #def0d8;
