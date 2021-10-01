@@ -122,28 +122,3 @@ categoryInput.addEventListener("focus", function() { // Non-arrow func for this.
 });
 
 
-
-// || Article Content 
-
-// Prepare elements
-const articleContent = document.querySelector("article-content");
-
-const addParagraphButton = document.getElementById("add-paragraph");
-
-// Add paragraph to article
-addParagraphButton.addEventListener("click", () => {
-
-    // Generate paragraph index (non-zero)
-    let paragraphIndex = document.querySelectorAll("article-paragraph").length + 1;
-
-    // Create paragraph
-    let newParagraph = document.createElement("article-paragraph");
-    newParagraph.setAttribute("slot", "slot-article-paragraphs");
-    newParagraph.setAttribute("data-paragraph-index", paragraphIndex); 
-    
-    // Append paragraph to DOM
-    articleContent.appendChild(newParagraph);
-
-    // Scroll into view
-    newParagraph.scrollIntoView({block: "center", behavior: "smooth"});
-});

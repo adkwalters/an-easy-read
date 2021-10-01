@@ -14,14 +14,8 @@ class ArticleImage extends HTMLElement {
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
-        // Prepare external stylesheet
-        const generalStyles = document.createElement("link");
-        generalStyles.setAttribute("rel", "stylesheet");
-        generalStyles.setAttribute("href", "/static/easy-read-general.css");
-
-        const articleStyles = document.createElement("link");
-        articleStyles.setAttribute("rel", "stylesheet");
-        articleStyles.setAttribute("href", "/static/easy-read-article.css");
+        // Add styling
+        const style = document.createElement("style");
 
         // Prepare elements 
         const label = document.createElement("label");
@@ -62,8 +56,7 @@ class ArticleImage extends HTMLElement {
         delImageButton.textContent = "Delete Image";  
 
         // Append elements to shadow DOM
-        shadow.appendChild(generalStyles);
-        shadow.appendChild(articleStyles);
+        shadow.appendChild(style);
         shadow.appendChild(label);
             label.appendChild(fileInput);
         shadow.appendChild(slotImg);
@@ -94,7 +87,6 @@ class ArticleImage extends HTMLElement {
             }
         });
 
-        
         // Update image inputs 
         slotImg.addEventListener("slotchange", () => {
            
@@ -127,7 +119,6 @@ class ArticleImage extends HTMLElement {
             }
         });
 
-
         // Delete image
         delImageButton.addEventListener("click", () => {  
 
@@ -149,6 +140,9 @@ class ArticleImage extends HTMLElement {
                 imageId.remove();
             }
         }); 
+
+        // Update style
+        updateStyle(this);
     }
 }
 customElements.define("article-image", ArticleImage);
@@ -165,22 +159,21 @@ class ArticleContent extends HTMLElement {
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
-        // Prepare external stylesheet
-        const generalStyles = document.createElement("link");
-        generalStyles.setAttribute("rel", "stylesheet");
-        generalStyles.setAttribute("href", "/static/easy-read-general.css");
-
-        const articleStyles = document.createElement("link");
-        articleStyles.setAttribute("rel", "stylesheet");
-        articleStyles.setAttribute("href", "/static/easy-read-article.css");
+        // Add styling
+        const style = document.createElement("style");
 
         // Prepare elements    
         const articleContentHeader = document.createElement("h2");
-        articleContentHeader.setAttribute("class", "article-form-content-header");
         articleContentHeader.innerHTML = "Article Content"; 
 
         const slotParagraphs = document.createElement("slot");
         slotParagraphs.setAttribute("name", "slot-article-paragraphs");
+
+        const addParaButton = document.createElement("button");
+        addParaButton.setAttribute("type", "button");
+        addParaButton.setAttribute("id", "add-para-button");
+        addParaButton.setAttribute("class", "content-placeholder");
+        addParaButton.textContent = "Add Paragraph";
 
         const delParaButton = document.createElement("button");
         delParaButton.setAttribute("type", "button");
@@ -188,10 +181,28 @@ class ArticleContent extends HTMLElement {
         delParaButton.textContent = "Delete Paragraph";
 
          // Append elements to shadow DOM
-        shadow.appendChild(generalStyles);
-        shadow.appendChild(articleStyles);
+        shadow.appendChild(style);
         shadow.appendChild(articleContentHeader);
         shadow.appendChild(slotParagraphs);
+        shadow.appendChild(addParaButton);
+
+        // Add paragraph to article
+        addParaButton.addEventListener("click", () => {
+
+            // Generate paragraph index (non-zero)
+            let paragraphIndex = document.querySelectorAll("article-paragraph").length + 1;
+
+            // Create paragraph
+            let newParagraph = document.createElement("article-paragraph");
+            newParagraph.setAttribute("slot", "slot-article-paragraphs");
+            newParagraph.setAttribute("data-paragraph-index", paragraphIndex); 
+            
+            // Append paragraph to DOM
+            this.appendChild(newParagraph);
+
+            // // Scroll into view
+            // newParagraph.scrollIntoView({block: "center", behavior: "smooth"});
+        });
 
         // Display delete-paragraph button for last paragraph only (LIFO)
         slotParagraphs.addEventListener("slotchange", () => {
@@ -230,12 +241,14 @@ class ArticleContent extends HTMLElement {
             }      
         });
 
-
         // Delete paragraph
         delParaButton.addEventListener("click", (event) => {  
             let paragraph = event.target.getRootNode().host; 
             paragraph.remove();
         }); 
+
+        // Update style
+        updateStyle(this);
     }
 }
 customElements.define("article-content", ArticleContent);
@@ -254,18 +267,11 @@ class ArticleParagraph extends HTMLElement {
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
-        // Prepare external stylesheet
-        const generalStyles = document.createElement("link");
-        generalStyles.setAttribute("rel", "stylesheet");
-        generalStyles.setAttribute("href", "/static/easy-read-general.css");
-
-        const articleStyles = document.createElement("link");
-        articleStyles.setAttribute("rel", "stylesheet");
-        articleStyles.setAttribute("href", "/static/easy-read-article.css");
+        // Add styling
+        const style = document.createElement("style");
 
         // Prepare elements    
         const paragraphHeader = document.createElement("h3");
-        paragraphHeader.setAttribute("class", "article-form-paragraph-header");
         paragraphHeader.innerHTML = `Paragraph ${paragraphIndex}`; 
 
         const slotImage = document.createElement("slot");
@@ -291,32 +297,31 @@ class ArticleParagraph extends HTMLElement {
 
         const addImageButton = document.createElement("button");
         addImageButton.setAttribute("type", "button");
-        addImageButton.setAttribute("class", "content-placeholder grey-out"); 
+        addImageButton.setAttribute("class", "grey-out content-placeholder"); 
         addImageButton.textContent = "Add Image";
         
         const addHeaderButton = document.createElement("button");
         addHeaderButton.setAttribute("type", "button");
-        addHeaderButton.setAttribute("class", "content-placeholder grey-out");
+        addHeaderButton.setAttribute("class", "grey-out content-placeholder");
         addHeaderButton.textContent = "Add Header";
 
         const addLevelButton = document.createElement("button");
         addLevelButton.setAttribute("type", "button");
-        addLevelButton.setAttribute("class", "content-placeholder button grey-out");
+        addLevelButton.setAttribute("class", "button grey-out content-placeholder");
         addLevelButton.textContent = "Add Level";    
                  
         const delParaButton = document.createElement("button");
         delParaButton.setAttribute("type", "button");
-        delParaButton.setAttribute("class", "del-para-button button delete");
+        delParaButton.setAttribute("class", "button delete del-para-button");
         delParaButton.textContent = "Delete Paragraph";
 
         const delLevelButton = document.createElement("button");
         delLevelButton.setAttribute("type", "button");
-        delLevelButton.setAttribute("class", "button del-level-button delete"); 
+        delLevelButton.setAttribute("class", "button delete del-level-button"); 
         delLevelButton.textContent = "Delete Level";   
 
         // Append elements to shadow DOM
-        shadow.appendChild(generalStyles);
-        shadow.appendChild(articleStyles);
+        shadow.appendChild(style);
         shadow.appendChild(paragraphHeader);
         shadow.appendChild(paragraphControls);
             paragraphControls.appendChild(slotImage);
@@ -359,7 +364,6 @@ class ArticleParagraph extends HTMLElement {
             }
         });
 
-
         // Add header to paragraph    
         addHeaderButton.addEventListener("click", () => {
 
@@ -387,8 +391,7 @@ class ArticleParagraph extends HTMLElement {
                 alert("A header has already been added for this paragraph");
             }
         });
-
-        
+ 
         // Add level to paragraph
         addLevelButton.addEventListener("click", () => {
             
@@ -409,7 +412,6 @@ class ArticleParagraph extends HTMLElement {
             // Scroll into view
             // level.scrollIntoView({block: "center", behavior: "smooth"});
         });   
-
 
         // Initialise delete-paragraph criteria
         let imageSlotEmpty = true;
@@ -437,8 +439,7 @@ class ArticleParagraph extends HTMLElement {
         }
         // Update button
         updateDelParaButton();
-
-        
+ 
         // Delete paragraph
         delParaButton.addEventListener("click", () => {   
 
@@ -448,7 +449,6 @@ class ArticleParagraph extends HTMLElement {
             // Delete paragraph
             this.remove();
         }); 
-
 
         // Delete last level (LIFO)
         delLevelButton.addEventListener("click", () => {
@@ -461,7 +461,6 @@ class ArticleParagraph extends HTMLElement {
             // Delete last level
             lastLevel.remove();
         })
-
 
         // Mark image slot as empty or filled
         slotImage.addEventListener("slotchange", () => {
@@ -491,7 +490,6 @@ class ArticleParagraph extends HTMLElement {
             updateDelParaButton();
         });
 
-        
         // Mark header slot as empty or filled
         slotHeader.addEventListener("slotchange", () => {
             
@@ -520,7 +518,6 @@ class ArticleParagraph extends HTMLElement {
             updateDelParaButton();   
         });
 
-        
         // Mark level slot as empty or filled
         slotLevels.addEventListener("slotchange", () => {
 
@@ -549,7 +546,6 @@ class ArticleParagraph extends HTMLElement {
             // Update button
             updateDelParaButton(); 
         });
-
 
         // Display delete-level button for last level only (LIFO)
         slotLevels.addEventListener("slotchange", () => {
@@ -598,6 +594,9 @@ class ArticleParagraph extends HTMLElement {
             // Update button
             updateDelParaButton(); 
         });
+
+        // Update style
+        updateStyle(this);
     }
 }
 customElements.define("article-paragraph", ArticleParagraph);
@@ -622,14 +621,8 @@ class ParagraphImage extends HTMLElement {
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
-        // Prepare external stylesheet
-        const generalStyles = document.createElement("link");
-        generalStyles.setAttribute("rel", "stylesheet");
-        generalStyles.setAttribute("href", "/static/easy-read-general.css");
-
-        const articleStyles = document.createElement("link");
-        articleStyles.setAttribute("rel", "stylesheet");
-        articleStyles.setAttribute("href", "/static/easy-read-article.css");
+        // Add styling
+        const style = document.createElement("style");
 
         // Prepare elements       
         const label = document.createElement("label");
@@ -670,8 +663,7 @@ class ParagraphImage extends HTMLElement {
         delImageButton.textContent = "Delete Image";  
 
         // Append elements to shadow DOM
-        shadow.appendChild(generalStyles);
-        shadow.appendChild(articleStyles);
+        shadow.appendChild(style);
         shadow.appendChild(label);
             label.appendChild(fileInput);
         shadow.appendChild(slotImg);
@@ -703,7 +695,6 @@ class ParagraphImage extends HTMLElement {
             }
         });
     
-
         // Update image inputs
         slotImg.addEventListener("slotchange", () => {
             
@@ -721,11 +712,13 @@ class ParagraphImage extends HTMLElement {
             }
         });
 
-
         // Delete image
         delImageButton.addEventListener("click", () => {  
             this.remove();
         });
+
+        // Update style
+        updateStyle(this);
     }
 }
 customElements.define("paragraph-image", ParagraphImage);
@@ -748,14 +741,8 @@ class ParagraphHeader extends HTMLElement {
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
-        // Prepare external stylesheet
-        const generalStyles = document.createElement("link");
-        generalStyles.setAttribute("rel", "stylesheet");
-        generalStyles.setAttribute("href", "/static/easy-read-general.css");
-
-        const articleStyles = document.createElement("link");
-        articleStyles.setAttribute("rel", "stylesheet");
-        articleStyles.setAttribute("href", "/static/easy-read-article.css");
+        // Prepare stylesheet
+        const style = document.createElement("style");
 
         // Prepare elements       
         const label = document.createElement("label");
@@ -776,8 +763,7 @@ class ParagraphHeader extends HTMLElement {
         delHeaderButton.textContent = "Delete Header";  
 
         // Append elements to shadow DOM
-        shadow.appendChild(generalStyles);
-        shadow.appendChild(articleStyles);
+        shadow.append(style);
         shadow.appendChild(label);
             label.appendChild(slotHeaderText);
         shadow.appendChild(delHeaderButton);
@@ -786,7 +772,7 @@ class ParagraphHeader extends HTMLElement {
         // designated content. Although slots provide fallback functionality,
         // I am unable to post data from the shadow DOM. I have attempted to use 
         // form-associated custom elements but so far have been unsuccessful.  
-        
+
         // Append fallback to light DOM
         this.appendChild(textarea); 
 
@@ -808,10 +794,12 @@ class ParagraphHeader extends HTMLElement {
         delHeaderButton.addEventListener("click", () => { 
             this.remove();
         });
+
+        // Update style
+        updateStyle(this);
     }
 }
 customElements.define("paragraph-header", ParagraphHeader);
-
 
 
 // <paragraph-level>
@@ -831,15 +819,6 @@ class ParagraphLevel extends HTMLElement {
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
-        // Prepare external stylesheet
-        const generalStyles = document.createElement("link");
-        generalStyles.setAttribute("rel", "stylesheet");
-        generalStyles.setAttribute("href", "/static/easy-read-general.css");
-
-        const articleStyles = document.createElement("link");
-        articleStyles.setAttribute("rel", "stylesheet");
-        articleStyles.setAttribute("href", "/static/easy-read-article.css");
-        
         // Prepare elements     
         const label = document.createElement("label");
         label.setAttribute("for", labelName);
@@ -854,17 +833,9 @@ class ParagraphLevel extends HTMLElement {
         textarea.setAttribute("id", labelName);
         textarea.setAttribute("class", "form-text");
 
-        // const delLevelButton = document.createElement("button");
-        // delLevelButton.setAttribute("type", "button");
-        // delLevelButton.setAttribute("class", "button delete del-level-button");
-        // delLevelButton.textContent = "Delete Level";   
-
         // Append elements to shadow DOM
-        shadow.appendChild(generalStyles);
-        shadow.appendChild(articleStyles);
         shadow.appendChild(label);
             label.appendChild(slotLevelText);
-        // shadow.appendChild(delLevelButton)
 
         // Append fallback to light DOM
         this.appendChild(textarea);
@@ -882,12 +853,94 @@ class ParagraphLevel extends HTMLElement {
                 levels[0].remove();
             }
         });
-
-        
-        // // Delete level
-        // delLevelButton.addEventListener("click", () => { 
-        //     this.remove();
-        // });
     }
 }
 customElements.define("paragraph-level", ParagraphLevel);
+
+
+// Update custom element style
+function updateStyle(element) {
+
+    // Get shadow root
+    const shadow = element.shadowRoot; 
+
+    // Update style property
+    shadow.querySelector("style").textContent = `
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        h2, 
+        h3 { 
+            margin-bottom: 1rem;
+        }
+        label {
+            font-size: 1.1rem;
+        }
+        input,
+        button {
+            background-color: #fbfdfe;
+            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+        }
+        .button {
+            width: max-content;
+            height: max-content;
+            padding: 0.4rem 0.8rem;
+            border: 1px solid #DDD;
+            border-radius: 10px;
+            font-size: 1.1rem;
+        }
+        .grey-out {
+            color: #DDD;
+        }
+        .grey-out:hover {
+            color: black;
+        }
+        .delete {
+            color: #DDD;        
+        }
+        .delete:hover {
+            color: red;
+        }
+        .content-placeholder {
+            display: block;
+            width: 100%; 
+            margin: 1rem 0;
+            padding: 1rem 0;
+            background: #fbfdfe;
+            border: 1px solid #DDD;
+            border-radius: 10px;
+            font-size: 1.1rem;
+        }   
+        .article-form-paragraph-controls {
+            display: flex;
+                flex-direction: column;
+            margin-bottom: 5rem;
+        }
+        .article-form-paragraph-controls-levels {
+            display: flex;
+                justify-content: space-between;
+        } 
+        .image-upload {
+            display: block;
+            width: 100%;
+            margin: 1rem auto;
+            padding: 1rem;
+            border-radius: 10px;
+            border: none;
+            font-size: 1rem;
+        }
+        #add-para-button {
+            margin-bottom: 0;
+        }
+        .del-para-button {
+            align-self: flex-end;
+            margin-top: 0.5rem;
+        }    
+        .del-image-button,
+        .del-header-button {
+            float: right;
+        }
+    `;
+}

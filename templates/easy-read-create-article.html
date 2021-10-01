@@ -15,13 +15,13 @@
 <!-- JavaScript -->
 {% block scripts %}
     <script src="/static/easy-read-header.js" defer></script>
+    <script src="/static/easy-read-cms.js" defer></script>    
     <script src="/static/easy-read-create-components.js"></script> 
-    <script src="/static/easy-read-cms.js" defer></script> <!-- deferred to allow custom element attribute to be read -->    
 {% endblock %}
 
 <!-- Main -->
-{% block main %}
-    <form id="article-form" action="/create-article" method="post" autocomplete="off">
+{% block main %}    
+    <form id="article-form" class="full-page" action="/create-article" method="post" autocomplete="off">
         <h1>Create Article</h1>
         <section id="article-form-meta" class="label-colour">
             <h2>Article data</h2>
@@ -129,7 +129,7 @@
                 {% endfor %}
             {% endif %}
             </article-content>   
-            <button type="button" id="add-paragraph">Add Paragraph</button>
+            <!-- <button type="button" id="add-paragraph" class="content-placeholder">Add Paragraph</button> -->
         </section>
         <button type="submit" id="submit-form-button" class="button big-button">Create Article</button>
     </form>

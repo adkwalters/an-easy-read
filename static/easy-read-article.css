@@ -6,8 +6,8 @@
     - other */
 
 
-/* || View Article || */
-
+/* || View Article ||           To be remade*/
+    
     article {
         max-width: 64rem;
         margin: auto;
@@ -147,6 +147,7 @@
     .display-summary.level-2:hover::after {
         display: block;
     }
+    
 
 
 
@@ -157,29 +158,13 @@
             flex-direction: column;
             gap: 2rem;
             padding: 0 1rem;
-        max-width: 49rem;
-        margin: 7rem auto;
     }
     #article-form section {
         padding: 1rem;
     }
-    h2, 
-    h3 {
+    #article-form h2 { 
         margin: 0;
         margin-bottom: 1rem;
-    }
-    label {
-        font-size: 1.1rem;
-    }
-    input,
-    select,
-    textarea {
-        width: 100%;
-        margin: 1rem auto;
-        padding: 1rem;
-        border-radius: 10px;
-        border: none;
-        font-size: 1rem;
     }
     .form-text {
         resize: vertical;
@@ -209,45 +194,15 @@
         padding: 1rem;
     }
 
-    /* - Paragraph Control */
+    /* - Paragraph content */
+
+    paragraph-header,
+    paragraph-level {
+        margin-top: -1rem; /*tighten up whitespace between content slots*/
+    }
+
     
-    #add-paragraph {
-        display: block;
-        width: 100%;        
-        margin-top: 5rem;
-        padding: 1rem 0;
-        background: #fbfdfe;
-        border: 1px solid #DDD;
-        border-radius: 10px;
-        font-size: 1.1rem;
-    }
-    .del-para-button {
-        align-self: flex-end;
-        margin-top: 0.5rem;
-    }
-    .article-form-paragraph-controls {
-        display: flex;
-            flex-direction: column;
-        margin-bottom: 5rem;
-    }
-    .content-placeholder {
-        display: block;
-        width: 100%; 
-        margin: 1rem 0;
-        padding: 1rem 0;
-        background: #fbfdfe;
-        border: 1px solid #DDD;
-        border-radius: 10px;
-        font-size: 1.1rem;
-    }
-    .del-image-button,
-    .del-header-button {
-        float: right;
-    }    
-    .article-form-paragraph-controls-levels {
-        display: flex;
-            justify-content: space-between;
-    }
+
     
     
 

@@ -5,7 +5,7 @@
     <meta name="description" content="">
 {% endblock %}
 
-<!-- Stylesheets -->
+<!-- CSS -->
 {% block stylesheets %}
     <link rel="stylesheet" href="/static/easy-read-navigation.css"/>  
     <link rel="stylesheet" href="/static/easy-read-general.css"/> 
@@ -14,10 +14,12 @@
 
 <!-- JavaScript -->
 {% block scripts %}
-    <script src="/static/easy-read-header.js"></script>
+    <script src="/static/easy-read-header.js" defer></script>
 {% endblock %}
 
 <!-- Main -->
 {% block main %}
-    <div><p>Hello, World</p></div>
+    <div id="author-articles-display-panel">
+        
+    </div>
 {% endblock %}
