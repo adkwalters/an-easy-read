@@ -179,7 +179,7 @@
 
 /* || Responsive design || */
 
-    /* - large portrait (280px and above) 
+    /* - large portrait  
             - show header-name */
 
     @media (min-width: 17.5rem) {
@@ -188,10 +188,10 @@
         }
     }
 
-    /* - small landscape (640px and above)
+    /* - small landscape 
             - Expand navigation*/
             
-    @media (min-width: 40rem) {
+    @media (min-width: 42rem) {
         #header-nav {
             align-self: center;
         }

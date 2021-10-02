@@ -236,7 +236,6 @@
         flex-direction: column;
         align-items: center;
     height: max-content;
-    flex: 100%;
     padding: 1rem;
 }
 .article-preview img {
