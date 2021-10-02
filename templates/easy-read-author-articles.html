@@ -20,18 +20,27 @@
 <!-- Main -->
 {% block main %}
     <div class="full-spread">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message | safe }}
+                    <button type="button" class="close-message"><span>&times;</span></button>
+                </div>                
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         <h1>My Articles</h1>
-        <section id="author-articles" class="label-colour">
+        <section id="author-articles">
             <ul>
                 {% if articles is not none %}
                     {% for article in articles %}
-                    <li class="article-preview">
+                    <li class="label-colour article-preview">
                         <figure>
                             <img src="{{ article['src'] }}">
                             <figcaption><h3>{{ article['title'] }}</h3></figcaption>
                         </figure>
                         <p>{{ article['description'] }}</p>
-                        <a href="/create-article?article_id={{ article['id'] }}">Edit Article</a>
+                        <a class="button label-colour article-edit" href="/create-article?article_id={{ article['id'] }}">Edit Article</a>
                     </li>
                     {% endfor %}
                 {% endif %}
