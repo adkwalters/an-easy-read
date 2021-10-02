@@ -150,6 +150,28 @@
     
 
 
+/* || Print article || */
+
+@media print {
+    #header-main,
+    article img,
+    .article-categories-list,
+    .article-control-panel,
+    .article-form-control-panel,
+    .prev,
+    .next {
+        display: none;
+    }
+    article p {
+        margin-bottom: 1rem;
+    }
+    .display-summary.level-1::after, 
+    .display-summary.level-2::after {
+        display: block;
+    }
+}
+
+
 
 /* || Create Article || */
 
@@ -199,30 +221,4 @@
     paragraph-header,
     paragraph-level {
         margin-top: -1rem; /*tighten up whitespace between content slots*/
-    }
-
-    
-
-    
-    
-
-/* || Print article || */
-
-    @media print {
-        #header-main,
-        article img,
-        .article-categories-list,
-        .article-control-panel,
-        .article-form-control-panel,
-        .prev,
-        .next {
-            display: none;
-        }
-        article p {
-            margin-bottom: 1rem;
-        }
-        .display-summary.level-1::after, 
-        .display-summary.level-2::after {
-            display: block;
-        }
     }

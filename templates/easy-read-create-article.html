@@ -24,7 +24,7 @@
     <form id="article-form" class="full-page" action="/create-article" method="post" autocomplete="off">
         <h1>Create Article</h1>
         <section id="article-form-meta" class="label-colour">
-            <h2>Article data</h2>
+            <h2>Article Data</h2>
             {% if article is not none %}
                 <input type="hidden" name="article-id" id="article-id" value="{{ article['id'] }}">
             {% else %}
@@ -74,7 +74,7 @@
             </label>
         </section>
         <section id="article-form-source" class="label-colour">
-            <h2>Source data</h2>
+            <h2>Source Data</h2>
             <!-- Article Source Data -->
             {% if source is not none %}
                 <label for="article-form-source-name">Source name:<input type="text" name="article-form-source-name" id="article-form-source-name" value="{{ source['name'] }}"/></label>

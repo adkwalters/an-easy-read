@@ -66,9 +66,7 @@
     
 /* || Index || */
 
-    #index-page h1 {
-        padding: 1rem 2rem;
-    }
+   
 
 
 
@@ -94,11 +92,3 @@
     }
 
 
-
-/* !! Author Pages !! */
-
-#author-articles-display-panel {
-    max-width: 64rem;
-    margin: auto;
-    padding: 7rem 1rem;
-}
