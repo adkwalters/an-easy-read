@@ -69,6 +69,14 @@
 
 /* || Utility classes || */
 
+    .full-spread {
+        display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        min-width: 10rem;
+        max-width: 80vw;
+        margin: 7rem auto;
+    }
     .full-page {
         display: flex;
             flex-direction: column;

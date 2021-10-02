@@ -19,7 +19,24 @@
 
 <!-- Main -->
 {% block main %}
-    <div id="author-articles-display-panel">
+    <div class="full-spread">
+        <h1>My Articles</h1>
+        <section id="author-articles" class="label-colour">
+            <ul>
+                {% if articles is not none %}
+                    {% for article in articles %}
+                    <li class="article-preview">
+                        <figure>
+                            <img src="{{ article['src'] }}">
+                            <figcaption><h3>{{ article['title'] }}</h3></figcaption>
+                        </figure>
+                        <p>{{ article['description'] }}</p>
+                        <a href="/create-article?article_id={{ article['id'] }}">Edit Article</a>
+                    </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </section>
         
     </div>
 {% endblock %}

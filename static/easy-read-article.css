@@ -222,3 +222,32 @@
     paragraph-level {
         margin-top: -1rem; /*tighten up whitespace between content slots*/
     }
+
+
+/* || Author's Articles || */
+
+#author-articles ul {
+    display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    padding: 2rem 1rem;        
+}
+.article-preview {
+    width: 15rem;
+    margin: 0 auto;
+}
+
+.article-preview img {
+    display: block;
+    margin: auto;
+    width: 90%;
+    border-radius: 10px;
+}
+.article-preview h3 {
+    margin-top: 1rem;
+    text-align: center;
+}
+.article-preview p {
+    text-align: justify;
+}

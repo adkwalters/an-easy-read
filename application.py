@@ -134,7 +134,7 @@ def login():
                 flash(f"You are successfully logged in. Welcome, {email}", "success")
 
                 # Redirect to homepage
-                return redirect("/")
+                return redirect("/author-articles")
             
         # Else throw error
         flash("The email or password is incorrect. Please try again.", "error")
@@ -424,7 +424,7 @@ def author_articles():
     else:
 
         # Query database for author's articles
-        articles = cursor.execute("SELECT * FROM article JOIN article_author ON article.id = article_author.article_id WHERE author_email = (?)", 
+        articles = cursor.execute("SELECT * FROM article JOIN article_author ON article.id = article_author.article_id JOIN image ON article.image_id = image.id WHERE author_email = (?)", 
             (session["user"],))
 
         return render_template("easy-read-author-articles.html", articles=articles)
