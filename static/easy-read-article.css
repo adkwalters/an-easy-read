@@ -227,17 +227,18 @@
 /* || Author's Articles || */
 
 #author-articles ul {
-    display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        flex-wrap: wrap;
-    padding: 2rem 1rem;        
+    display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+        grid-gap: 2rem;
 }
 .article-preview {
-    width: 15rem;
-    margin: 0 auto;
+    display: flex;
+        flex-direction: column;
+        align-items: center;
+    height: max-content;
+    flex: 100%;
+    padding: 1rem;
 }
-
 .article-preview img {
     display: block;
     margin: auto;
@@ -250,4 +251,8 @@
 }
 .article-preview p {
     text-align: justify;
+}
+.article-edit {
+    justify-self: end;
+    background: #fbfdfe;
 }
