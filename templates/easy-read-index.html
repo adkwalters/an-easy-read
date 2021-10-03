@@ -9,6 +9,7 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="/static/easy-read-navigation.css"/>  
     <link rel="stylesheet" href="/static/easy-read-general.css"/> 
+    <link rel="stylesheet" href="/static/easy-read-article.css"/> 
 {% endblock %}
 
 <!-- JavaScript --> 
@@ -18,7 +19,7 @@
 
 <!-- Main -->
 {% block main %}
-    <div id="index-page" class="full-page">
+    <div id="index-page" class="full-spread">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -29,5 +30,27 @@
             {% endif %}
         {% endwith %}
         <h1>Welcome to Easy Read</h1>
+        <section id="all-articles" class="articles-display-pannel">
+            <ul>
+                {% if articles is not none %}
+                    {% for article in articles %}
+                    <li class="label-colour article-preview">
+                        {% if article['src'] is not none %}
+                            <figure>
+                                <img src="{{ article['src'] }}">
+                                <figcaption><h3>{{ article['title'] }}</h3></figcaption>
+                            </figure>
+                        {% else %}
+                            <i class="far fa-image"></i>
+                            <h3>{{ article['title'] }}</h3>
+                        {% endif %}
+                        <p>{{ article['description'] }}</p>
+                        <a href="/create-article?article_id={{ article['id'] }}"><button type="button" class="button grey-out edit-article-button">Edit Article</button></a>
+                        <a href=""><button type="button" class="button grey-out edit-article-button">Publish Article</button></a>
+                    </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </section>
     </div>
 {% endblock %}

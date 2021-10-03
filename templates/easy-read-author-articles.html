@@ -30,22 +30,28 @@
             {% endif %}
         {% endwith %}
         <h1>My Articles</h1>
-        <section id="author-articles">
+        <section id="author-articles" class="articles-display-pannel">
             <ul>
                 {% if articles is not none %}
                     {% for article in articles %}
                     <li class="label-colour article-preview">
-                        <figure>
-                            <img src="{{ article['src'] }}">
-                            <figcaption><h3>{{ article['title'] }}</h3></figcaption>
-                        </figure>
+                        {% if article['src'] is not none %}
+                            <figure>
+                                <img src="{{ article['src'] }}">
+                                <figcaption><h3>{{ article['title'] }}</h3></figcaption>
+                            </figure>
+                        {% else %}
+                            <i class="far fa-image"></i>
+                            <h3>{{ article['title'] }}</h3>
+                        {% endif %}
                         <p>{{ article['description'] }}</p>
-                        <a class="button label-colour article-edit" href="/create-article?article_id={{ article['id'] }}">Edit Article</a>
+                        <a href="/create-article?article_id={{ article['id'] }}"><button type="button" class="button grey-out edit-article-button">Edit Article</button></a>
+                        <a href=""><button type="button" class="button grey-out edit-article-button">Publish Article</button></a>
                     </li>
                     {% endfor %}
                 {% endif %}
+                <a id="add-article-button" href="/create-article"><i class="far fa-plus-square"></i></a>
             </ul>
         </section>
-        
     </div>
 {% endblock %}

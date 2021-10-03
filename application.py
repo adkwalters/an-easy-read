@@ -34,7 +34,7 @@ cursor = connection.cursor()
 
 
 # Image validation 
-#   https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
+# - taken from https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
 def validate_image(stream):
     header = stream.read(512)
     stream.seek(0) 
@@ -45,7 +45,7 @@ def validate_image(stream):
 
 
 # Decorate routes to require login
-#   https://flask.palletsprojects.com/en/2.0.x/patterns/viewdecorators/
+# - adapted from https://flask.palletsprojects.com/en/2.0.x/patterns/viewdecorators/
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -53,6 +53,16 @@ def login_required(f):
             return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function
+
+
+# Index page
+@app.route("/")
+def index():
+    
+    # Query database for author's articles
+    articles = cursor.execute("SELECT * FROM article JOIN article_author ON article.id = article_author.article_id JOIN image ON article.image_id = image.id")
+    
+    return render_template("easy-read-index.html", articles=articles)
 
 
 # Register user
@@ -157,15 +167,6 @@ def logout():
     return redirect("/")
 
 
-# Index page
-@app.route("/")
-def index():
-    
-    # !! TODO
-
-    return render_template("easy-read-index.html")
-
-
 @app.route("/add-image", methods=["POST"])
 def add_image():
     
@@ -265,6 +266,9 @@ def create_article():
         # when the signal is a lack of input data?
 
         # Clear existing article data
+        cursor.execute("UPDATE article SET image_id = null WHERE id = (?)",
+            (article_id,))
+
         cursor.execute("DELETE FROM article_category WHERE article_id = (?)",
             (article_id,))
 
@@ -377,7 +381,7 @@ def create_article():
         connection.commit()
 
         # Redirect to homepage
-        return redirect("/")
+        return redirect("/author-articles")
     
     # User requests to create new article or edit existing article
     else:
@@ -424,7 +428,7 @@ def author_articles():
     else:
 
         # Query database for author's articles
-        articles = cursor.execute("SELECT * FROM article JOIN article_author ON article.id = article_author.article_id JOIN image ON article.image_id = image.id WHERE author_email = (?)", 
+        articles = cursor.execute("SELECT * FROM article JOIN article_author ON article.id = article_author.article_id LEFT JOIN image ON article.image_id = image.id WHERE author_email = (?)", 
             (session["user"],))
 
         return render_template("easy-read-author-articles.html", articles=articles)

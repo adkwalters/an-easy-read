@@ -172,7 +172,7 @@ class ArticleContent extends HTMLElement {
         const addParaButton = document.createElement("button");
         addParaButton.setAttribute("type", "button");
         addParaButton.setAttribute("id", "add-para-button");
-        addParaButton.setAttribute("class", "content-placeholder");
+        addParaButton.setAttribute("class", "grey-out content-placeholder");
         addParaButton.textContent = "Add Paragraph";
 
         const delParaButton = document.createElement("button");
@@ -890,6 +890,7 @@ function updateStyle(element) {
             border: 1px solid #DDD;
             border-radius: 10px;
             font-size: 1.1rem;
+            cursor: pointer;
         }
         .grey-out {
             color: #DDD;

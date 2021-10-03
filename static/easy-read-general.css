@@ -110,6 +110,7 @@
         border: 1px solid #DDD;
         border-radius: 10px;
         font-size: 1.1rem;
+        cursor: pointer;
     }
     .big-button {
         margin: 0rem auto;
@@ -139,7 +140,7 @@
         visibility: hidden;
     }
     .alert {
-        position: absolute;
+        position: fixed;
             bottom: 2rem;
             right: 2rem;
         display: flex;
@@ -148,9 +149,8 @@
         margin-left: 1rem;
         padding: 0.4rem 0.8rem;
         border-radius: 10px;
-        font-size: 1rem;
+        font-size: 1.3rem;
         text-align: center;
-
     }
     .alert-success { 
         background: #def0d8;
@@ -189,7 +189,8 @@
     }
 
     /* - small landscape 
-            - Expand navigation*/
+            - Expand navigation
+            - Reposition flashed messages*/
             
     @media (min-width: 42rem) {
         #header-nav {
@@ -203,5 +204,10 @@
         }
         #header-nav-icon {
             font-size: 0; /* hide icon */
+        }
+        .alert {
+            position: absolute;
+                bottom: 80vh;
+            font-size: 1rem;
         }
     }

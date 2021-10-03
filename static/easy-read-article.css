@@ -201,9 +201,6 @@
         width: 75%;
         margin: auto;
     }
-
-    /* - Category control */
-
     .article-form-categories-controls {
         display: flex;
             justify-content: space-between;
@@ -215,18 +212,22 @@
             gap: 1rem;
         padding: 1rem;
     }
-
-    /* - Paragraph content */
-
     paragraph-header,
     paragraph-level {
         margin-top: -1rem; /*tighten up whitespace between content slots*/
     }
+    #submit-form-button {
+        position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+        box-shadow: 0 0px 12px 0 rgba(0,0,0,0.4);
+    }
 
 
-/* || Author's Articles || */
 
-#author-articles ul {
+/* ||  Articles Display || */
+
+.articles-display-pannel ul {
     display: grid;
         grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
         grid-gap: 2rem;
@@ -244,14 +245,37 @@
     width: 90%;
     border-radius: 10px;
 }
+.article-preview i {
+    margin: -1rem;
+    color: #DDD;
+    font-size: 10rem;
+}
 .article-preview h3 {
     margin-top: 1rem;
     text-align: center;
 }
 .article-preview p {
-    text-align: justify;
+    margin-bottom: 0;
+    text-align: left;
 }
-.article-edit {
-    justify-self: end;
+.article-preview a {
+    width: 100%;
+}
+.edit-article-button {
+    display: block;
+    justify-self: end; 
+    width: 100%;
+    margin-top: 0.5rem;    
     background: #fbfdfe;
+}
+#add-article-button {
+    margin: auto;
+}
+#add-article-button i {
+    color: #EEE;
+    font-size: 15rem;
+    cursor: pointer;
+}
+#add-article-button i:hover {
+    color: #DDD;
 }
