@@ -5,7 +5,8 @@
 import os
 import sqlite3
 import imghdr # for file validation
-from flask import Flask, redirect, render_template, request, make_response, abort, session, flash, flask_login, url_for
+import flask_login
+from flask import Flask, redirect, render_template, request, make_response, abort, session, flash, url_for
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask.json import jsonify
