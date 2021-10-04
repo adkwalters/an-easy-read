@@ -5,7 +5,7 @@
 import os
 import sqlite3
 import imghdr # for file validation
-from flask import Flask, redirect, render_template, request, make_response, abort, session, flash
+from flask import Flask, redirect, render_template, request, make_response, abort, session, flash, flask_login, url_for
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask.json import jsonify
@@ -14,23 +14,61 @@ from flask_session import Session
 from functools import wraps
 
 
-# Configure application
+# Instantiate application
 app = Flask(__name__)
-app.config['TEMPLATES_AUTO_RELOAD'] = True  # Ensure templates are auto-reloaded
-app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024  # Set maximum file upload size to 1mb
-app.config['UPLOAD_PATH'] = 'static\images' # Set file upload folder
-app.config['UPLOAD_EXTENSIONS'] = {'.jpg', '.png', '.gif'} # Set permitted file types
+app.secret_key = 'temp secret key' # Change this
+app.config['TEMPLATES_AUTO_RELOAD'] = True  # Auto-reloads templates upon change
 
-# Configure session to use filesystem (instead of signed cookies)
-app.config["SESSION_FILE_DIR"] = mkdtemp()
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
+
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
+
+
+# # Configure session to use filesystem (instead of signed cookies)
+# app.config["SESSION_FILE_DIR"] = mkdtemp()
+# app.config["SESSION_PERMANENT"] = False
+# app.config["SESSION_TYPE"] = "filesystem"
+# Session(app)
+
 
 # Connect SQLite database
 connection = sqlite3.connect("easy_read.db", check_same_thread=False) # Allow returned connection to be shared between multiple threads
 connection.row_factory = sqlite3.Row # Allow row access by column name
 cursor = connection.cursor()
+
+
+users = cursor.execute("SELECT * FROM author")
+
+
+class User(flask_login.UserMixin):
+    pass
+
+
+@login_manager.user_loader
+def user_loader(email):
+    if email not in users:
+        return
+
+    user = User()
+    user.id = email
+    return user
+
+
+@login_manager.request_loader
+def request_loader(request):
+    email = request.form.get('email')
+    if email not in users:
+        return
+    
+    user = User()
+    user.id = email
+    return user
+
+
+# Configure file upload criteria
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024  # Set maximum file upload size to 1mb
+app.config['UPLOAD_PATH'] = 'static\images' # Set file upload folder
+app.config['UPLOAD_EXTENSIONS'] = {'.jpg', '.png', '.gif'} # Set permitted file types
 
 
 # Image validation 
@@ -44,15 +82,15 @@ def validate_image(stream):
     return '.' + (format if format != 'jpeg' else 'jpg')
 
 
-# Decorate routes to require login
-# - adapted from https://flask.palletsprojects.com/en/2.0.x/patterns/viewdecorators/
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get("user") is None:
-            return redirect("/login")
-        return f(*args, **kwargs)
-    return decorated_function
+# # Decorate routes to require login
+# # - adapted from https://flask.palletsprojects.com/en/2.0.x/patterns/viewdecorators/
+# def login_required(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if session.get("user") is None:
+#             return redirect("/login")
+#         return f(*args, **kwargs)
+#     return decorated_function
 
 
 # Index page
@@ -126,26 +164,16 @@ def login():
         email = request.form.get("login-email")
         password = request.form.get("login-password")
 
-        # Query database for user
-        user = cursor.execute("SELECT password FROM author WHERE email = ?", 
-            (email,)).fetchone()
+        if password == users[email]['password']:
+            user = User()
+            user.id = email
+            flask_login.login_user(user)
+
+            # Notify user
+            flash(f"You are successfully logged in. Welcome, {email}", "success")
+
+            return redirect("/author-articles")
         
-        if user:
-            
-            # Check password hash
-            password_matches = check_password_hash(user['password'], password)
-
-            if password_matches:
-            
-                # Save user to session
-                session["user"] = email
-                
-                # Notify user
-                flash(f"You are successfully logged in. Welcome, {email}", "success")
-
-                # Redirect to homepage
-                return redirect("/author-articles")
-            
         # Else throw error
         flash("The email or password is incorrect. Please try again.", "error")
 
@@ -210,7 +238,7 @@ def add_image():
 
 
 @app.route("/create-article", methods=["GET", "POST"])
-@login_required
+# @login_required
 def create_article():
 
     # If user requests to create article
@@ -416,7 +444,7 @@ def create_article():
 
 
 @app.route("/author-articles", methods=["GET", "POST"])
-@login_required
+# @login_required
 def author_articles():
 
     # Author requests ??
