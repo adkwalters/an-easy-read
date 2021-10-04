@@ -207,7 +207,7 @@
         }
         .alert {
             position: absolute;
-                bottom: 80vh;
+                bottom: calc(100vh - 9rem); /* this doesn't work as expected on some screen sizes */
             font-size: 1rem;
         }
     }
