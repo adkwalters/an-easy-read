@@ -23,32 +23,44 @@
 <body>
     <header id="header-main">
         <div id=header-brand>
-            <a href="/" id="brand-logo">
+            <a href="{{ url_for('index') }}" id="brand-logo">
                 <i class="fas fa-book-open"></i> 
             </a>
             <h1 id="brand-name">
-                <a href="/">Easy Read</a>
+                <a href="{{ url_for('index') }}">Easy Read</a>
             </h1>
         </div>
         <nav id="header-nav">
             <i id="header-nav-icon" class="fas fa-bars"></i>
             <ul id="header-nav-list">    
                 {% if session.user %}
-                <li><a class="nav-link" href="/author-articles">Write</a></li>
+                <li><a class="nav-link" href="{{ url_for('author-article') }}">Write</a></li>
                 <li><a class="nav-link" href="">Read</a></li>                
                 <li><a class="nav-link" href="">About</a></li>
                 <li><a class="nav-link" href="">Contact</a></li>
-                <li><a class="nav-link" href="/logout">Log out</a></li>
+                <li><a class="nav-link" href="{{ url_for('logout') }}">Log out</a></li>
                 {% else %}
                 <li><a class="nav-link" href="">Read</a></li>
                 <li><a class="nav-link" href="">About</a></li>
                 <li><a class="nav-link" href="">Contact</a></li>
-                <li><a class="nav-link" href="/login">Log in</a></li>
+                <li><a class="nav-link" href="{{ url_for('login') }}">Log in</a></li>
                 {% endif %}
             </ul> 
         </nav>   
     </header>
     <main>
+
+        <!-- Flashed messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message | safe }}
+                    <button type="button" class="close-message"><span>&times;</span></button>
+                </div>                
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <!-- Main -->
         {% block main %}{% endblock %}
     </main>  

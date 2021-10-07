@@ -20,17 +20,10 @@
 <!-- Main -->
 {% block main %}
     <div id="index-page" class="full-spread">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message | safe }}
-                    <button type="button" class="close-message"><span>&times;</span></button>
-                </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <h1>Welcome to Easy Read</h1>
-        <section id="all-articles" class="articles-display-pannel">
+
+        <h1>Welcome to Easy Read{% if test_user %}, {{ test_user['username'] }}{% endif %}</h1>
+           
+        <!-- <section id="all-articles" class="articles-display-pannel">
             <ul>
                 {% if articles is not none %}
                     {% for article in articles %}
@@ -51,6 +44,6 @@
                     {% endfor %}
                 {% endif %}
             </ul>
-        </section>
+        </section> -->
     </div>
 {% endblock %}

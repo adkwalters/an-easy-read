@@ -18,25 +18,29 @@
 
 <!-- Main -->
 {% block main %}
-    <div class="small-page">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message | safe }}
-                    <button type="button" class="close-message"><span>&times;</span></button>
-                </div>                
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <form class="login-form" action="/login" method="post">
-            <h1>Login</h1>
+    <div id="login" class="small-page">
+        <h1>Login</h1>
+        <form class="login-form" action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
             <div class="login-form label-colour">
-                <label id="login-email">Email:<input name="login-email" autocomplete="off" required autofocus></label>
-                <label id="login-password">Password:<input name="login-password" type="password" required></label>
+                <!-- Username -->
+                {{ form.username.label }}
+                {{ form.username(size=32, value=test_value) }}
+                {% for error in form.username.errors %}
+                    <span class="form-alert alert-error">{{ error }}</span>
+                {% endfor %}   
+                <!-- Password -->
+                {{ form.password.label }}
+                {{ form.password(size=32) }}
+                {% for error in form.password.errors %}
+                    <span class="form-alert alert-error">{{ error }}</span>
+                {% endfor %}   
+                <!-- Remember me -->
+                {{ form.remember_me() }}       
+                {{ form.remember_me.label }} 
             </div>
-            
-            <button class="button big-button" type="submit">Log In</button>
+                {{ form.submit(class="label-colour big-button") }}
         </form>
-        <p>Don't have an account? <a href="/register">Click to register</a></p>
+        <p>Don't have an account? <a href="">Click to register</a></p>
     </div>
 {% endblock %}

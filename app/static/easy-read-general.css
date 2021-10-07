@@ -75,7 +75,7 @@
             gap: 2rem;
         min-width: 10rem;
         max-width: 80vw;
-        margin: 7rem auto;
+        margin: 6rem auto;
     }
     .full-page {
         display: flex;
@@ -83,7 +83,7 @@
             gap: 2rem;
         min-width: 10rem;
         max-width: 49rem;
-        margin: 7rem auto;
+        margin: 6rem auto;
     }
     .full-page section {
         padding: 1rem;
@@ -91,7 +91,7 @@
     .small-page {
         min-width: 10rem;
         max-width: 30rem;
-        margin: 7rem auto;
+        margin: 6rem auto;
     }
     .label-size {
         width: max-content;
@@ -152,6 +152,10 @@
         font-size: 1.3rem;
         text-align: center;
     }
+    .form-alert {
+        padding: 0.5rem;
+        border-radius: 10px;
+    }
     .alert-success { 
         background: #def0d8;
         border: 1px solid #567c526b;
@@ -193,6 +197,11 @@
             - Reposition flashed messages*/
             
     @media (min-width: 42rem) {
+        .full-spread,
+        .full-page,
+        .small-page {
+            margin: 7rem auto;
+        }
         #header-nav {
             align-self: center;
         }
