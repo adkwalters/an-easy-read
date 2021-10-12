@@ -12,4 +12,4 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 
 # import here at bottom as workaround for circular import
-from app import routes
+from app import routes, models
