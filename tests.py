@@ -20,6 +20,13 @@ class UserModelCase(unittest.TestCase):
 
         self.assertTrue(len(users) > 0)
 
+    def test_hash_user_password(self):
+        u = User(username='Andrew', email='andrew@email.com')
+        u.set_password('password')
+
+        self.assertTrue(u.check_password('password'))
+        self.assertFalse(u.check_password('not the password'))
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
