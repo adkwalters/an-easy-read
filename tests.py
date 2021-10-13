@@ -2,6 +2,7 @@ import unittest
 from app import app, db
 from app.models import User
 
+
 class UserModelCase(unittest.TestCase):
     def setUp(self):
         
@@ -18,10 +19,11 @@ class UserModelCase(unittest.TestCase):
 
         # Delete tables
         db.drop_all()
-    
+
     def test_add_user(self):
         
         u = User(username='Andrew', email='andrew@email.com')
+        
         db.session.add(u)
         db.session.commit()
 
