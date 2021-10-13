@@ -21,7 +21,7 @@
 {% block main %}
     <div id="index-page" class="full-spread">
 
-        <h1>Welcome to Easy Read{% if test_user %}, {{ test_user['username'] }}{% endif %}</h1>
+        <h1>Welcome to Easy Read{% if current_user.is_authenticated %}, {{ current_user.username }}{% endif %}</h1>
            
         <!-- <section id="all-articles" class="articles-display-pannel">
             <ul>
