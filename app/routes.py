@@ -1,7 +1,9 @@
 from flask import render_template, flash, redirect
 from flask.helpers import url_for
+from flask_login import current_user, login_user
 from app import app
 from app.forms import LoginForm 
+from app.models import User
 
 
 @app.route('/')
@@ -19,21 +21,33 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     
-    # Get login form
+    # Redirect user if logged in
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+
+    # Get user login data from login form
     form = LoginForm()
 
-    # TEST mock value (for article-edit mode)
-    test_value = "This is a test value"
-    
-    # If form is posted and validated
-    if form.validate_on_submit():    
+    # If user submits valid login data 
+    if form.validate_on_submit():  
+        
+        # Get user's username
+        user = User.query.filter_by(username=form.username.data).first()
 
-        # TEST flashed messages and form submission
-        flash('Login request: {}, remember_me: {}'.format(
-            form.username.data, form.remember_me.data))
+        # If user does not exist or password is incorrect
+        if user is None or not user.check_password(form.password.data):
+
+            # Alert user
+            flash('The email or password is incorrect. Please try again.', 'error')
+            
+            # Refresh login page
+            return redirect(url_for('login'))
+
+        # Login user in with 'remember me' preference
+        login_user(user, remember=form.remember_me.data)
 
         # Redirect user to index page
         return redirect(url_for('index'))
 
     # Render login page
-    return render_template('easy-read-login.html', form=form, test_value=test_value)
+    return render_template('easy-read-login.html', form=form)
