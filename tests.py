@@ -4,11 +4,11 @@ from app.models import User
 
 
 class UserModelCase(unittest.TestCase):
-    def set_up(self):
+    def setUp(self):
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'    # Use in-memory SQLite database
         db.create_all()
 
-    def tear_down(self):
+    def tearDown(self):
         db.session.remove()
         db.drop_all()
 
