@@ -12,8 +12,11 @@ app.config.from_object(Config)
 # Initialise app database engine
 db = SQLAlchemy(app)
 
-# Initialise login manager
+# Initialise and configure login manager 
 login = LoginManager(app)
+login.login_view = 'login'
+login.login_message = 'Please log in to access that page.'
+login.login_message_category = 'error'
 
 # import here at bottom as workaround for circular import
 from app import routes, models
