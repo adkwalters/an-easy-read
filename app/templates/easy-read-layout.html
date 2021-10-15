@@ -23,11 +23,11 @@
 <body>
     <header id="header-main">
         <div id=header-brand>
-            <a href="{{ url_for('index') }}" id="brand-logo">
+            <a href="{{ url_for('main.index') }}" id="brand-logo">
                 <i class="fas fa-book-open"></i> 
             </a>
             <h1 id="brand-name">
-                <a href="{{ url_for('index') }}">Easy Read</a>
+                <a href="{{ url_for('main.index') }}">Easy Read</a>
             </h1>
         </div>
         <nav id="header-nav">
@@ -38,12 +38,12 @@
                 <li><a class="nav-link" href="">Read</a></li>                
                 <li><a class="nav-link" href="">About</a></li>
                 <li><a class="nav-link" href="">Contact</a></li>
-                <li><a class="nav-link" href="{{ url_for('logout') }}">Log out</a></li>
+                <li><a class="nav-link" href="{{ url_for('auth.logout') }}">Log out</a></li>
                 {% else %}
                 <li><a class="nav-link" href="">Read</a></li>
                 <li><a class="nav-link" href="">About</a></li>
                 <li><a class="nav-link" href="">Contact</a></li>
-                <li><a class="nav-link" href="{{ url_for('login') }}">Log in</a></li>
+                <li><a class="nav-link" href="{{ url_for('auth.login') }}">Log in</a></li>
                 {% endif %}
             </ul> 
         </nav>   
