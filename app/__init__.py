@@ -9,7 +9,7 @@ db = SQLAlchemy()
 
 # Instatiate and configure login manager 
 login = LoginManager()
-login.login_view = 'login'
+login.login_view = 'auth.login'
 login.login_message = 'Please log in to access that page.'
 login.login_message_category = 'error'
 
