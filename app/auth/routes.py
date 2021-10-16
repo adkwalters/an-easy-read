@@ -57,6 +57,8 @@ def logout():
     # Log user out
     logout_user()
 
+    flash('You have logged out successfully.', 'success')
+
     # Render index page
     return redirect(url_for('main.index'))
 

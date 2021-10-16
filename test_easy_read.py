@@ -1,3 +1,9 @@
+import os
+
+# Configure tests to use in-memory database 
+# Import before other imports to avoid database fallback
+os.environ['DATABASE_URL'] = 'sqlite://'  
+
 import unittest
 from flask import current_app
 from flask_login import current_user, login_user, logout_user
@@ -31,6 +37,7 @@ class TestWebApp(unittest.TestCase):
 class UserModelCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
+        self.app.config['WTF_CSRF_ENABLED'] = False    # Disable CSRF during tests
         self.appctx = self.app.app_context()
         self.appctx.push()
         self.client = self.app.test_client()
@@ -56,4 +63,20 @@ class UserModelCase(unittest.TestCase):
         self.assertTrue(u.check_password('password'))
         self.assertFalse(u.check_password('not the password'))
 
-        
+    def test_log_user_in_and_out(self):
+        u = User(username='Andrew', email='andrew@email.com')
+        u.set_password('password')
+        db.session.add(u)
+        db.session.commit()
+        login_response = self.client.post('/login', data=dict(
+            username='Andrew', 
+            password='password'), follow_redirects=True)
+        html = login_response.get_data(as_text=True)
+        assert login_response.request.path == '/index'
+        assert 'Welcome to Easy Read, Andrew' in html
+        assert 'Welcome to Easy Read, David' not in html
+        logout_response = self.client.get('/logout', follow_redirects=True)
+        html = logout_response.get_data(as_text=True)
+        assert logout_response.request.path == '/index'
+        assert 'You have logged out successfully.' in html
+
