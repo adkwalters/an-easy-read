@@ -1,5 +1,7 @@
 import os
 
+from werkzeug.utils import redirect
+
 # Configure tests to use in-memory database 
 # Import before other imports to avoid database fallback
 os.environ['DATABASE_URL'] = 'sqlite://'  
@@ -63,6 +65,18 @@ class UserModelCase(unittest.TestCase):
         self.assertTrue(u.check_password('password'))
         self.assertFalse(u.check_password('not the password'))
 
+    def test_register_user(self):
+        register = self.client.post('/register', data=dict(
+            username='Andrew',
+            email='andrew@email.com',
+            password='password',
+            confirm_password='password',
+            remember_me=True), follow_redirects=True)
+        html = register.get_data(as_text=True)
+        assert register.request.path == '/index'
+        assert 'Welcome to Easy Read, Andrew' in html
+        assert 'Welcome to Easy Read, David' not in html
+
     def test_log_user_in_and_out(self):
         u = User(username='Andrew', email='andrew@email.com')
         u.set_password('password')
@@ -78,5 +92,5 @@ class UserModelCase(unittest.TestCase):
         logout_response = self.client.get('/logout', follow_redirects=True)
         html = logout_response.get_data(as_text=True)
         assert logout_response.request.path == '/index'
-        assert 'You have logged out successfully.' in html
+        assert 'You have logged out successfully.' in html            
 
