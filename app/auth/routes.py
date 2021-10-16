@@ -1,22 +1,57 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
-from app.auth.forms import LoginForm 
+from app.auth.forms import LoginForm, RegisterForm 
 from app.models import User
 from app.auth import bp
+from app import db
+
+
+@bp.route('/register', methods=['GET', 'POST'])
+def register():
+
+    # If user is already logged in, redirect to index
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+
+    # Get user data 
+    form = RegisterForm()
+    
+    # If use data is valid 
+    if form.validate_on_submit():
+
+        # Instantiate user and set password
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        
+        # Add user to database and commit
+        db.session.add(user)
+        db.session.commit()
+
+        # Log user in
+        login_user(user)
+
+        # Alert user 
+        flash('You are successfully registered.', 'success')
+
+        # Redirect user to index page
+        return redirect(url_for('main.index'))
+
+    # Render user registration page
+    return render_template('easy-read-register.html', form=form)
 
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     
-    # Redirect user if logged in
+    # If user is already logged in, redirect to index
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
 
-    # Get user login data from login form
+    # Get user data
     form = LoginForm()
 
-    # If user submits valid login data 
+    # If user data is valid 
     if form.validate_on_submit():  
         
         # Get user's username

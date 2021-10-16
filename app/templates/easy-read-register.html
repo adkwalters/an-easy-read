@@ -18,26 +18,38 @@
 
 <!-- Main -->
 {% block main %}
-    <div class="small-page">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    <div>{{ message | safe }}</div>
-                    <button type="button" class="close-message"><span>&times;</span></button>
-                </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <form class="login-form" action="/register" method="post">  
-            <h1>Register</h1>
-            <div class="login-form label-colour">
-                <label id="register-email">Email:<input name="register-email" autocomplete="off" required autofocus></label>
-                <label id="register-password">Password:<input name="register-password" type="password" required></label>
-                <label id="register-password-confirmation">Confirm password:<input name="register-password-confirmation" type="password" required></label>
+    <div id="register" class="small-page">
+        <h1>Register</h1>
+        <form class="auth-form" action="" method="post" novalidate>  
+            {{ form.hidden_tag() }}
+            <div class="auth-form label-colour">
+                <!-- Username -->
+                {{ form.username.label }}
+                {{ form.username(size=32) }}
+                {% for error in form.username.errors %}
+                    <span class="form-alert alert-error">{{ error }}</span>
+                {% endfor %}   
+                <!-- Email -->
+                {{ form.email.label }}
+                {{ form.email(size=32) }}
+                {% for error in form.email.errors %}
+                    <span class="form-alert alert-error">{{ error }}</span>
+                {% endfor %}   
+                <!-- Password -->
+                {{ form.password.label }}
+                {{ form.password }}
+                {% for error in form.password.errors %}
+                    <span class="form-alert alert-error">{{ error }}</span>
+                {% endfor %} 
+                <!-- Confirm password -->
+                {{ form.confirm_password.label }}
+                {{ form.confirm_password }}
+                {% for error in form.confirm_password.errors %}
+                    <span class="form-alert alert-error">{{ error }}</span>
+                {% endfor %}     
             </div>
-            <button class="button big-button" type="submit">Register</button>
+                {{ form.submit(class="label-colour big-button") }}
         </form>
-        <p>Already have an account? <a href="/login">Click to login</a></p>
+        <p>Already have an account? <a href="{{ url_for('auth.login') }}">Click to login</a></p>
     </div>
 {% endblock %}

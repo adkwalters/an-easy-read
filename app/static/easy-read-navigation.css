@@ -71,15 +71,16 @@
 
 
 
-/* || Login || */
+/* || Registration and Login || */
 
+    #register h1,
     #login h1 {
         padding-left: 2rem;
     }
-    .login-form {
+    .auth-form {
         padding: 1rem;
     }
-    .login-form input{
+    .auth-form input{
         width: 100%;
         margin: 1rem auto;
         padding: 1rem;
@@ -87,17 +88,18 @@
         border: none;
         font-size: 1rem;
     }
-    .login-form input[type="checkbox"] {
+    .auth-form input[type="checkbox"] {
         width: max-content;
         margin-top: 0;
     }
-    .login-form span {
+    .auth-form span {
         display: block;
         margin-bottom: 1rem;
     }
-    .login-form input[type="submit"] {
+    .auth-form input[type="submit"] {
         margin-top: 2rem;
     }
+    #register p,
     #login p {
         padding-top: 0;
         padding-left: 2rem;

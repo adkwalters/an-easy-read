@@ -20,18 +20,18 @@
 {% block main %}
     <div id="login" class="small-page">
         <h1>Login</h1>
-        <form class="login-form" action="" method="post" novalidate>
+        <form class="auth-form" action="" method="post" novalidate>
             {{ form.hidden_tag() }}
-            <div class="login-form label-colour">
+            <div class="auth-form label-colour">
                 <!-- Username -->
                 {{ form.username.label }}
-                {{ form.username(size=32, value=test_value) }}
+                {{ form.username(size=32) }}
                 {% for error in form.username.errors %}
                     <span class="form-alert alert-error">{{ error }}</span>
                 {% endfor %}   
                 <!-- Password -->
                 {{ form.password.label }}
-                {{ form.password(size=32) }}
+                {{ form.password }}
                 {% for error in form.password.errors %}
                     <span class="form-alert alert-error">{{ error }}</span>
                 {% endfor %}   
@@ -41,6 +41,6 @@
             </div>
                 {{ form.submit(class="label-colour big-button") }}
         </form>
-        <p>Don't have an account? <a href="">Click to register</a></p>
+        <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Click to register</a></p>
     </div>
 {% endblock %}
