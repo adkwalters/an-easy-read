@@ -1,11 +1,10 @@
-from flask import render_template, redirect, url_for, request, flash
+from flask import render_template, redirect, url_for, flash
 from flask_login import login_required
-from app import db
-from app.auth.routes import login
-from app.main import bp
-from app.models import Article
-from app.main.forms import ArticleForm
 
+from app import db
+from app.main import bp
+from app.main.forms import ArticleForm
+from app.models import Article
 
 
 @bp.route('/')
@@ -49,3 +48,4 @@ def create_article():
         return redirect(url_for('main.author_articles'))
     
     return render_template('create-article.html', form=form)
+    

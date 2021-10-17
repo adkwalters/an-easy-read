@@ -1,10 +1,11 @@
 from flask import render_template, flash, redirect, url_for, request
-from flask_login import current_user, login_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user
 from werkzeug.urls import url_parse
+
+from app import db
+from app.auth import bp
 from app.auth.forms import LoginForm, RegisterForm 
 from app.models import User
-from app.auth import bp
-from app import db
 
 
 @bp.route('/register', methods=['GET', 'POST'])
@@ -17,7 +18,7 @@ def register():
     # Get user data 
     form = RegisterForm()
     
-    # If use data is valid 
+    # If user data is valid 
     if form.validate_on_submit():
 
         # Instantiate user and set password
@@ -96,4 +97,3 @@ def logout():
 
     # Render index page
     return redirect(url_for('main.index'))
-

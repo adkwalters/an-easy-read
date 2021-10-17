@@ -1,14 +1,12 @@
 import os
+import unittest
 
-from werkzeug.utils import redirect
+from flask import current_app
 
-# Configure tests to use in-memory database 
-# Import before other imports to avoid database fallback
+# Configure tests to use in-memory database
+# Configure before local application to avoid triggering fallback in Config object
 os.environ['DATABASE_URL'] = 'sqlite://'  
 
-import unittest
-from flask import current_app
-from flask_login import current_user, login_user, logout_user
 from app import create_app, db
 from app.models import User
 
