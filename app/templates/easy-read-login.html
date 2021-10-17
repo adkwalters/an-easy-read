@@ -25,7 +25,7 @@
             <div class="auth-form label-colour">
                 <!-- Username -->
                 {{ form.username.label }}
-                {{ form.username(size=32) }}
+                {{ form.username(size=32, autocomplete="off", autofocus=True) }}
                 {% for error in form.username.errors %}
                     <span class="form-alert alert-error">{{ error }}</span>
                 {% endfor %}   
