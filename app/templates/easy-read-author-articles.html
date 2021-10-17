@@ -20,32 +20,23 @@
 <!-- Main -->
 {% block main %}
     <div class="full-spread">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message | safe }}
-                    <button type="button" class="close-message"><span>&times;</span></button>
-                </div>                
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
         <h1>My Articles</h1>
         <section id="author-articles" class="articles-display-pannel">
             <ul>
                 {% if articles is not none %}
                     {% for article in articles %}
                     <li class="label-colour article-preview">
-                        {% if article['src'] is not none %}
+                        {% if article.src %}
                             <figure>
-                                <img src="{{ article['src'] }}">
-                                <figcaption><h3>{{ article['title'] }}</h3></figcaption>
+                                <img src="{{ article.src }}">
+                                <figcaption><h3>{{ article.title }}</h3></figcaption>
                             </figure>
                         {% else %}
                             <i class="far fa-image"></i>
-                            <h3>{{ article['title'] }}</h3>
+                            <h3>{{ article.title }}</h3>
                         {% endif %}
-                        <p>{{ article['description'] }}</p>
-                        <a href="/create-article?article_id={{ article['id'] }}"><button type="button" class="button grey-out edit-article-button">Edit Article</button></a>
+                        <p>{{ article.description }}</p>
+                        <a href="{{ url_for('main.create_article') }}"><button type="button" class="button grey-out edit-article-button">Edit Article</button></a>
                         <a href=""><button type="button" class="button grey-out edit-article-button">Publish Article</button></a>
                     </li>
                     {% endfor %}

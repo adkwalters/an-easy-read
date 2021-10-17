@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from app import db
 from app.main import bp
@@ -15,12 +15,14 @@ def index():
     return render_template('easy-read-index.html')
 
 
-@bp.route('/author-articles', methods=['GET', 'POST'])
+@bp.route('/author-articles', methods=['GET'])
 @login_required
 def author_articles():
 
+    articles = Article.query.filter_by(author=current_user) 
+
     # Render author's articles pages
-    return render_template('easy-read-author-articles.html')
+    return render_template('easy-read-author-articles.html', articles=articles)
 
 
 @bp.route('/create-article', methods=['GET', 'POST'])
@@ -36,7 +38,8 @@ def create_article():
         # Instantiate article and set data
         article = Article(
             title=form.article_title.data,
-            description=form.article_desc.data 
+            description=form.article_desc.data,
+            user_id=current_user.id
         )
 
         # Add article to database and commit
