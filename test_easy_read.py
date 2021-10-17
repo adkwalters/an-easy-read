@@ -53,8 +53,8 @@ class UserModelCase(unittest.TestCase):
         self.client = None
 
     def test_add_user(self):
-        u = User(username='Andrew', email='andrew@email.com')
-        db.session.add(u)
+        user = User(username='Andrew', email='andrew@email.com')
+        db.session.add(user)
         db.session.commit()
         users = User.query.all()
         self.assertTrue(len(users) > 0)
@@ -78,17 +78,55 @@ class UserModelCase(unittest.TestCase):
         assert 'Welcome to Easy Read, David' not in html
 
     def test_log_user_in_and_out(self):
-        u = User(username='Andrew', email='andrew@email.com')
-        u.set_password('password')
-        db.session.add(u)
+        user = User(username='Andrew', email='andrew@email.com')
+        user.set_password('password')
+        db.session.add(user)
         db.session.commit()
-        login_response = self.client.post('/login', data=dict(
+        login = self.client.post('/login', data=dict(
             username='Andrew', 
-            password='password'), follow_redirects=True)
-        html = login_response.get_data(as_text=True)
-        assert login_response.request.path == '/author-articles'
-        logout_response = self.client.get('/logout', follow_redirects=True)
-        html = logout_response.get_data(as_text=True)
-        assert logout_response.request.path == '/index'
+            password='password'), 
+            follow_redirects=True)
+        html = login.get_data(as_text=True)
+        assert login.request.path == '/author-articles'
+        logout = self.client.get('/logout', follow_redirects=True)
+        html = logout.get_data(as_text=True)
+        assert logout.request.path == '/index'
         assert 'You have logged out successfully.' in html            
 
+
+class ArticleModelCase(unittest.TestCase):
+    def setUp(self):
+        self.app = create_app()
+        self.app.config['WTF_CSRF_ENABLED'] = False   
+        self.appctx = self.app.app_context()
+        self.appctx.push()
+        self.client = self.app.test_client()
+        db.create_all()
+        self.populate_db()
+        self.login()
+
+    def tearDown(self):
+        db.drop_all()
+        self.appctx.pop()
+        self.app = None
+        self.appctx = None
+        self.client = None
+    
+    def populate_db(self):
+        user = User(username='Andrew', email='andrew@email.com')
+        user.set_password('password')
+        db.session.add(user)
+        db.session.commit()
+
+    def login(self):
+        self.client.post('/login', data=dict(
+            username='Andrew', 
+            password='password'
+        ))
+
+    def test_setup(self):
+        response = self.client.get('/author-articles', follow_redirects=True)
+        assert response.status_code == 200
+        assert response.request.path == '/author-articles'
+
+        
