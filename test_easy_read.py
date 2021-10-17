@@ -86,9 +86,7 @@ class UserModelCase(unittest.TestCase):
             username='Andrew', 
             password='password'), follow_redirects=True)
         html = login_response.get_data(as_text=True)
-        assert login_response.request.path == '/index'
-        assert 'Welcome to Easy Read, Andrew' in html
-        assert 'Welcome to Easy Read, David' not in html
+        assert login_response.request.path == '/author-articles'
         logout_response = self.client.get('/logout', follow_redirects=True)
         html = logout_response.get_data(as_text=True)
         assert logout_response.request.path == '/index'
