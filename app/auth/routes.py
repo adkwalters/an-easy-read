@@ -76,8 +76,8 @@ def login():
         # or if a network location is parsed (== not relative)
         if not target_page or url_parse(target_page).netloc != '':
 
-            # Reassign target page as index
-            target_page = url_for('main.index')
+            # Reassign author's articles page as index
+            target_page = url_for('main.author_articles')
 
         # Redirect user to target page
         return redirect(target_page)

@@ -34,7 +34,7 @@
             <i id="header-nav-icon" class="fas fa-bars"></i>
             <ul id="header-nav-list">    
                 {% if current_user.is_authenticated %}
-                <li><a class="nav-link" href="">Write</a></li>
+                <li><a class="nav-link" href="{{ url_for('main.author_articles') }}">Write</a></li>
                 <li><a class="nav-link" href="">Read</a></li>                
                 <li><a class="nav-link" href="">About</a></li>
                 <li><a class="nav-link" href="">Contact</a></li>
