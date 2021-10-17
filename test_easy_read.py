@@ -131,12 +131,12 @@ class ArticleModelCase(unittest.TestCase):
 
     def test_add_article(self):
         article = self.client.post('/create-article', data=dict(
-            title='This Is the Title of the Article',
-            description='This is the description of the article, and is far longer than the title'
-        ))
+            article_title='Article Title',
+            article_desc='Article description'),
+            follow_redirects=True)
         assert article.status_code == 200
         assert article.request.path == '/author-articles'
         html = article.get_data(as_text=True)
-        assert 'This Is the Title of the Article' in html
+        assert 'Article successfully saved' in html
 
         
