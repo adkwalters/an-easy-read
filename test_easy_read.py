@@ -127,7 +127,7 @@ class ArticleModelCase(unittest.TestCase):
         assert response.status_code == 200
         assert response.request.path == '/author-articles'
 
-    def test_add_article(self):
+    def test_add_and_display_article(self):
         article = self.client.post('/create-article', data=dict(
             article_title='Article Title',
             article_desc='Article description'),
@@ -136,5 +136,5 @@ class ArticleModelCase(unittest.TestCase):
         assert article.request.path == '/author-articles'
         html = article.get_data(as_text=True)
         assert 'Article successfully saved' in html
-
-        
+        assert 'Article Title' in html
+  
