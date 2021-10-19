@@ -1,14 +1,14 @@
 import os
 import unittest
 
-from flask import current_app
+from flask import current_app, session
 
 # Configure tests to use in-memory database
 # Configure before local application to avoid triggering fallback in Config object
 os.environ['DATABASE_URL'] = 'sqlite://'  
 
 from app import create_app, db
-from app.models import User
+from app.models import User, Article
 
 
 class TestWebApp(unittest.TestCase):
@@ -138,3 +138,22 @@ class ArticleModelCase(unittest.TestCase):
         assert 'Article successfully saved' in html
         assert 'Article Title' in html
   
+    def test_edit_article(self):
+        original_title = 'This Is the Original Title'
+        original_post = self.client.post('/create-article', data=dict(
+            article_title=original_title,
+            article_desc='Article description'),
+            follow_redirects=True)
+        original_article = Article.query.filter_by(title=original_title).first()  
+        edited_title = 'This Is the Edited Title'
+        edited_post = self.client.post('/create-article', data=dict(
+            article_id=original_article.id,
+            article_title=edited_title,
+            article_desc='Article description'),
+            follow_redirects=True)
+        edited_article = Article.query.filter_by(title=original_title).first()
+        html = edited_post.get_data(as_text=True)
+        assert 'Article successfully saved' in html
+        assert edited_title in html
+        assert edited_article.id == original_article.id
+
