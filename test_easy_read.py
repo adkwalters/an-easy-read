@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from flask import current_app, session
+from flask import current_app
 
 # Configure tests to use in-memory database
 # Configure before local application to avoid triggering fallback in Config object
@@ -29,9 +29,10 @@ class TestWebApp(unittest.TestCase):
         assert current_app == self.app
 
     def test_home_page_redirect(self):
-        response = self.client.get('/author-articles', follow_redirects=True)
-        assert response.status_code == 200
-        assert response.request.path == '/login'
+        get_response = self.client.get('/author-articles', 
+            follow_redirects=True)
+        assert get_response.status_code == 200
+        assert get_response.request.path == '/login'
 
     
 class UserModelCase(unittest.TestCase):
@@ -64,14 +65,16 @@ class UserModelCase(unittest.TestCase):
         self.assertFalse(u.check_password('not the password'))
 
     def test_register_user(self):
-        register = self.client.post('/register', data=dict(
-            username='Andrew',
-            email='andrew@email.com',
-            password='password',
-            confirm_password='password',
-            remember_me=True), follow_redirects=True)
-        html = register.get_data(as_text=True)
-        assert register.request.path == '/index'
+        post_registration = self.client.post('/register', 
+            data=dict(
+                username='Andrew',
+                email='andrew@email.com',
+                password='password',
+                confirm_password='password',
+                remember_me=True), 
+            follow_redirects=True)
+        html = post_registration.get_data(as_text=True)
+        assert post_registration.request.path == '/index'
         assert 'Welcome to Easy Read, Andrew' in html
         assert 'Welcome to Easy Read, David' not in html
 
@@ -80,15 +83,17 @@ class UserModelCase(unittest.TestCase):
         user.set_password('password')
         db.session.add(user)
         db.session.commit()
-        login = self.client.post('/login', data=dict(
-            username='Andrew', 
-            password='password'), 
+        post_login = self.client.post('/login', 
+            data=dict(
+                username='Andrew', 
+                password='password'), 
             follow_redirects=True)
-        html = login.get_data(as_text=True)
-        assert login.request.path == '/author-articles'
-        logout = self.client.get('/logout', follow_redirects=True)
-        html = logout.get_data(as_text=True)
-        assert logout.request.path == '/index'
+        html = post_login.get_data(as_text=True)
+        assert post_login.request.path == '/author-articles'
+        post_logout = self.client.get('/logout', 
+            follow_redirects=True)
+        html = post_logout.get_data(as_text=True)
+        assert post_logout.request.path == '/index'
         assert 'You have logged out successfully.' in html            
 
 
@@ -117,33 +122,36 @@ class ArticleModelCase(unittest.TestCase):
         db.session.commit()
 
     def login(self):
-        self.client.post('/login', data=dict(
-            username='Andrew', 
-            password='password'
+        self.client.post('/login', 
+            data=dict(
+                username='Andrew', 
+                password='password'
         ))
 
     def test_setup(self):
-        response = self.client.get('/author-articles', follow_redirects=True)
-        assert response.status_code == 200
-        assert response.request.path == '/author-articles'
+        get_response = self.client.get('/author-articles', 
+            follow_redirects=True)
+        assert get_response.status_code == 200
+        assert get_response.request.path == '/author-articles'
 
     def test_add_and_display_article(self):
-        article = self.client.post('/create-article', data=dict(
-            article_title='Article Title',
-            article_desc='Article description'),
+        post_article = self.client.post('/create-article', 
+            data=dict(
+                article_title='Article Title',
+                article_desc='Article description'),
             follow_redirects=True)
-        assert article.status_code == 200
-        assert article.request.path == '/author-articles'
-        html = article.get_data(as_text=True)
+        assert post_article.request.path == '/author-articles'
+        html = post_article.get_data(as_text=True)
         assert 'Article successfully saved' in html
         assert 'Article Title' in html
   
     def test_edit_article(self):
         # Post original article
         original_title = 'Original Title'
-        self.client.post('/create-article', data=dict(
-            article_title=original_title,
-            article_desc='Article description'))
+        post_original_article = self.client.post('/create-article', 
+            data=dict(
+                article_title=original_title,
+                article_desc='Article description'))
         original_article = Article.query.filter_by(title=original_title).first()
         assert original_article is not None
         # Get original article
