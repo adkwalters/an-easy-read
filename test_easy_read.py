@@ -139,21 +139,34 @@ class ArticleModelCase(unittest.TestCase):
         assert 'Article Title' in html
   
     def test_edit_article(self):
-        original_title = 'This Is the Original Title'
-        original_post = self.client.post('/create-article', data=dict(
+        # Post original article
+        original_title = 'Original Title'
+        self.client.post('/create-article', data=dict(
             article_title=original_title,
-            article_desc='Article description'),
-            follow_redirects=True)
-        original_article = Article.query.filter_by(title=original_title).first()  
+            article_desc='Article description'))
+        original_article = Article.query.filter_by(title=original_title).first()
+        assert original_article is not None
+        # Get original article
+        get_original_article = self.client.get('/create-article', 
+            query_string={
+                'article-id': original_article.id}, 
+            follow_redirects=True)    
+        html = get_original_article.get_data(as_text=True)
+        assert get_original_article.request.path == '/create-article'
+        assert original_title in html
+        # Post edited article
         edited_title = 'This Is the Edited Title'
-        edited_post = self.client.post('/create-article', data=dict(
-            article_id=original_article.id,
-            article_title=edited_title,
-            article_desc='Article description'),
-            follow_redirects=True)
-        edited_article = Article.query.filter_by(title=original_title).first()
-        html = edited_post.get_data(as_text=True)
+        post_edited_article = self.client.post('/create-article', 
+            query_string={
+                'article-id': original_article.id}, 
+            data=dict(
+                article_title=edited_title,
+                article_desc='Article description'),
+                follow_redirects=True)
+        edited_article = Article.query.filter_by(title=edited_title).first()
+        html = post_edited_article.get_data(as_text=True)
+        assert edited_article.id == original_article.id
         assert 'Article successfully saved' in html
         assert edited_title in html
-        assert edited_article.id == original_article.id
+        assert original_title not in html
 
