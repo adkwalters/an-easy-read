@@ -19,7 +19,7 @@ def index():
 @login_required
 def author_articles():
 
-    articles = Article.query.filter_by(author=current_user) 
+    articles = current_user.articles
 
     # Render author's articles pages
     return render_template('easy-read-author-articles.html', articles=articles)
