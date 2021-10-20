@@ -214,3 +214,72 @@ class ArticleModelCase(unittest.TestCase):
         assert get_article_as_david.request.path != '/create-article'
         get_article_as_david_html = get_article_as_david.get_data(as_text=True)
         assert 'You do not have access to edit that article.' in get_article_as_david_html
+
+
+class SourceModelCase(unittest.TestCase):    
+    def setUp(self):
+        self.app = create_app()
+        self.app.config['WTF_CSRF_ENABLED'] = False   
+        self.appctx = self.app.app_context()
+        self.appctx.push()
+        self.client = self.app.test_client()
+        db.create_all()
+
+    def tearDown(self):
+        db.drop_all()
+        self.appctx.pop()
+        self.app = None
+        self.appctx = None
+        self.client = None
+    
+    def test_add_and_edit_article_source_data(self):
+        # Register and sign user in
+        self.client.post('register',
+            data=dict(
+                username='Andrew',
+                email='andrew@email.com',
+                password='password',
+                confirm_password='password'))
+        self.client.post('/login', 
+            data=dict(
+                username='Andrew', 
+                password='password'))
+        # Post article with source data
+        self.client.post('/create-article',
+            data=dict(
+                article_title='Article Title',
+                article_desc='Article description',
+                source_name='The Source',
+                source_author='Dr Source',
+                source_title='Source Article Title',
+                source_contact='source@email.com',
+                source_hyperlink='https://www.source.com/source-article-title'))
+        article = Article.query.filter_by(title='Article Title').first()
+        # Get article with source data
+        get_article = self.client.get('/create-article',
+            query_string={
+                'article-id': article.id})
+        get_article_html = get_article.get_data(as_text=True)
+        assert 'Source Article Title' in get_article_html
+        # Post article with updated source data
+        post_updated_artilce = self.client.post('/create-article',
+            query_string={
+                'article-id': article.id},
+            data=dict(
+                article_title='Article Title',
+                article_desc='Article description',
+                source_name='The Updated Source',
+                source_author='Dr Updated Source',
+                source_title='Updated Source Article Title',
+                source_contact='updated_source@email.com',
+                source_hyperlink='https://www.source.com/updated-source-article-title'),
+            follow_redirects=True)
+        post_updated_artilce_html = post_updated_artilce.get_data(as_text=True)
+        assert 'Article Title' in post_updated_artilce_html
+        # Get article with updated source data
+        get_updated_article = self.client.get('/create-article',
+            query_string={
+                'article-id': article.id})
+        get_updated_article_html = get_updated_article.get_data(as_text=True)
+        assert 'Updated Source Article Title' in get_updated_article_html
+
