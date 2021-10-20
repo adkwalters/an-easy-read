@@ -116,9 +116,12 @@ class ArticleModelCase(unittest.TestCase):
         self.client = None
     
     def populate_db(self):
-        user = User(username='Andrew', email='andrew@email.com')
-        user.set_password('password')
-        db.session.add(user)
+        andrew = User(username='Andrew', email='andrew@email.com')
+        andrew.set_password('password')
+        david = User(username='David', email='david@email.com')
+        david.set_password('password')
+        db.session.add(andrew)
+        db.session.add(david)
         db.session.commit()
 
     def login(self):
@@ -170,11 +173,44 @@ class ArticleModelCase(unittest.TestCase):
             data=dict(
                 article_title=edited_title,
                 article_desc='Article description'),
-                follow_redirects=True)
-        edited_article = Article.query.filter_by(title=edited_title).first()
+            follow_redirects=True)
         html = post_edited_article.get_data(as_text=True)
-        assert edited_article.id == original_article.id
         assert 'Article successfully saved' in html
         assert edited_title in html
         assert original_title not in html
+        edited_article = Article.query.filter_by(title=edited_title).first()
+        assert edited_article.id == original_article.id
 
+    def test_restrict_article_access_to_author(self):     
+        # Post article as Andrew
+        self.client.post('/create-article',
+            data=dict(
+                article_title='Title',
+                article_desc='Description'))
+        andrews_article = Article.query.filter_by(title='Title').first()
+        andrew = User.query.filter_by(username='Andrew').first()
+        assert andrews_article.author == andrew
+        # Get article as Andrew
+        get_article_as_andrew = self.client.get('/create-article',
+            query_string={
+                'article-id': andrews_article.id},
+            follow_redirects=True)
+        assert get_article_as_andrew.request.path == '/create-article'
+        # Log Andrew out and David in
+        self.client.get('/logout')
+        self.client.post('/login',
+            data=dict(
+                username='David',
+                password='password'),
+            follow_redirects=True)
+        get_index_as_david = self.client.get('/')
+        get_index_as_david_html = get_index_as_david.get_data(as_text=True)
+        assert 'David' in get_index_as_david_html
+        # get article as David
+        get_article_as_david = self.client.get('/create-article',
+            query_string={
+                'article-id': andrews_article.id},
+            follow_redirects=True)
+        assert get_article_as_david.request.path != '/create-article'
+        get_article_as_david_html = get_article_as_david.get_data(as_text=True)
+        assert 'You do not have access to edit that article.' in get_article_as_david_html
