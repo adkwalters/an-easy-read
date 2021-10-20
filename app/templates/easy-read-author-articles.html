@@ -36,8 +36,14 @@
                             <h3>{{ article.title }}</h3>
                         {% endif %}
                         <p>{{ article.description }}</p>
-                        <a href="{{ url_for('main.create_article') }}"><button type="button" class="button grey-out edit-article-button">Edit Article</button></a>
-                        <a href=""><button type="button" class="button grey-out edit-article-button">Publish Article</button></a>
+                        <form action="/create-article" method="get">
+                            <input type="hidden" name="article-id" value="{{ article.id }}">
+                            <button type="submit" class="button grey-out edit-article-button">Edit Article</button></a>
+                        </form>
+                        <form action="">
+                            <input type="hidden" value="{{ article.id }}">
+                            <button type="submit" class="button grey-out edit-article-button">Publish Article</button>
+                        </form>
                     </li>
                     {% endfor %}
                 {% endif %}

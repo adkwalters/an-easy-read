@@ -1,5 +1,6 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
+from sqlalchemy import insert, update
 
 from app import db
 from app.main import bp
@@ -29,26 +30,67 @@ def author_articles():
 @login_required
 def create_article():
 
-    # Get article data
+    # Get article form data
     form = ArticleForm() 
 
-    # If article data is valid
-    if form.validate_on_submit():
-    
-        # Instantiate article and set data
-        article = Article(
-            title=form.article_title.data,
-            description=form.article_desc.data,
-            user_id=current_user.id
-        )
+    # Get article ID from URL 
+    article_id = request.args.get('article-id')
 
-        # Add article to database and commit
-        db.session.add(article)
+    # Get article from article ID
+    article = Article.query.filter_by(id=article_id).first()
+
+    # If author requests an article form
+    if request.method == 'GET':
+
+        # Render blank article form (create) or prefilled article form (edit)  
+        return render_template('create-article.html', form=form, article=article)
+    
+    # If author posts valid article 
+    if form.validate_on_submit():
+
+        # Edit mode
+        if article:
+
+            # I wanted to use an UPSERT statement to combine the UPDATE
+            # and INSERT statements below, using the .on_conflict_do_update
+            # constructor. However, the use of the 'article' variable causes
+            # the constructor to fail in article create mode as no 
+            # URL parameters are present, resulting in an undefined variable.
+
+            # Construct and execute article UPDATE query
+            update_statement = (
+                update(Article).
+                where(Article.id == article.id).
+                values(
+                    title=form.article_title.data,
+                    description=form.article_desc.data
+                )
+            )
+
+            db.session.execute(update_statement)
+        
+        # Create mode
+        else:
+
+            # Construct and execute INSERT query
+            insert_statement = (
+                insert(Article).
+                values(
+                    title=form.article_title.data,
+                    description=form.article_desc.data,
+                    user_id=current_user.id
+                )
+            )
+
+            db.session.execute(insert_statement)
+
+        # Save changes to database
         db.session.commit()
 
+        # Alert author 
         flash('Article successfully saved', 'success')
 
+        # Return author to author's articles page
         return redirect(url_for('main.author_articles'))
-    
-    return render_template('create-article.html', form=form)
+
     

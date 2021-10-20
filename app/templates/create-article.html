@@ -27,8 +27,13 @@
         <section id="article-form-meta" class="label-colour">
             <h2>Article Data</h2>
             <!-- Article data -->
-            {{ form.article_title.label }} {{ form.article_title }}
-            {{ form.article_desc.label }} {{ form.article_desc }}
+            {% if article %}
+                {{ form.article_title.label }} {{ form.article_title(value=article.title) }}
+                {{ form.article_desc.label }} {{ form.article_desc(value=article.description) }}
+            {% else %}
+                {{ form.article_title.label }} {{ form.article_title }}
+                {{ form.article_desc.label }} {{ form.article_desc }}
+            {% endif %}
         </section>
         {{ form.submit(class="button big-button") }}    
     </form>
