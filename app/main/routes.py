@@ -42,6 +42,18 @@ def create_article():
     # If author requests an article form
     if request.method == 'GET':
 
+        # If author requests to edit an article 
+        if article:
+            
+            # If the author selects an article that is not theirs
+            if current_user != article.author:
+
+                # Alert author
+                flash('You do not have access to edit that article.', 'error')
+
+                # Redirect author to their own articles page
+                return redirect(url_for('main.author_articles'))
+
         # Render blank article form (create) or prefilled article form (edit)  
         return render_template('create-article.html', form=form, article=article)
     
