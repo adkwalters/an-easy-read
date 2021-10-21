@@ -5,7 +5,7 @@ from sqlalchemy.dialects.sqlite import insert
 from app import db
 from app.main import bp
 from app.main.forms import ArticleForm
-from app.models import Article
+from app.models import Article, Source
 
 
 @bp.route('/')
@@ -44,6 +44,9 @@ def create_article():
 
         # If author requests to edit an article 
         if article:
+
+            # Get article source data
+            source = article.source
             
             # If the author selects an article that is not theirs
             if current_user != article.author:
@@ -55,7 +58,7 @@ def create_article():
                 return redirect(url_for('main.author_articles'))
 
         # Render blank article form (create) or prefilled article form (edit)  
-        return render_template('create-article.html', form=form, article=article)
+        return render_template('create-article.html', form=form, article=article, source=source)
     
     # If author posts valid article 
     if form.validate_on_submit():
@@ -75,8 +78,27 @@ def create_article():
                 )
             )
 
-        # Execute query
+        # Construct source upsert query
+        source_upsert = insert(Source) \
+            .values(
+                article_id=article_id,
+                title=form.source_title.data,
+                author=form.source_author.data,
+                link=form.source_link.data,
+                name=form.source_name.data,
+                contact=form.source_contact.data) \
+            .on_conflict_do_update(
+                index_elements=['article_id'],
+                set_=dict(
+                    title=form.source_title.data,
+                    author=form.source_author.data,
+                    link=form.source_link.data,
+                    name=form.source_name.data,
+                    contact=form.source_contact.data))
+
+        # Execute queries
         db.session.execute(article_upsert)
+        db.session.execute(source_upsert)
 
         # Save changes to database
         db.session.commit()

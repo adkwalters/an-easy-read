@@ -29,3 +29,15 @@ class Article(db.Model):
     title = db.Column(db.String)
     description = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    source = db.relationship('Source', backref='summary', uselist=False)    # uselist for 1:1 relationship
+
+
+class Source(db.Model):
+    title = db.Column(db.String)
+    author = db.Column(db.String)
+    link = db.Column(db.String)
+    name = db.Column(db.String)
+    contact = db.Column(db.String)
+    article_id = db.Column(db.Integer, db.ForeignKey('article.id'), primary_key=True)
+
+

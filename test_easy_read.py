@@ -249,11 +249,11 @@ class SourceModelCase(unittest.TestCase):
             data=dict(
                 article_title='Article Title',
                 article_desc='Article description',
-                source_name='The Source',
-                source_author='Dr Source',
                 source_title='Source Article Title',
-                source_contact='source@email.com',
-                source_hyperlink='https://www.source.com/source-article-title'))
+                source_author='Dr Source',
+                source_link='https://www.source.com/source-article-title',
+                source_name='The Source',
+                source_contact='source@email.com'))
         article = Article.query.filter_by(title='Article Title').first()
         # Get article with source data
         get_article = self.client.get('/create-article',
@@ -268,11 +268,11 @@ class SourceModelCase(unittest.TestCase):
             data=dict(
                 article_title='Article Title',
                 article_desc='Article description',
-                source_name='The Updated Source',
-                source_author='Dr Updated Source',
                 source_title='Updated Source Article Title',
-                source_contact='updated_source@email.com',
-                source_hyperlink='https://www.source.com/updated-source-article-title'),
+                source_author='Dr Updated Source',
+                source_link='https://www.source.com/updated-source-article-title',
+                source_name='The Updated Source',
+                source_contact='updated_source@email.com'),
             follow_redirects=True)
         post_updated_artilce_html = post_updated_artilce.get_data(as_text=True)
         assert 'Article Title' in post_updated_artilce_html
