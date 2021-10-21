@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-from sqlalchemy import insert, update
+from sqlalchemy.dialects.sqlite import insert
 
 from app import db
 from app.main import bp
@@ -59,42 +59,24 @@ def create_article():
     
     # If author posts valid article 
     if form.validate_on_submit():
-
-        # Edit mode
-        if article:
-
-            # I wanted to use an UPSERT statement to combine the UPDATE
-            # and INSERT statements below, using the .on_conflict_do_update
-            # constructor. However, the use of the 'article' variable causes
-            # the constructor to fail in article create mode as no 
-            # URL parameters are present, resulting in an undefined variable.
-
-            # Construct and execute article UPDATE query
-            update_statement = (
-                update(Article).
-                where(Article.id == article.id).
-                values(
-                    title=form.article_title.data,
-                    description=form.article_desc.data
-                )
-            )
-
-            db.session.execute(update_statement)
         
-        # Create mode
-        else:
-
-            # Construct and execute INSERT query
-            insert_statement = (
-                insert(Article).
-                values(
+        # Construct article upsert query
+        article_upsert = insert(Article) \
+            .values(
+                id=article_id,
+                title=form.article_title.data,
+                description=form.article_desc.data,
+                user_id=current_user.id) \
+            .on_conflict_do_update(
+                index_elements=['id'],
+                set_=dict(
                     title=form.article_title.data,
                     description=form.article_desc.data,
-                    user_id=current_user.id
                 )
             )
 
-            db.session.execute(insert_statement)
+        # Execute query
+        db.session.execute(article_upsert)
 
         # Save changes to database
         db.session.commit()
