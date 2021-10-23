@@ -63,8 +63,8 @@ def create_article():
     # If author posts valid article 
     if form.validate_on_submit():
         
-        # Construct article upsert query
-        article_upsert = insert(Article) \
+        # Upsert article data
+        db.session.execute(insert(Article) \
             .values(
                 id=article_id,
                 title=form.article_title.data,
@@ -74,12 +74,10 @@ def create_article():
                 index_elements=['id'],
                 set_=dict(
                     title=form.article_title.data,
-                    description=form.article_desc.data,
-                )
-            )
+                    description=form.article_desc.data)))
 
-        # Construct source upsert query
-        source_upsert = insert(Source) \
+        # Upsert source data
+        db.session.execute(insert(Source) \
             .values(
                 article_id=article_id,
                 title=form.source_title.data,
@@ -94,11 +92,7 @@ def create_article():
                     author=form.source_author.data,
                     link=form.source_link.data,
                     name=form.source_name.data,
-                    contact=form.source_contact.data))
-
-        # Execute queries
-        db.session.execute(article_upsert)
-        db.session.execute(source_upsert)
+                    contact=form.source_contact.data)))
 
         # Save changes to database
         db.session.commit()
