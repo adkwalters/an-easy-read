@@ -36,7 +36,7 @@
                             <h3>{{ article.title }}</h3>
                         {% endif %}
                         <p>{{ article.description }}</p>
-                        <form action="/create-article" method="get">
+                        <form action="{{ url_for('main.edit_article') }}" method="get">
                             <input type="hidden" name="article-id" value="{{ article.id }}">
                             <button type="submit" class="button grey-out edit-article-button">Edit Article</button></a>
                         </form>
@@ -47,7 +47,7 @@
                     </li>
                     {% endfor %}
                 {% endif %}
-                <a id="add-article-button" href="/create-article"><i class="far fa-plus-square"></i></a>
+                <a id="add-article-button" href="{{ url_for('main.create_article') }}""><i class="far fa-plus-square"></i></a>
             </ul>
         </section>
     </div>

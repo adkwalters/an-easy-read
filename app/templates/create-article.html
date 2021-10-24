@@ -27,31 +27,18 @@
         <section id="article-form-meta" class="label-colour">
             <h2>Article Data</h2>
             <!-- Article data -->
-            {% if article %}
-                {{ form.article_title.label }} {{ form.article_title(value=article.title) }}
-                {{ form.article_desc.label }} {{ form.article_desc(value=article.description) }}
-            {% else %}
-                {{ form.article_title.label }} {{ form.article_title }}
-                {{ form.article_desc.label }} {{ form.article_desc }}
-            {% endif %}
+            {{ form.article_title.label }} {{ form.article_title }}
+            {{ form.article_desc.label }} {{ form.article_desc }}
         </section>
         <section id="article-form-source" class="label-colour">
             <h2>Source Data</h2>
             <!-- Article Source Data -->
-            {% if source is not none %}
-                {{ form.source_title.label }} {{ form.source_title(value=source.title) }}
-                {{ form.source_author.label }} {{ form.source_author(value=source.author) }}
-                {{ form.source_link.label }} {{ form.source_link(value=source.link) }}
-                {{ form.source_name.label }} {{ form.source_name(value=source.name) }}
-                {{ form.source_contact.label }} {{ form.source_contact(value=source.contact) }}
-            {% else %}
-                {{ form.source_title.label }} {{ form.source_title }}
-                {{ form.source_author.label }} {{ form.source_author }}
-                {{ form.source_link.label }} {{ form.source_link }}
-                {{ form.source_name.label }} {{ form.source_name }}
-                {{ form.source_contact.label }} {{ form.source_contact }}
-            {% endif %}
-        </section>
+            {{ form.source_title.label }} {{ form.source_title }}
+            {{ form.source_author.label }} {{ form.source_author }}
+            {{ form.source_link.label }} {{ form.source_link }}
+            {{ form.source_name.label }} {{ form.source_name }}
+            {{ form.source_contact.label }} {{ form.source_contact }}
+            </section>   
         {{ form.submit(class="button big-button") }}    
     </form>
 {% endblock %}

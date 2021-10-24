@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-from sqlalchemy.dialects.sqlite import insert
+from sqlalchemy import update
 
 from app import db
 from app.main import bp
@@ -33,66 +33,88 @@ def create_article():
     # Get article form data
     form = ArticleForm() 
 
+    # If author posts valid article 
+    if form.validate_on_submit():         
+    
+        # Create article object
+        article = Article(
+            title=form.article_title.data,
+            description=form.article_desc.data,
+            user_id=current_user.id)
+        
+        # Add and flush article object to get article ID
+        db.session.add(article)
+        db.session.flush()
+        
+        # Create source object
+        source = Source(
+            article_id=article.id,
+            title=form.source_title.data,
+            author=form.source_author.data,
+            link=form.source_link.data,
+            name=form.source_name.data,
+            contact=form.source_contact.data)
+
+        # Add objects to session
+        db.session.add(source)
+
+        # Save changes to database
+        db.session.commit()
+
+        # Alert author 
+        flash('Article successfully saved', 'success')
+
+        # Return author to author's articles page
+        return redirect(url_for('main.author_articles'))
+    
+    # Render blank article form
+    return render_template('create-article.html', form=form)
+
+
+@bp.route('/edit-article', methods=['GET', 'POST'])
+@login_required
+def edit_article():
+
+    # Get article form data
+    form = ArticleForm() 
+
     # Get article ID from URL 
     article_id = request.args.get('article-id')
 
     # Get article from article ID
-    article = Article.query.filter_by(id=article_id).first()
+    article = db.session.query(Article).filter_by(id=article_id).one()
 
-    # If author requests an article form
-    if request.method == 'GET':
+    # If the author selects an article that is not theirs
+    if current_user != article.author:
 
-        # If author requests to edit an article 
-        if article:
+        # Alert author
+        flash('You do not have access to edit that article.', 'error')
 
-            # Get article source data
-            source = article.source
-            
-            # If the author selects an article that is not theirs
-            if current_user != article.author:
+        # Redirect author to their own articles page
+        return redirect(url_for('main.author_articles'))
 
-                # Alert author
-                flash('You do not have access to edit that article.', 'error')
-
-                # Redirect author to their own articles page
-                return redirect(url_for('main.author_articles'))
-
-        # Render blank article form (create) or prefilled article form (edit)  
-        return render_template('create-article.html', form=form, article=article, source=source)
-    
     # If author posts valid article 
     if form.validate_on_submit():
-        
-        # Upsert article data
-        db.session.execute(insert(Article) \
+
+        # Update article data
+        db.session.execute(update(Article)
+            .where(Article.id==article.id)
             .values(
-                id=article_id,
+                id=article.id,
                 title=form.article_title.data,
                 description=form.article_desc.data,
-                user_id=current_user.id) \
-            .on_conflict_do_update(
-                index_elements=['id'],
-                set_=dict(
-                    title=form.article_title.data,
-                    description=form.article_desc.data)))
+                user_id=current_user.id))
 
-        # Upsert source data
-        db.session.execute(insert(Source) \
+        # Update source data
+        db.session.execute(update(Source)
+            .where(Source.article_id==article.id)
             .values(
                 article_id=article_id,
                 title=form.source_title.data,
                 author=form.source_author.data,
                 link=form.source_link.data,
                 name=form.source_name.data,
-                contact=form.source_contact.data) \
-            .on_conflict_do_update(
-                index_elements=['article_id'],
-                set_=dict(
-                    title=form.source_title.data,
-                    author=form.source_author.data,
-                    link=form.source_link.data,
-                    name=form.source_name.data,
-                    contact=form.source_contact.data)))
+                contact=form.source_contact.data))
 
         # Save changes to database
         db.session.commit()
@@ -103,4 +125,9 @@ def create_article():
         # Return author to author's articles page
         return redirect(url_for('main.author_articles'))
 
-    
+    # Get article data
+    source = article.source
+
+    # Render prefilled article form (edit mode)  
+    return render_template('edit-article.html', form=form, article=article, source=source)
+
