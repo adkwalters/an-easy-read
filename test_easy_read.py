@@ -155,7 +155,7 @@ class ArticleModelCase(unittest.TestCase):
             data=dict(
                 article_title=original_title,
                 article_desc='Article description'))
-        original_article = db.session.query(Article).filter_by(title=original_title).first()
+        original_article = db.session.query(Article).filter_by(title=original_title).one()
         assert original_article is not None
         # Get original article
         get_original_article = self.client.get('/edit-article', 
@@ -178,7 +178,7 @@ class ArticleModelCase(unittest.TestCase):
         assert 'Article successfully saved' in html
         assert edited_title in html
         assert original_title not in html
-        edited_article = db.session.query(Article).filter_by(title=edited_title).first()
+        edited_article = db.session.query(Article).filter_by(title=edited_title).one()
         assert edited_article.id == original_article.id
 
     def test_restrict_article_access_to_author(self):     
@@ -187,8 +187,8 @@ class ArticleModelCase(unittest.TestCase):
             data=dict(
                 article_title='Title',
                 article_desc='Description'))
-        andrews_article = db.session.query(Article).filter_by(title='Title').first()
-        andrew = db.session.query(User).filter_by(username='Andrew').first()
+        andrews_article = db.session.query(Article).filter_by(title='Title').one()
+        andrew = db.session.query(User).filter_by(username='Andrew').one()
         assert andrews_article.author == andrew
         # Get article as Andrew
         get_article_as_andrew = self.client.get('/edit-article',
@@ -254,7 +254,7 @@ class SourceModelCase(unittest.TestCase):
                 source_link='https://www.source.com/source-article-title',
                 source_name='The Source',
                 source_contact='source@email.com'))
-        article = db.session.query(Article).filter_by(title='Article Title').first()
+        article = db.session.query(Article).filter_by(title='Article Title').one()
         # Get article with source data
         get_article = self.client.get('/edit-article',
             query_string={
