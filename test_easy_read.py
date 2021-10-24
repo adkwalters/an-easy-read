@@ -151,23 +151,23 @@ class ArticleModelCase(unittest.TestCase):
     def test_edit_article(self):
         # Post original article
         original_title = 'Original Title'
-        post_original_article = self.client.post('/create-article', 
+        self.client.post('/create-article', 
             data=dict(
                 article_title=original_title,
                 article_desc='Article description'))
-        original_article = Article.query.filter_by(title=original_title).first()
+        original_article = db.session.query(Article).filter_by(title=original_title).first()
         assert original_article is not None
         # Get original article
-        get_original_article = self.client.get('/create-article', 
+        get_original_article = self.client.get('/edit-article', 
             query_string={
                 'article-id': original_article.id}, 
             follow_redirects=True)    
         html = get_original_article.get_data(as_text=True)
-        assert get_original_article.request.path == '/create-article'
+        assert get_original_article.request.path == '/edit-article'
         assert original_title in html
         # Post edited article
         edited_title = 'This Is the Edited Title'
-        post_edited_article = self.client.post('/create-article', 
+        post_edited_article = self.client.post('/edit-article', 
             query_string={
                 'article-id': original_article.id}, 
             data=dict(
@@ -178,7 +178,7 @@ class ArticleModelCase(unittest.TestCase):
         assert 'Article successfully saved' in html
         assert edited_title in html
         assert original_title not in html
-        edited_article = Article.query.filter_by(title=edited_title).first()
+        edited_article = db.session.query(Article).filter_by(title=edited_title).first()
         assert edited_article.id == original_article.id
 
     def test_restrict_article_access_to_author(self):     
@@ -187,15 +187,15 @@ class ArticleModelCase(unittest.TestCase):
             data=dict(
                 article_title='Title',
                 article_desc='Description'))
-        andrews_article = Article.query.filter_by(title='Title').first()
-        andrew = User.query.filter_by(username='Andrew').first()
+        andrews_article = db.session.query(Article).filter_by(title='Title').first()
+        andrew = db.session.query(User).filter_by(username='Andrew').first()
         assert andrews_article.author == andrew
         # Get article as Andrew
-        get_article_as_andrew = self.client.get('/create-article',
+        get_article_as_andrew = self.client.get('/edit-article',
             query_string={
                 'article-id': andrews_article.id},
             follow_redirects=True)
-        assert get_article_as_andrew.request.path == '/create-article'
+        assert get_article_as_andrew.request.path == '/edit-article'
         # Log Andrew out and David in
         self.client.get('/logout')
         self.client.post('/login',
@@ -207,11 +207,11 @@ class ArticleModelCase(unittest.TestCase):
         get_index_as_david_html = get_index_as_david.get_data(as_text=True)
         assert 'David' in get_index_as_david_html
         # get article as David
-        get_article_as_david = self.client.get('/create-article',
+        get_article_as_david = self.client.get('/edit-article',
             query_string={
                 'article-id': andrews_article.id},
             follow_redirects=True)
-        assert get_article_as_david.request.path != '/create-article'
+        assert get_article_as_david.request.path != '/edit-article'
         get_article_as_david_html = get_article_as_david.get_data(as_text=True)
         assert 'You do not have access to edit that article.' in get_article_as_david_html
 
@@ -254,15 +254,15 @@ class SourceModelCase(unittest.TestCase):
                 source_link='https://www.source.com/source-article-title',
                 source_name='The Source',
                 source_contact='source@email.com'))
-        article = Article.query.filter_by(title='Article Title').first()
+        article = db.session.query(Article).filter_by(title='Article Title').first()
         # Get article with source data
-        get_article = self.client.get('/create-article',
+        get_article = self.client.get('/edit-article',
             query_string={
                 'article-id': article.id})
         get_article_html = get_article.get_data(as_text=True)
         assert 'Source Article Title' in get_article_html
         # Post article with updated source data
-        post_updated_artilce = self.client.post('/create-article',
+        post_updated_artilce = self.client.post('/edit-article',
             query_string={
                 'article-id': article.id},
             data=dict(
@@ -277,7 +277,7 @@ class SourceModelCase(unittest.TestCase):
         post_updated_artilce_html = post_updated_artilce.get_data(as_text=True)
         assert 'Article Title' in post_updated_artilce_html
         # Get article with updated source data
-        get_updated_article = self.client.get('/create-article',
+        get_updated_article = self.client.get('/edit-article',
             query_string={
                 'article-id': article.id})
         get_updated_article_html = get_updated_article.get_data(as_text=True)
