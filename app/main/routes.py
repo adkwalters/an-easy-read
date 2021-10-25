@@ -5,7 +5,7 @@ from sqlalchemy import update
 from app import db
 from app.main import bp
 from app.main.forms import ArticleForm
-from app.models import Article, Source
+from app.models import Article, Source, Category
 
 
 @bp.route('/')
@@ -55,8 +55,25 @@ def create_article():
             name=form.source_name.data,
             contact=form.source_contact.data)
 
-        # Add objects to session
+        # Add source object to session
         db.session.add(source)
+
+        # Get submitted categories
+        categories_in_form = form.article_category.data
+
+        # For each category selected
+        for category in categories_in_form:
+
+            # Check if category exists in database
+            category_in_database = Category.query.filter_by(name=category).first()
+            
+            if category_in_database is None:
+                
+                # Instantiate new category
+                category_in_database = Category(name=category)
+
+            # Append category to article collection
+            article.categories.append(category_in_database)
 
         # Save changes to database
         db.session.commit()
@@ -116,6 +133,32 @@ def edit_article():
                 name=form.source_name.data,
                 contact=form.source_contact.data))
 
+        # ?? In order to update a article's catgories, the following  
+        # code deletes the entire category collection and then reinserts
+        # the selected values back into the database. While this works, 
+        # I feel like it smells. How else can I trigger the deletion of 
+        # a category when its signal is the lack of a key:value pair?
+        
+        # Clear category collection
+        article.categories = [] 
+
+        # Get selected categories
+        categories_in_form = form.article_category.data
+
+        # For each category selected
+        for category in categories_in_form:
+
+            # Check if category exists in database
+            category_in_database = Category.query.filter_by(name=category).first()
+            
+            if category_in_database is None:
+                
+                # Instantiate new category
+                category_in_database = Category(name=category)
+
+            # Append category to article collection
+            article.categories.append(category_in_database)
+        
         # Save changes to database
         db.session.commit()
 
@@ -127,7 +170,8 @@ def edit_article():
 
     # Get article data
     source = article.source
+    categories = article.categories
 
     # Render prefilled article form (edit mode)  
-    return render_template('edit-article.html', form=form, article=article, source=source)
+    return render_template('edit-article.html', form=form, article=article, source=source, categories=categories)
 

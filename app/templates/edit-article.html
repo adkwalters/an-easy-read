@@ -34,6 +34,31 @@
                 {{ form.article_title.label }} {{ form.article_title }}
                 {{ form.article_desc.label }} {{ form.article_desc }}
             {% endif %}
+            <label for="article-form-categories">Categories:
+                <input list="article-form-categories-input"> 
+                <datalist id="article-form-categories-input"> 
+                    <option value="Technology"></option>
+                    <option value="Science"></option>
+                    <option value="Nature"></option>
+                    <option value="Culture"></option>
+                    <option value="Language"></option>
+                </datalist>
+                <div class="article-form-categories-controls">
+                    <button type="button" id="article-form-add-category-button" class="button">Add Category</button>
+                    <button type="button" id="article-form-del-category-button" class="button delete">Delete Category</button>
+                </div>
+                <ul id="article-form-categories-selected">
+                <!-- Article Categories -->
+                {{ form.article_category }}
+
+                {% if categories %} 
+                    {% for category in categories %}   
+                        <li class="label-size label-colour">{{ category.name }}</li>
+                        <input type="hidden" name="article_category-{{ loop.index }}" value="{{ category.name }}">
+                    {% endfor %}
+                {% endif %}
+                </ul>
+            </label>
         </section>
         <section id="article-form-source" class="label-colour">
             <h2>Source Data</h2>

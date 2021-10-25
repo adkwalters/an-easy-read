@@ -10,6 +10,12 @@ def load_user(id):
     return User.query.get(int(id))    # Flask-Login requires int, not string
 
 
+# Declare association tables first
+article_category = db.Table('article_category',
+    db.Column('article_id', db.Integer, db.ForeignKey('article.id')),
+    db.Column('category_id', db.Integer, db.ForeignKey('category.id')))
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
@@ -30,6 +36,9 @@ class Article(db.Model):
     description = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     source = db.relationship('Source', backref='summary', uselist=False)    # uselist for 1:1 relationship
+    categories = db.relationship('Category', 
+        secondary=article_category,
+        back_populates='articles')
 
 
 class Source(db.Model):
@@ -38,6 +47,13 @@ class Source(db.Model):
     link = db.Column(db.String)
     name = db.Column(db.String)
     contact = db.Column(db.String)
-    article_id = db.Column(db.Integer, db.ForeignKey('article.id'), primary_key=True)
+    article_id = db.Column(db.ForeignKey('article.id'), primary_key=True)
 
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    articles = db.relationship('Article', 
+        secondary=article_category,
+        back_populates='categories')
 
