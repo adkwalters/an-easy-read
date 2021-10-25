@@ -283,3 +283,65 @@ class SourceModelCase(unittest.TestCase):
         get_updated_article_html = get_updated_article.get_data(as_text=True)
         assert 'Updated Source Article Title' in get_updated_article_html
 
+
+class CategoryModelCase(unittest.TestCase):    
+    def setUp(self):
+        self.app = create_app()
+        self.app.config['WTF_CSRF_ENABLED'] = False   
+        self.appctx = self.app.app_context()
+        self.appctx.push()
+        self.client = self.app.test_client()
+        db.create_all()
+
+    def tearDown(self):
+        db.drop_all()
+        self.appctx.pop()
+        self.app = None
+        self.appctx = None
+        self.client = None
+    
+    def test_add_and_update_article_categories(self):
+        # Register and sign user in
+        self.client.post('register',
+            data=dict(
+                username='Andrew',
+                email='andrew@email.com',
+                password='password',
+                confirm_password='password'))
+        self.client.post('/login', 
+            data=dict(
+                username='Andrew', 
+                password='password'))
+        # Post article with category data
+        self.client.post('/create-article',
+            data={
+                'article_title': 'Title',
+                'article_desc': 'Description',
+                'article_category-1': 'Initial Category 1',
+                'article_category-2': 'Initial Category 2'})
+        article = db.session.query(Article).filter_by(title='Title').one()
+        # Get article with category data
+        get_article = self.client.get('/edit-article',
+            query_string={
+                'article-id': article.id})
+        article_html = get_article.get_data(as_text=True)
+        assert 'Category 1' in article_html
+        # Post article with updated category data
+        self.client.post('/edit-article',
+            query_string={
+                'article-id': article.id},
+            data={
+                'article_title': 'Title',
+                'article_desc': 'Description',
+                'article_category-1': 'Updated Category A',
+                'article_category-2': 'Updated Category B'},
+            follow_redirects=True)
+        # Get article with updated category data
+        get_updated_article = self.client.get('/edit-article', 
+            query_string={
+                'article-id': article.id},
+            follow_redirects=True)
+        updated_article_html = get_updated_article.get_data(as_text=True)
+        assert 'Updated Category A' and 'Updated Category B' in updated_article_html
+        assert 'Initial Category 1' and 'Initial Category 2' not in updated_article_html
+
