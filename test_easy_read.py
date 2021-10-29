@@ -345,3 +345,57 @@ class CategoryModelCase(unittest.TestCase):
         assert 'Updated Category A' and 'Updated Category B' in updated_article_html
         assert 'Initial Category 1' and 'Initial Category 2' not in updated_article_html
 
+
+class ImageModelCase(unittest.TestCase):    
+    def setUp(self):
+        self.app = create_app()
+        self.app.config['WTF_CSRF_ENABLED'] = False   
+        self.appctx = self.app.app_context()
+        self.appctx.push()
+        self.client = self.app.test_client()
+        db.create_all()
+
+    def tearDown(self):
+        db.drop_all()
+        self.appctx.pop()
+        self.app = None
+        self.appctx = None
+        self.client = None
+    
+    def test_upload_and_validate_image(self):
+        # Register and sign user in
+        self.client.post('register',
+            data=dict(
+                username='Andrew',
+                email='andrew@email.com',
+                password='password',
+                confirm_password='password'))
+        self.client.post('/login', 
+            data=dict(
+                username='Andrew', 
+                password='password'))
+        # Post valid image
+        image = r'app\static\images\test_images\initial_image.jpg'
+        response = self.client.post('/add-image', 
+            data={
+            'article_image': (open(image, 'rb'), image)})
+        assert response.status_code == 201    # success, created
+        # Post false image (incorrect file extension)
+        false_image = r'app\static\images\test_images\inorrect_ext_jpg.png'
+        post_false_image = self.client.post('/add-image', 
+            data={
+            'article_image': (open(false_image, 'rb'), false_image)})
+        assert post_false_image.status_code == 400    # Bad request
+        # Post oversized image
+        oversized_image = r'app\static\images\test_images\oversized_image.jpg'
+        post_oversized_image = self.client.post('/add-image', 
+            data={
+            'article_image': (open(oversized_image, 'rb'), oversized_image)})
+        assert post_oversized_image.status_code == 413    # Request entity too large
+        # Post text file
+        text_file = r'app\static\images\test_images\text_file.txt'
+        post_text_file = self.client.post('/add-image', 
+            data={
+            'article_image': (open(text_file, 'rb'), text_file)})
+        assert post_text_file.status_code == 400    # Bad request
+
