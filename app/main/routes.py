@@ -65,7 +65,8 @@ def create_article():
         for category in categories_in_form:
 
             # Check if category exists in database
-            category_in_database = Category.query.filter_by(name=category).first()
+            category_in_database = db.session.query(Category) \
+                .filter_by(name=category).one_or_none()
             
             if category_in_database is None:
                 
@@ -132,14 +133,9 @@ def edit_article():
                 link=form.source_link.data,
                 name=form.source_name.data,
                 contact=form.source_contact.data))
-
-        # ?? In order to update a article's catgories, the following  
-        # code deletes the entire category collection and then reinserts
-        # the selected values back into the database. While this works, 
-        # I feel like it smells. How else can I trigger the deletion of 
-        # a category when its signal is the lack of a key:value pair?
         
-        # Clear category collection
+        # In order to reset categories, delete and reinsert
+        # Delete category collection
         article.categories = [] 
 
         # Get selected categories
@@ -149,7 +145,8 @@ def edit_article():
         for category in categories_in_form:
 
             # Check if category exists in database
-            category_in_database = Category.query.filter_by(name=category).first()
+            category_in_database = db.session.query(Category) \
+                .filter_by(name=category).one_or_none()
             
             if category_in_database is None:
                 
