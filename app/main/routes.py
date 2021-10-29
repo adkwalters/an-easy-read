@@ -1,11 +1,27 @@
-from flask import render_template, redirect, url_for, flash, request
+import os
+import imghdr
+
+from flask import render_template, redirect, url_for, flash, request, current_app, abort
 from flask_login import login_required, current_user
 from sqlalchemy import update
+from werkzeug.utils import secure_filename
 
 from app import db
 from app.main import bp
-from app.main.forms import ArticleForm
-from app.models import Article, Source, Category
+from app.main.forms import ArticleForm, ImageForm
+from app.models import Article, Source, Category, Image
+from config import basedir
+
+
+# Image validation
+# https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
+def validate_image(stream):
+    header = stream.read(512)           # Read first chunk of data from stream
+    stream.seek(0)                      # Reset stream for file save
+    format = imghdr.what(None, header)  # Process first chunk with imghrd library
+    if not format:
+        return None
+    return '.' + (format if format != 'jpeg' else 'jpg') 
 
 
 @bp.route('/')
@@ -24,6 +40,58 @@ def author_articles():
 
     # Render author's articles pages
     return render_template('easy-read-author-articles.html', articles=articles)
+
+
+@bp.route('/add-image', methods=['POST'])
+@login_required
+def add_image():
+
+    # Get image form data
+    form = ImageForm()
+
+    # If author posts valid article 
+    if form.validate_on_submit():
+        
+        # Get image file
+        file = form.article_image.data
+
+        # Get validated filename
+        filename = secure_filename(file.filename)
+
+        # If a file is selected 
+        if filename != '':
+            
+            # Get its extension
+            file_ext = os.path.splitext(filename)[1]
+
+            # if the file extension is not permitted or file is invalid (see function)
+            if file_ext not in current_app.config.get('UPLOAD_EXTENSIONS') \
+                    or file_ext != validate_image(file.stream):
+                
+                # Abort invalid image upload
+                abort(400)
+
+        # Generate image src attribute
+        src = os.path.join(
+            current_app.config.get('UPLOAD_PATH'), filename)
+
+        # Save image to file
+        file.save(os.path.join(basedir + '\\app\\' + src))
+
+        # Create database object
+        image = Image(src=src)
+        
+        # Add object to session 
+        db.session.add(image)
+
+        # Save changes to database
+        db.session.commit()
+
+        # return image ID
+        return {"image_id": image.id}, 201
+
+    # Abort invalid image upload
+    abort(400)
 
 
 @bp.route('/create-article', methods=['GET', 'POST'])

@@ -12,8 +12,8 @@ def load_user(id):
 
 # Declare association tables first
 article_category = db.Table('article_category',
-    db.Column('article_id', db.Integer, db.ForeignKey('article.id')),
-    db.Column('category_id', db.Integer, db.ForeignKey('category.id')))
+    db.Column('article_id', db.ForeignKey('article.id')),
+    db.Column('category_id', db.ForeignKey('category.id')))
 
 
 class User(UserMixin, db.Model):
@@ -30,11 +30,19 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
+class Image(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    alt = db.Column(db.String)
+    src = db.Column(db.String)
+    article = db.relationship('Article', backref='article')
+
+
 class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     description = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.ForeignKey('user.id'))
+    image_id = db.Column(db.ForeignKey('image.id'))
     source = db.relationship('Source', backref='summary', uselist=False)    # uselist for 1:1 relationship
     categories = db.relationship('Category', 
         secondary=article_category,

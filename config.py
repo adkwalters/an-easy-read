@@ -19,4 +19,12 @@ class Config(object):
     
     # Disable application change signalling
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # Configure images
+    UPLOAD_PATH = r'static\images'
+    MAX_CONTENT_LENGTH = 1024 * 1024    # 1MB
+    UPLOAD_EXTENSIONS = ['.jpg', '.png', '.gif']
+    
+
+
     

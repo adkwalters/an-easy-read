@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import IntegerField, StringField, SubmitField, FieldList
 from wtforms.validators import DataRequired
 
@@ -21,3 +22,9 @@ class ArticleForm(FlaskForm):
 
     submit = SubmitField('Save Article')
     
+
+class ImageForm(FlaskForm):
+    article_image = FileField('Article Image', validators=[
+        FileAllowed(['jpg', 'png', 'gif'], 'Please select an image.')
+    ])
+
