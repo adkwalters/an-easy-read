@@ -144,6 +144,14 @@ def create_article():
             # Append category to article collection
             article.categories.append(category_in_database)
 
+        # Set image ID as foreign key
+        article.image_id = form.article_image_id.data
+
+        # Update article object with image alt
+        db.session.execute(update(Image)
+            .where(Image.id==form.article_image_id.data)
+            .values(alt=form.article_image_alt.data))
+
         # Save changes to database
         db.session.commit()
 
@@ -224,6 +232,14 @@ def edit_article():
             # Append category to article collection
             article.categories.append(category_in_database)
         
+        # Set image ID as foreign key
+        article.image_id = form.article_image_id.data
+
+        # Update image alt 
+        db.session.execute(update(Image)
+            .where(Image.id==form.article_image_id.data)
+            .values(alt=form.article_image_alt.data))
+
         # Save changes to database
         db.session.commit()
 
@@ -236,7 +252,8 @@ def edit_article():
     # Get article data
     source = article.source
     categories = article.categories
+    article_image = db.session.query(Image).filter_by(id=article.image_id).one_or_none()
 
     # Render prefilled article form (edit mode)  
-    return render_template('edit-article.html', form=form, article=article, source=source, categories=categories)
+    return render_template('edit-article.html', form=form, article=article, source=source, categories=categories, article_image=article_image)
 

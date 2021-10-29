@@ -26,9 +26,12 @@
         <h1>Create Article</h1>
         <section id="article-form-meta" class="label-colour">
             <h2>Article Data</h2>
-            <!-- Article data -->
+            <!-- Article meta data -->
             {{ form.article_title.label }} {{ form.article_title }}
             {{ form.article_desc.label }} {{ form.article_desc }}
+            <!-- Article Image -->
+            <article-image></article-image>
+            <!-- Article Categories -->
             <label for="article-form-categories">Categories:
                 <input list="article-form-categories-input"> 
                 <datalist id="article-form-categories-input"> 

@@ -18,13 +18,16 @@ class ArticleImage extends HTMLElement {
         const style = document.createElement("style");
 
         // Prepare elements 
+
+        const form = document.getElementById('article-form')
+
         const label = document.createElement("label");
         label.setAttribute("for", "article-form-main-image-input");
         label.textContent = "Main image";
 
         const fileInput = document.createElement("input");
         fileInput.setAttribute("type", "file");
-        fileInput.setAttribute("name", "article-form-main-image-input");
+        fileInput.setAttribute("name", "article_image");
         fileInput.setAttribute("class", "image-upload");
         fileInput.setAttribute("accept", "image/*");
         
@@ -44,11 +47,11 @@ class ArticleImage extends HTMLElement {
         
         const altInput = document.createElement("input");
         altInput.setAttribute("slot", "slot-article-image-alt");
-        altInput.setAttribute("name", "article-image-alt");
+        altInput.setAttribute("name", "article_image_alt");
 
         const imageId = document.createElement("input");
         imageId.setAttribute("type", "hidden");
-        imageId.setAttribute("name", "article-image-id");
+        imageId.setAttribute("name", "article_image_id");
         
         const delImageButton = document.createElement("button");
         delImageButton.setAttribute("type", "button");
@@ -66,23 +69,44 @@ class ArticleImage extends HTMLElement {
         fileInput.addEventListener("change", () => {
 
             // Get file
-            let file = this.shadowRoot.querySelector(".image-upload").files[0];
+            let file = fileInput.files[0];
         
             if (file) {
+
+                // Append file input to light DOM before creation of form data
+                this.appendChild(fileInput)
         
                 // Create image URL
                 img.src = URL.createObjectURL(file);
-        
-                // Post image to the server asynchronously 
-                postImageAsync(file).then(response => {
-        
+                
+                // Create form data object 
+                let formData = new FormData(form);
+
+                // Post form data to server
+                return fetch("/add-image", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json()) 
+                .catch(error => {
+                    console.error(error)
+
+                    // Alert author
+                    alert('The file selected is invalid or not permitted.');
+                    
+                    // Reappend file input to shadow DOM
+                    label.appendChild(fileInput);
+                    fileInput.value = ""; 
+
+                }).then(response => {
+
                     // Save image ID to hidden input
                     imageId.value = response.image_id;
-        
+
                     // Append elements to light DOM
-                    this.appendChild(imageId); // Must be first in db UPDATE                                     
+                    this.appendChild(imageId);                                     
                     this.appendChild(img);
-                    this.appendChild(altInput); 
+                    this.appendChild(altInput);
                 });
             }
         });
@@ -102,8 +126,12 @@ class ArticleImage extends HTMLElement {
                 // Display image-delete button
                 shadow.appendChild(delImageButton);
 
-                // Remove image input
-                label.removeChild(fileInput);
+                // If image file input exists in shadow DOM
+                if (label.contains(fileInput)) {
+                    
+                    // Remove file input
+                    label.removeChild(fileInput);
+                }
             }
             else {
                 
@@ -125,7 +153,7 @@ class ArticleImage extends HTMLElement {
             // Get image content
             let image = slotImg.assignedNodes();
             let imageAlt = slotAlt.assignedNodes();
-            let imageId = document.querySelector("[name='article-image-id']")
+            let imageId = document.querySelector("[name='article_image_id']")
 
             // If image exists
             if (image[0]) {

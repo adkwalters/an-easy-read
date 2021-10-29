@@ -20,6 +20,10 @@ class ArticleForm(FlaskForm):
     source_name = StringField('Source Name')
     source_contact = StringField('Source Contact Details')
 
+    article_image_id = IntegerField('Article Image ID')
+    # ?? How to make image alt required ONLY when image ID exists
+    article_image_alt = StringField('Article Image Description') 
+
     submit = SubmitField('Save Article')
     
 

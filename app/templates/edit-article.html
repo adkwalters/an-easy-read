@@ -26,7 +26,7 @@
         <h1>Create Article</h1>
         <section id="article-form-meta" class="label-colour">
             <h2>Article Data</h2>
-            <!-- Article data -->
+            <!-- Article meta data -->
             {% if article %}
                 {{ form.article_title.label }} {{ form.article_title(value=article.title) }}
                 {{ form.article_desc.label }} {{ form.article_desc(value=article.description) }}
@@ -34,6 +34,17 @@
                 {{ form.article_title.label }} {{ form.article_title }}
                 {{ form.article_desc.label }} {{ form.article_desc }}
             {% endif %}
+            <!-- Article Image -->
+            {% if article_image %}
+                <article-image>
+                    <img slot="slot-article-image" class="article-form-image" src="{{ article_image.src }}">
+                    <input slot="slot-article-image-alt" value="{{ article_image.alt }}">
+                    <input type="hidden" name="article_image_id" value="{{ article_image.id }}">
+                </article-image>
+            {% else %}
+            <article-image></article-image>
+            {% endif %}
+            <!-- Article Categories -->
             <label for="article-form-categories">Categories:
                 <input list="article-form-categories-input"> 
                 <datalist id="article-form-categories-input"> 
