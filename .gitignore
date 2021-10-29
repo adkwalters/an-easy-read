@@ -139,3 +139,10 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Test images
+app/static/images/updated_image.jpg
+app/static/images/initial_image.jpg
+app/static/images/app_static_images_test_images_updated_image.jpg
+app/static/images/app_static_images_test_images_oversized_image.jpg
+app/static/images/app_static_images_test_images_initial_image.jpg
