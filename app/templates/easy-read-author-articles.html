@@ -26,14 +26,14 @@
                 {% if articles is not none %}
                     {% for article in articles %}
                     <li class="label-colour article-preview">
-                        {% if article.src %}
+                        {% if article['Image'].src %}
                             <figure>
-                                <img src="{{ article.src }}">
-                                <figcaption><h3>{{ article.title }}</h3></figcaption>
+                                <img src="{{ article['Image'].src }}">
+                                <figcaption><h3>{{ article['Article'].title }}</h3></figcaption>
                             </figure>
                         {% else %}
                             <i class="far fa-image"></i>
-                            <h3>{{ article.title }}</h3>
+                            <h3>{{ article['Article'].title }}</h3>
                         {% endif %}
                         <p>{{ article.description }}</p>
                         <form action="{{ url_for('main.edit_article') }}" method="get">

@@ -35,9 +35,11 @@ def index():
 @bp.route('/author-articles', methods=['GET'])
 @login_required
 def author_articles():
-
-    articles = current_user.articles
-
+    
+    articles = db.session.query(Article, Image) \
+        .outerjoin(Image, Image.id == Article.image_id) \
+        .filter(Article.author == current_user).all()
+    
     # Render author's articles pages
     return render_template('easy-read-author-articles.html', articles=articles)
 
