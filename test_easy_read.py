@@ -148,6 +148,24 @@ class ArticleModelCase(unittest.TestCase):
         html = post_article.get_data(as_text=True)
         assert 'Article successfully saved' in html
         assert 'Article Title' in html
+
+    def test_delete_article(self):
+        # Post article
+        post_article = self.client.post('/create-article', 
+            data=dict(
+                article_title='Title',
+                article_desc='Description'),
+            follow_redirects=True)
+        articles_display = post_article.get_data(as_text=True)
+        assert 'Title' in articles_display
+        article = db.session.query(Article).filter_by(title="Title").one_or_none()
+        # Delete article
+        get_delete_article = self.client.get('/delete-article',
+            query_string={
+                'article-id': article.id},
+            follow_redirects=True)
+        updated_articles_display = get_delete_article.get_data(as_text=True)
+        assert 'Title' not in updated_articles_display
   
     def test_edit_article(self):
         # Post original article
