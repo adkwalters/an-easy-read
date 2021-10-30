@@ -259,3 +259,31 @@ def edit_article():
     # Render prefilled article form (edit mode)  
     return render_template('edit-article.html', form=form, article=article, source=source, categories=categories, article_image=article_image)
 
+
+@bp.route('/delete-article')
+@login_required
+def delete_article():
+
+    # Get article ID from URL 
+    article_id = request.args.get('article-id')
+
+    # Get article from article ID
+    article = db.session.query(Article).filter_by(id=article_id).one()
+
+    # If the author selects an article that is not theirs
+    if current_user != article.author:
+
+        # Alert author
+        flash('You do not have access to delete that article.', 'error')
+
+        # Return author to author's articles page
+        return redirect(url_for('main.author_articles'))
+    
+    db.session.delete(article)
+    db.session.commit()
+
+    flash('Article successfully deleted', 'success')
+
+    # Return author to author's articles page
+    return redirect(url_for('main.author_articles'))
+

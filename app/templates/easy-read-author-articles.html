@@ -35,15 +35,21 @@
                             <i class="far fa-image"></i>
                             <h3>{{ article['Article'].title }}</h3>
                         {% endif %}
-                        <p>{{ article.description }}</p>
-                        <form action="{{ url_for('main.edit_article') }}" method="get">
-                            <input type="hidden" name="article-id" value="{{ article.id }}">
-                            <button type="submit" class="button grey-out edit-article-button">Edit Article</button></a>
-                        </form>
-                        <form action="">
-                            <input type="hidden" value="{{ article.id }}">
-                            <button type="submit" class="button grey-out edit-article-button">Publish Article</button>
-                        </form>
+                        <p>{{ article['Article'].description }}</p>
+                        <div class="article-controls">
+                            <form action="{{ url_for('main.edit_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
+                                <button type="submit" class="button grey-out edit-article-button">Edit</button></a>
+                            </form>
+                            <form action="">
+                                <input type="hidden" value="{{ article['Article'].id }}">
+                                <button type="submit" class="button grey-out edit-article-button">Publish</button>
+                            </form>
+                            <form action="{{ url_for('main.delete_article') }}" method="get" onSubmit="return confirm('Click OK to delete this article.')">
+                                <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
+                                <button type="submit" class="button delete edit-article-button">Delete</button>
+                            </form>
+                        </div>
                     </li>
                     {% endfor %}
                 {% endif %}

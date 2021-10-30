@@ -43,7 +43,8 @@ class Article(db.Model):
     description = db.Column(db.String)
     user_id = db.Column(db.ForeignKey('user.id'))
     image_id = db.Column(db.ForeignKey('image.id'))
-    source = db.relationship('Source', backref='summary', uselist=False)    # uselist for 1:1 relationship
+    source = db.relationship('Source', backref='summary', uselist=False,    # uselist for 1:1 relationship
+        cascade="all, delete, delete-orphan")    
     categories = db.relationship('Category', 
         secondary=article_category,
         back_populates='articles')

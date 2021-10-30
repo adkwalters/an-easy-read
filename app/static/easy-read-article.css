@@ -258,15 +258,14 @@
     margin-bottom: 0;
     text-align: left;
 }
-.article-preview a {
+.article-controls {
+    display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
+    margin-top: 1rem;
 }
-.edit-article-button {
-    display: block;
-    justify-self: end; 
+.article-preview button {
     width: 100%;
-    margin-top: 0.5rem;    
-    background: #fbfdfe;
 }
 #add-article-button {
     margin: auto;
