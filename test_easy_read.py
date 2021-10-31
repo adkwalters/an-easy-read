@@ -476,3 +476,69 @@ class ImageModelCase(unittest.TestCase):
         assert updated_image.src in updated_article_html
         assert 'Updated image description' in updated_article_html
 
+
+class ParagraphModelCase(unittest.TestCase):    
+    def setUp(self):
+        self.app = create_app()
+        self.app.config['WTF_CSRF_ENABLED'] = False   
+        self.appctx = self.app.app_context()
+        self.appctx.push()
+        self.client = self.app.test_client()
+        db.create_all()
+        self.populate_db()
+        self.login()
+
+    def tearDown(self):
+        db.drop_all()
+        self.appctx.pop()
+        self.app = None
+        self.appctx = None
+        self.client = None
+    
+    def populate_db(self):
+        andrew = User(username='Andrew', email='andrew@email.com')
+        andrew.set_password('password')
+        db.session.add(andrew)
+        db.session.commit()
+
+    def login(self):
+        self.client.post('/login', 
+            data=dict(
+                username='Andrew', 
+                password='password'))
+
+    def test_add_and_update_paragraph_header(self):
+        # Post article with initial headers
+        self.client.post('/create-article',
+            data={
+                'article_title': 'Title',
+                'article_desc': 'Description',
+                'paragraph-1-paragraph_index': '1',
+                'paragraph-1-paragraph_header': 'Initial Paragraph 1',
+                'paragraph-2-paragraph_index': '2',
+                'paragraph-2-paragraph_header': 'Initial Paragraph 2'})
+        article = db.session.query(Article).filter_by(title='Title').one()
+        # Get article with category data
+        get_initial_article = self.client.get('/edit-article',
+            query_string={
+                'article-id': article.id}) 
+        initial_article_html = get_initial_article.get_data(as_text=True)
+        assert 'Initial Paragraph 1' and 'Initial Paragraph 2' in initial_article_html  
+        # Post article with updated headers
+        self.client.post('/edit-article',
+            query_string={
+                'article-id': article.id},
+            data={
+                'article_title': 'Title',
+                'article_desc': 'Description',
+                'paragraph-1-paragraph_index': '1',
+                'paragraph-1-paragraph_header': 'Updated Paragraph 1',
+                'paragraph-2-paragraph_header': 'Updated Paragraph 2'})
+        # Get article with updated headers
+        get_updated_article = self.client.post('/edit-article',
+            query_string={
+                'article-id': article.id},
+            follow_redirects=True)
+        updated_article_html = get_updated_article.get_data(as_text=True)
+        assert 'Updated Paragraph 1' and 'Updated Paragraph 2' in updated_article_html
+        assert 'Initial Paragraph 1' and 'Initial Paragraph 2' not in updated_article_html
