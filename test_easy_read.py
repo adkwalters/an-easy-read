@@ -514,16 +514,20 @@ class ParagraphModelCase(unittest.TestCase):
                 'article_title': 'Title',
                 'article_desc': 'Description',
                 'paragraph-1-paragraph_index': '1',
-                'paragraph-1-paragraph_header': 'Initial Paragraph 1',
+                'paragraph-1-paragraph_header': 'Initial Paragraph 1 Header',
                 'paragraph-2-paragraph_index': '2',
-                'paragraph-2-paragraph_header': 'Initial Paragraph 2'})
+                'paragraph-2-paragraph_header': 'Initial Paragraph 2 Header',
+                'paragraph-3-paragraph_index': '3',
+                'paragraph-3-paragraph_header': 'Initial Paragraph 3 Header',
+                })
         article = db.session.query(Article).filter_by(title='Title').one()
         # Get article with category data
         get_initial_article = self.client.get('/edit-article',
             query_string={
                 'article-id': article.id}) 
         initial_article_html = get_initial_article.get_data(as_text=True)
-        assert 'Initial Paragraph 1' and 'Initial Paragraph 2' in initial_article_html  
+        assert 'Initial Paragraph 1' and 'Initial Paragraph 2' \
+            and 'Initial Paragraph 3' in initial_article_html
         # Post article with updated headers
         self.client.post('/edit-article',
             query_string={
@@ -532,13 +536,17 @@ class ParagraphModelCase(unittest.TestCase):
                 'article_title': 'Title',
                 'article_desc': 'Description',
                 'paragraph-1-paragraph_index': '1',
-                'paragraph-1-paragraph_header': 'Updated Paragraph 1',
-                'paragraph-2-paragraph_header': 'Updated Paragraph 2'})
+                'paragraph-1-paragraph_header': 'Updated Paragraph 1 Header',
+                'paragraph-2-paragraph_index': '2',
+                'paragraph-3-paragraph_index': '3',
+                'paragraph-3-paragraph_header': 'Updated Paragraph 3 Header',
+                })
         # Get article with updated headers
         get_updated_article = self.client.post('/edit-article',
             query_string={
                 'article-id': article.id},
             follow_redirects=True)
         updated_article_html = get_updated_article.get_data(as_text=True)
-        assert 'Updated Paragraph 1' and 'Updated Paragraph 2' in updated_article_html
-        assert 'Initial Paragraph 1' and 'Initial Paragraph 2' not in updated_article_html
+        assert 'Updated Paragraph 1' and 'id="paragraph-2"' \
+            and 'Updated Paragraph 3' in updated_article_html
+        assert 'Initial' not in updated_article_html
