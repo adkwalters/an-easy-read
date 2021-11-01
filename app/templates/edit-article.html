@@ -95,13 +95,13 @@
                     <!-- Paragraphs -->
                     {% for paragraph in paragraphs %}
                         <article-paragraph slot="slot-article-paragraphs" data-paragraph-index="{{ paragraph.index }}">
+                            <ul slot="slot-article-paragraphs" id="paragraph-{{ paragraph.index }}">
+                                <input type=hidden name="paragraph-{{ paragraph.index }}-paragraph_index" value="{{ paragraph.index }}">
+                            </ul>
                         <!-- Header -->
                         {% if paragraph.header %}
                             <paragraph-header slot="slot-paragraph-header" data-paragraph-index="{{ paragraph.index }}">
-                                <ul slot="slot-header-text" id="paragraph-{{ paragraph.index }}">
-                                    <input type=hidden value="{{ paragraph.index }}">
-                                    <textarea name="paragraph-{{ paragraph.index }}-paragraph_header" class="form-text form-text-header">{{ paragraph.header }}</textarea>
-                                </ul>
+                                <textarea slot="slot-header-text" name="paragraph-{{ paragraph.index }}-paragraph_header" class="form-text form-text-header">{{ paragraph.header }}</textarea>
                             </paragraph-header>
                         {% endif %}
                         </article-paragraph>

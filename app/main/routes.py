@@ -168,8 +168,8 @@ def create_article():
             # Instantiate new paragraph
             paragraph_in_database = Paragraph(
                 index=paragraph['paragraph_index'],
-                header=paragraph['paragraph_header'],
-                image_id=paragraph['paragraph_image_id'])
+                header=paragraph['paragraph_header'])
+                # image_id=paragraph['paragraph_image_id'])
             
             # Append paragraph to article collection
             article.paragraphs.append(paragraph_in_database)

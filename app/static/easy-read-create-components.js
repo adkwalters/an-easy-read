@@ -291,14 +291,27 @@ class ArticleParagraph extends HTMLElement {
 
         // Get paragraph index from html attribute
         const paragraphIndex = this.getAttribute("data-paragraph-index");
-
+        
+        // Generate labels
+        const paragraphName = `paragraph-${paragraphIndex}`;
+        const indexName = paragraphName + "-paragraph_index"
+        
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
         // Add styling
         const style = document.createElement("style");
 
-        // Prepare elements    
+        // Prepare elements
+        const fieldList = document.createElement("ul");
+        fieldList.setAttribute("id", paragraphName);
+        fieldList.setAttribute("slot", "slot-article-paragraphs")
+
+        const hiddenIndex = document.createElement("input");
+        hiddenIndex.setAttribute("type", "hidden");
+        hiddenIndex.setAttribute("name", indexName);
+        hiddenIndex.value = paragraphIndex;
+
         const paragraphHeader = document.createElement("h3");
         paragraphHeader.innerHTML = `Paragraph ${paragraphIndex}`; 
 
@@ -362,6 +375,10 @@ class ArticleParagraph extends HTMLElement {
             paragraphControls.appendChild(levelControls);
                 levelControls.appendChild(addLevelButton);   
             paragraphControls.appendChild(delParaButton);
+
+        // Append hidden input for paragraph index to light DOM
+        this.appendChild(fieldList);
+            fieldList.appendChild(hiddenIndex);
 
         // Add image to paragraph
         addImageButton.addEventListener("click", () => {
@@ -763,10 +780,8 @@ class ParagraphHeader extends HTMLElement {
         // Get paragraph index from html attribute 
         const paragraphIndex = this.getAttribute("data-paragraph-index");
 
-        // Generate labels
-        const paragraphName = `paragraph-${paragraphIndex}`;
-        const indexName = paragraphName + "-paragraph_index"
-        const headerName = paragraphName + "-paragraph_header";
+        // Generate label
+        const headerName = `paragraph-${paragraphIndex}-paragraph_header`
                 
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
@@ -782,16 +797,8 @@ class ParagraphHeader extends HTMLElement {
         const slotHeaderText = document.createElement("slot");
         slotHeaderText.setAttribute("name", "slot-header-text");
 
-        const fieldList = document.createElement("ul");
-        fieldList.setAttribute("id", paragraphName);
-        fieldList.setAttribute("slot", "slot-header-text");
-
-        const hiddenIndex = document.createElement("input");
-        hiddenIndex.setAttribute("type", "hidden");
-        hiddenIndex.setAttribute("name", indexName);
-        hiddenIndex.value = paragraphIndex;
-
         const headerText = document.createElement("textarea");
+        headerText.setAttribute("slot", "slot-header-text");
         headerText.setAttribute("name", headerName);
         headerText.setAttribute("class", "form-text form-text-header");
 
@@ -812,9 +819,7 @@ class ParagraphHeader extends HTMLElement {
         // form-associated custom elements but so far have been unsuccessful.  
 
         // Append fallback to light DOM
-        this.appendChild(fieldList);
-            fieldList.appendChild(hiddenIndex);
-            fieldList.appendChild(headerText);
+        this.appendChild(headerText);
 
         // Overwrite header fallback
         slotHeaderText.addEventListener("slotchange", () => {
