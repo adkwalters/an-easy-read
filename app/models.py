@@ -43,11 +43,16 @@ class Article(db.Model):
     description = db.Column(db.String)
     user_id = db.Column(db.ForeignKey('user.id'))
     image_id = db.Column(db.ForeignKey('image.id'))
-    source = db.relationship('Source', backref='summary', uselist=False,    # uselist for 1:1 relationship
+    source = db.relationship('Source', 
+        backref='summary', 
+        uselist=False,    # 1:1 relationship
         cascade="all, delete, delete-orphan")    
     categories = db.relationship('Category', 
         secondary=article_category,
         back_populates='articles')
+    paragraphs = db.relationship('Paragraph', 
+        backref='paragraphs',
+        cascade="all, delete, delete-orphan")    
 
 
 class Source(db.Model):
@@ -65,4 +70,10 @@ class Category(db.Model):
     articles = db.relationship('Article', 
         secondary=article_category,
         back_populates='categories')
+
+
+class Paragraph(db.Model):
+    article_id = db.Column(db.ForeignKey('article.id'), primary_key=True)
+    index = db.Column(db.Integer, primary_key=True)
+    header = db.Column(db.String)
 

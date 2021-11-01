@@ -763,8 +763,10 @@ class ParagraphHeader extends HTMLElement {
         // Get paragraph index from html attribute 
         const paragraphIndex = this.getAttribute("data-paragraph-index");
 
-        // Generate label
-        const labelName = `paragraph-${paragraphIndex}-header`;
+        // Generate labels
+        const paragraphName = `paragraph-${paragraphIndex}`;
+        const indexName = paragraphName + "-paragraph_index"
+        const headerName = paragraphName + "-paragraph_header";
                 
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
@@ -774,16 +776,24 @@ class ParagraphHeader extends HTMLElement {
 
         // Prepare elements       
         const label = document.createElement("label");
-        label.setAttribute("for", labelName);
+        label.setAttribute("for", headerName);
         label.textContent = "Header:";
 
         const slotHeaderText = document.createElement("slot");
         slotHeaderText.setAttribute("name", "slot-header-text");
 
-        const textarea = document.createElement("textarea");
-        textarea.setAttribute("slot", "slot-header-text")
-        textarea.setAttribute("name", labelName);
-        textarea.setAttribute("class", "form-text form-text-header");
+        const fieldList = document.createElement("ul");
+        fieldList.setAttribute("id", paragraphName);
+        fieldList.setAttribute("slot", "slot-header-text");
+
+        const hiddenIndex = document.createElement("input");
+        hiddenIndex.setAttribute("type", "hidden");
+        hiddenIndex.setAttribute("name", indexName);
+        hiddenIndex.value = paragraphIndex;
+
+        const headerText = document.createElement("textarea");
+        headerText.setAttribute("name", headerName);
+        headerText.setAttribute("class", "form-text form-text-header");
 
         const delHeaderButton = document.createElement("button");
         delHeaderButton.setAttribute("class", "button delete del-header-button");
@@ -802,7 +812,9 @@ class ParagraphHeader extends HTMLElement {
         // form-associated custom elements but so far have been unsuccessful.  
 
         // Append fallback to light DOM
-        this.appendChild(textarea); 
+        this.appendChild(fieldList);
+            fieldList.appendChild(hiddenIndex);
+            fieldList.appendChild(headerText);
 
         // Overwrite header fallback
         slotHeaderText.addEventListener("slotchange", () => {

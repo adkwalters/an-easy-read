@@ -59,7 +59,10 @@
             {{ form.source_link.label }} {{ form.source_link }}
             {{ form.source_name.label }} {{ form.source_name }}
             {{ form.source_contact.label }} {{ form.source_contact }}
-            </section>   
-        {{ form.submit(class="button big-button") }}    
+        </section>
+        <section class="label-colour">
+            <article-content></article-content>
+        </section>
+        {{ form.submit(class="button big-button", value="Create Article") }}    
     </form>
 {% endblock %}

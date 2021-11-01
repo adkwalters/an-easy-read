@@ -1,9 +1,12 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import IntegerField, StringField, SubmitField, FieldList
+from wtforms import IntegerField, StringField, SubmitField, FieldList, HiddenField, FormField, TextAreaField, Form
 from wtforms.validators import DataRequired
 
-from app.models import Article
+
+class ParagraphForm(Form):
+    paragraph_index = HiddenField('Paragraph ID')
+    paragraph_header = TextAreaField('Article Category') 
 
 
 class ArticleForm(FlaskForm):
@@ -23,6 +26,8 @@ class ArticleForm(FlaskForm):
     article_image_id = IntegerField('Article Image ID')
     # ?? How to make image alt required ONLY when image ID exists
     article_image_alt = StringField('Article Image Description') 
+
+    paragraph = FieldList(FormField(ParagraphForm))
 
     submit = SubmitField('Save Article')
     

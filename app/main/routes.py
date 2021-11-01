@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 from app import db
 from app.main import bp
 from app.main.forms import ArticleForm, ImageForm
-from app.models import Article, Source, Category, Image
+from app.models import Article, Source, Category, Image, Paragraph
 from config import basedir
 
 
@@ -106,6 +106,7 @@ def create_article():
     # If author posts valid article 
     if form.validate_on_submit():         
     
+    # Article meta
         # Create article object
         article = Article(
             title=form.article_title.data,
@@ -115,7 +116,8 @@ def create_article():
         # Add and flush article object to get article ID
         db.session.add(article)
         db.session.flush()
-        
+
+    # Source
         # Create source object
         source = Source(
             article_id=article.id,
@@ -128,10 +130,11 @@ def create_article():
         # Add source object to session
         db.session.add(source)
 
+    # Categories
         # Get submitted categories
         categories_in_form = form.article_category.data
 
-        # For each category selected
+        # For each category
         for category in categories_in_form:
 
             # Check if category exists in database
@@ -146,13 +149,30 @@ def create_article():
             # Append category to article collection
             article.categories.append(category_in_database)
 
+    # Article Image
         # Set image ID as foreign key
         article.image_id = form.article_image_id.data
 
-        # Update article object with image alt
+        # Update image object with image alt
         db.session.execute(update(Image)
             .where(Image.id==form.article_image_id.data)
             .values(alt=form.article_image_alt.data))
+        
+    # Paragraphs
+        # Get submitted paragraphs
+        paragraphs_in_form = form.paragraph.data
+        
+        # For each paragraph
+        for paragraph in paragraphs_in_form:
+
+            # Instantiate new paragraph
+            paragraph_in_database = Paragraph(
+                index=paragraph['paragraph_index'],
+                header=paragraph['paragraph_header'],
+                image_id=paragraph['paragraph_image_id'])
+            
+            # Append paragraph to article collection
+            article.paragraphs.append(paragraph_in_database)
 
         # Save changes to database
         db.session.commit()
@@ -162,7 +182,7 @@ def create_article():
 
         # Return author to author's articles page
         return redirect(url_for('main.author_articles'))
-    
+
     # Render blank article form
     return render_template('create-article.html', form=form)
 
@@ -192,7 +212,8 @@ def edit_article():
     # If author posts valid article 
     if form.validate_on_submit():
 
-        # Update article data
+    # Article meta data
+        # Update article object
         db.session.execute(update(Article)
             .where(Article.id==article.id)
             .values(
@@ -201,7 +222,8 @@ def edit_article():
                 description=form.article_desc.data,
                 user_id=current_user.id))
 
-        # Update source data
+    # Source data
+        # Update source object
         db.session.execute(update(Source)
             .where(Source.article_id==article.id)
             .values(
@@ -212,9 +234,13 @@ def edit_article():
                 name=form.source_name.data,
                 contact=form.source_contact.data))
         
-        # In order to reset categories, delete and reinsert
+    # Categories
+        # In order to reset categories, delete and reinsert     
         # Delete category collection
         article.categories = [] 
+
+        # Flush to ensure delete query emitted before insert query 
+        db.session.flush()
 
         # Get selected categories
         categories_in_form = form.article_category.data
@@ -242,6 +268,28 @@ def edit_article():
             .where(Image.id==form.article_image_id.data)
             .values(alt=form.article_image_alt.data))
 
+    # Paragraphs
+        # In order to reset paragraphs, delete and reinsert
+        # Delete paragraphs collection
+        article.paragraphs = [] 
+        
+        # Flush to ensure delete query emitted before insert query 
+        db.session.flush()
+
+        # Get submitted paragraphs
+        paragraphs_in_form = form.paragraph.data
+        
+        # For each paragraph
+        for paragraph in paragraphs_in_form:
+
+            # Instantiate new paragraph
+            paragraph_in_database = Paragraph(
+                index=paragraph['paragraph_index'],
+                header=paragraph['paragraph_header'])
+            
+            # Append paragraph to article collection
+            article.paragraphs.append(paragraph_in_database)
+
         # Save changes to database
         db.session.commit()
 
@@ -255,9 +303,19 @@ def edit_article():
     source = article.source
     categories = article.categories
     article_image = db.session.query(Image).filter_by(id=article.image_id).one_or_none()
+    paragraphs = article.paragraphs
+
+    for paragraph in paragraphs:
+        print(paragraph.index)
 
     # Render prefilled article form (edit mode)  
-    return render_template('edit-article.html', form=form, article=article, source=source, categories=categories, article_image=article_image)
+    return render_template('edit-article.html', 
+        form=form, 
+        article=article, 
+        source=source, 
+        categories=categories, 
+        article_image=article_image,
+        paragraphs=paragraphs)
 
 
 @bp.route('/delete-article')
