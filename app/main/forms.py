@@ -33,7 +33,7 @@ class ArticleForm(FlaskForm):
     
 
 class ImageForm(FlaskForm):
-    article_image = FileField('Article Image', validators=[
+    upload_image = FileField('Article Image', validators=[
         FileAllowed(['jpg', 'png', 'gif'], 'Please select an image.')
     ])
 

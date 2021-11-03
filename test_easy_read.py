@@ -400,25 +400,25 @@ class ImageModelCase(unittest.TestCase):
         image = r'app\static\images\test_images\initial_image.jpg'
         response = self.client.post('/add-image', 
             data={
-            'article_image': (open(image, 'rb'), image)})
+            'upload_image': (open(image, 'rb'), image)})
         assert response.status_code == 201    # success, created
         # Post false image (incorrect file extension)
         false_image = r'app\static\images\test_images\inorrect_ext_jpg.png'
         post_false_image = self.client.post('/add-image', 
             data={
-            'article_image': (open(false_image, 'rb'), false_image)})
+            'upload_image': (open(false_image, 'rb'), false_image)})
         assert post_false_image.status_code == 400    # Bad request
         # Post oversized image
         oversized_image = r'app\static\images\test_images\oversized_image.jpg'
         post_oversized_image = self.client.post('/add-image', 
             data={
-            'article_image': (open(oversized_image, 'rb'), oversized_image)})
+            'upload_image': (open(oversized_image, 'rb'), oversized_image)})
         assert post_oversized_image.status_code == 413    # Request entity too large
         # Post text file
         text_file = r'app\static\images\test_images\text_file.txt'
         post_text_file = self.client.post('/add-image', 
             data={
-            'article_image': (open(text_file, 'rb'), text_file)})
+            'upload_image': (open(text_file, 'rb'), text_file)})
         assert post_text_file.status_code == 400    # Bad request
 
     def test_add_and_update_article_image(self):
@@ -426,7 +426,7 @@ class ImageModelCase(unittest.TestCase):
         image_file = r'app\static\images\test_images\initial_image.jpg'
         post_image = self.client.post('/add-image', 
             data={
-                'article_image': (open(image_file, 'rb'), image_file)})
+                'upload_image': (open(image_file, 'rb'), image_file)})
         post_image_response = json.loads(post_image.data.decode())    # binary object to json
         image_id = post_image_response['image_id']
         image = db.session.query(Image).get(image_id)
@@ -452,7 +452,7 @@ class ImageModelCase(unittest.TestCase):
         updated_image_file = r'app\static\images\test_images\updated_image.jpg'
         post_updated_image = self.client.post('/add-image', 
             data={
-                'article_image': (open(updated_image_file, 'rb'), updated_image_file)})
+                'upload_image': (open(updated_image_file, 'rb'), updated_image_file)})
         post_updated_image_response = json.loads(post_updated_image.data.decode())
         updated_image_id = post_updated_image_response['image_id']
         updated_image = db.session.query(Image).get(updated_image_id)
@@ -550,3 +550,54 @@ class ParagraphModelCase(unittest.TestCase):
         assert 'Updated Paragraph 1' and 'id="paragraph-2"' \
             and 'Updated Paragraph 3' in updated_article_html
         assert 'Initial' not in updated_article_html
+
+    def test_add_and_update_paragraph_image(self):
+        # Post initial image 
+        image_file = r'app\static\images\test_images\initial_image.jpg'
+        post_image = self.client.post('/add-image', 
+            data={
+                'upload_image': (open(image_file, 'rb'), image_file)})
+        post_image_response = json.loads(post_image.data.decode())    # binary object to json
+        image_id = post_image_response['image_id']
+        image = db.session.query(Image).get(image_id)
+        # Post article with initial image ID and alt
+        self.client.post('/create-article', 
+            data={
+                'article_title': 'Title',
+                'article_desc': 'Description',
+                'paragraph-1-paragraph_index': '1',
+                'paragraph-1-paragraph_image_id': image.id,
+                'paragraph-1-paragraph_image_alt': 'Initial image description'})
+        article = db.session.query(Article).filter_by(title='Title').one()
+        # Get article with initial image and alt
+        get_initial_article = self.client.get('/edit-article',
+            query_string={
+                'article-id': article.id})
+        initial_article_html = get_initial_article.get_data(as_text=True)
+        assert image.src in initial_article_html
+        assert 'Initial image description' in initial_article_html
+        # Post updated image 
+        updated_image_file = r'app\static\images\test_images\updated_image.jpg'
+        post_updated_image = self.client.post('/add-image', 
+            data={
+                'upload_image': (open(updated_image_file, 'rb'), updated_image_file)})
+        post_updated_image_response = json.loads(post_updated_image.data.decode())
+        updated_image_id = post_updated_image_response['image_id']
+        updated_image = db.session.query(Image).get(updated_image_id)
+        # Post article with updated image ID and alt
+        self.client.post('/edit-article',
+            query_string={
+                'article-id': article.id},
+            data={
+                'article_title': 'Title',
+                'article_desc': 'Description',
+                'paragraph-1-paragraph_index': '1',
+                'paragraph-1-paragraph_image_id': updated_image.id,
+                'paragraph-1-paragraph_image_alt': 'Updated image description'})
+        # Get article with updated image ID and alt
+        get_updated_article = self.client.get('/edit-article',
+            query_string={
+                'article-id': article.id})
+        updated_article_html = get_updated_article.get_data(as_text=True)
+        assert updated_image.src in updated_article_html
+        assert 'Updated image description' in updated_article_html
