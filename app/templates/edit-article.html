@@ -38,7 +38,7 @@
             {% if article_image %}
                 <article-image>
                     <img slot="slot-article-image" class="article-form-image" src="{{ article_image.src }}">
-                    <input slot="slot-article-image-alt" value="{{ article_image.alt }}">
+                    <input slot="slot-article-image-alt" name="article_image_alt" value="{{ article_image.alt }}">
                     <input type="hidden" name="article_image_id" value="{{ article_image.id }}">
                 </article-image>
             {% else %}
@@ -94,16 +94,25 @@
                 {% if paragraphs %}
                     <!-- Paragraphs -->
                     {% for paragraph in paragraphs %}
-                        <article-paragraph slot="slot-article-paragraphs" data-paragraph-index="{{ paragraph.index }}">
-                            <ul slot="slot-article-paragraphs" id="paragraph-{{ paragraph.index }}">
-                                <input type=hidden name="paragraph-{{ paragraph.index }}-paragraph_index" value="{{ paragraph.index }}">
+                        <article-paragraph slot="slot-article-paragraphs" data-paragraph-index="{{ paragraph['Paragraph'].index }}">
+                            <!-- Index -->
+                            <ul slot="slot-paragraph-index" id="paragraph-{{ paragraph['Paragraph'].index }}">
+                                <input type=hidden name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_index" value="{{ paragraph['Paragraph'].index }}">
                             </ul>
-                        <!-- Header -->
-                        {% if paragraph.header %}
-                            <paragraph-header slot="slot-paragraph-header" data-paragraph-index="{{ paragraph.index }}">
-                                <textarea slot="slot-header-text" name="paragraph-{{ paragraph.index }}-paragraph_header" class="form-text form-text-header">{{ paragraph.header }}</textarea>
-                            </paragraph-header>
-                        {% endif %}
+                            <!-- Image -->
+                            {% if paragraph['Paragraph'].image_id %}
+                            <paragraph-image slot="slot-paragraph-image" data-paragraph-index="{{ paragraph['Paragraph'].index }}">
+                                <img slot="slot-paragraph-image-img" class="article-form-image" src="{{ paragraph['Image'].src }}"/>
+                                <input slot="slot-paragraph-image-alt" name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_image_alt" value="{{ paragraph['Image'].alt }}"/>
+                                <input type="hidden" name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_image_id" value="{{ paragraph['Image'].id }}"/>
+                            </paragraph-image>
+                            {% endif %}
+                            <!-- Header -->
+                            {% if paragraph['Paragraph'].header %}
+                                <paragraph-header slot="slot-paragraph-header" data-paragraph-index="{{ paragraph['Paragraph'].index }}">
+                                    <textarea slot="slot-header-text" name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_header" class="form-text form-text-header">{{ paragraph['Paragraph'].header }}</textarea>
+                                </paragraph-header>
+                            {% endif %}
                         </article-paragraph>
                     {% endfor %}
                 {% endif %}

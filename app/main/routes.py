@@ -55,7 +55,7 @@ def add_image():
     if form.validate_on_submit():
         
         # Get image file
-        file = form.article_image.data
+        file = form.upload_image.data
 
         # Get validated filename
         filename = secure_filename(file.filename)
@@ -168,8 +168,13 @@ def create_article():
             # Instantiate new paragraph
             paragraph_in_database = Paragraph(
                 index=paragraph['paragraph_index'],
-                header=paragraph['paragraph_header'])
-                # image_id=paragraph['paragraph_image_id'])
+                header=paragraph['paragraph_header'],
+                image_id=paragraph['paragraph_image_id'])
+            
+            # Update image object with image alt
+            db.session.execute(update(Image)
+                .where(Image.id==paragraph['paragraph_image_id'])
+                .values(alt=paragraph['paragraph_image_alt']))
             
             # Append paragraph to article collection
             article.paragraphs.append(paragraph_in_database)
@@ -285,7 +290,13 @@ def edit_article():
             # Instantiate new paragraph
             paragraph_in_database = Paragraph(
                 index=paragraph['paragraph_index'],
-                header=paragraph['paragraph_header'])
+                header=paragraph['paragraph_header'],
+                image_id=paragraph['paragraph_image_id'])
+
+            # Update image object with image alt
+            db.session.execute(update(Image)
+                .where(Image.id==paragraph['paragraph_image_id'])
+                .values(alt=paragraph['paragraph_image_alt']))
             
             # Append paragraph to article collection
             article.paragraphs.append(paragraph_in_database)
@@ -303,11 +314,10 @@ def edit_article():
     source = article.source
     categories = article.categories
     article_image = db.session.query(Image).filter_by(id=article.image_id).one_or_none()
-    paragraphs = article.paragraphs
-
-    for paragraph in paragraphs:
-        print(paragraph.index)
-
+    paragraphs = db.session.query(Paragraph, Image) \
+        .outerjoin(Image, Image.id == Paragraph.image_id) \
+        .filter(Paragraph.article_id == article.id).all()
+    
     # Render prefilled article form (edit mode)  
     return render_template('edit-article.html', 
         form=form, 

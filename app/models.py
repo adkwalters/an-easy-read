@@ -35,6 +35,7 @@ class Image(db.Model):
     alt = db.Column(db.String)
     src = db.Column(db.String)
     article = db.relationship('Article', backref='article')
+    paragraphs = db.relationship('Paragraph', backref='paragraph')
 
 
 class Article(db.Model):
@@ -76,4 +77,5 @@ class Paragraph(db.Model):
     article_id = db.Column(db.ForeignKey('article.id'), primary_key=True)
     index = db.Column(db.Integer, primary_key=True)
     header = db.Column(db.String)
+    image_id = db.Column(db.ForeignKey('image.id'))
 

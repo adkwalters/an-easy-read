@@ -1,8 +1,7 @@
 // n.b. The following elements use a LIFO system of content deletion
-// in order to preserve content indicies (data-paragraph-index, data-level-index)
+// in order to preserve content indices (data-paragraph-index, data-level-index)
 // If the author were to be allowed to delete content out of sequence,
-// content indicies would need to be pulled by the server
-// rather than pushed by the client. 
+// content indices would no longer be contiguous.
 
 // <article-image> 
 class ArticleImage extends HTMLElement {
@@ -17,42 +16,41 @@ class ArticleImage extends HTMLElement {
         // Add styling
         const style = document.createElement("style");
 
-        // Prepare elements 
+        // Prepare elements
+        const form = document.getElementById('article-form');
 
-        const form = document.getElementById('article-form')
-
-        const label = document.createElement("label");
-        label.setAttribute("for", "article-form-main-image-input");
-        label.textContent = "Main image";
-
-        const fileInput = document.createElement("input");
-        fileInput.setAttribute("type", "file");
-        fileInput.setAttribute("name", "article_image");
-        fileInput.setAttribute("class", "image-upload");
-        fileInput.setAttribute("accept", "image/*");
-        
-        const slotImg = document.createElement("slot");
-        slotImg.setAttribute("name", "slot-article-image");
-
-        const img = document.createElement("img");
-        img.setAttribute("slot", "slot-article-image");
-        img.setAttribute("class", "article-form-image");
-        
-        const slotAlt = document.createElement("slot");
-        slotAlt.setAttribute("name", "slot-article-image-alt");
+        const imageLabel = document.createElement("label");
+        imageLabel.setAttribute("for", "upload_image");
+        imageLabel.textContent = "Main image";
 
         const altLabel = document.createElement("label");
         altLabel.setAttribute("for", "article-image-alt");
         altLabel.textContent = "Image description:";
-        
+
+        const imgSlot = document.createElement("slot");
+        imgSlot.setAttribute("name", "slot-article-image");
+
+        const altSlot = document.createElement("slot");
+        altSlot.setAttribute("name", "slot-article-image-alt");
+
+        const hiddenId = document.createElement("input");
+        hiddenId.setAttribute("type", "hidden");
+        hiddenId.setAttribute("name", "article_image_id");
+
+        const imageInput = document.createElement("input");
+        imageInput.setAttribute("type", "file");
+        imageInput.setAttribute("name", "upload_image");
+        imageInput.setAttribute("class", "image-upload");
+        imageInput.setAttribute("accept", "image/*");
+
         const altInput = document.createElement("input");
         altInput.setAttribute("slot", "slot-article-image-alt");
         altInput.setAttribute("name", "article_image_alt");
 
-        const imageId = document.createElement("input");
-        imageId.setAttribute("type", "hidden");
-        imageId.setAttribute("name", "article_image_id");
-        
+        const img = document.createElement("img");
+        img.setAttribute("slot", "slot-article-image");
+        img.setAttribute("class", "article-form-image");
+   
         const delImageButton = document.createElement("button");
         delImageButton.setAttribute("type", "button");
         delImageButton.setAttribute("class", "button delete del-image-button");
@@ -60,21 +58,21 @@ class ArticleImage extends HTMLElement {
 
         // Append elements to shadow DOM
         shadow.appendChild(style);
-        shadow.appendChild(label);
-            label.appendChild(fileInput);
-        shadow.appendChild(slotImg);
-        shadow.appendChild(slotAlt);
+        shadow.appendChild(imageLabel);
+            imageLabel.appendChild(imageInput);
+        shadow.appendChild(imgSlot);
+        shadow.appendChild(altSlot);
   
         // Add article image
-        fileInput.addEventListener("change", () => {
+        imageInput.addEventListener("change", async () => {
 
             // Get file
-            let file = fileInput.files[0];
+            let file = imageInput.files[0];
         
             if (file) {
 
-                // Append file input to light DOM before creation of form data
-                this.appendChild(fileInput)
+                // Reappend file input to light DOM before creation of form data
+                this.appendChild(imageInput)
         
                 // Create image URL
                 img.src = URL.createObjectURL(file);
@@ -93,44 +91,44 @@ class ArticleImage extends HTMLElement {
 
                     // Alert author
                     alert('The file selected is invalid or not permitted.');
-                    
+
                     // Reappend file input to shadow DOM
-                    label.appendChild(fileInput);
-                    fileInput.value = ""; 
+                    imageLabel.appendChild(imageInput);
+                    imageInput.value = "";
 
                 }).then(response => {
 
                     // Save image ID to hidden input
-                    imageId.value = response.image_id;
-
-                    // Append elements to light DOM
-                    this.appendChild(imageId);                                     
+                    hiddenId.value = response.image_id;
+                    
+                    // Append elements to light DOM                                   
                     this.appendChild(img);
+                    this.appendChild(hiddenId);
                     this.appendChild(altInput);
                 });
             }
         });
 
         // Update image inputs 
-        slotImg.addEventListener("slotchange", () => {
+        imgSlot.addEventListener("slotchange", () => {
            
             // Get article image
-            let image = slotImg.assignedNodes({flatten: true});
+            let image = imgSlot.assignedNodes({flatten: true});
 
             // If image exists
             if (image[0]) {
 
                 // Display image-alt header
-                shadow.insertBefore(altLabel, slotAlt);
+                shadow.insertBefore(altLabel, altSlot);
 
                 // Display image-delete button
                 shadow.appendChild(delImageButton);
 
                 // If image file input exists in shadow DOM
-                if (label.contains(fileInput)) {
+                if (imageLabel.contains(imageInput)) {
                     
                     // Remove file input
-                    label.removeChild(fileInput);
+                    imageLabel.removeChild(imageInput);
                 }
             }
             else {
@@ -142,8 +140,8 @@ class ArticleImage extends HTMLElement {
                 shadow.removeChild(delImageButton);
 
                 // Display empty image input
-                label.appendChild(fileInput)
-                fileInput.value = ""; 
+                imageLabel.appendChild(imageInput)
+                imageInput.value = ""; 
             }
         });
 
@@ -151,9 +149,8 @@ class ArticleImage extends HTMLElement {
         delImageButton.addEventListener("click", () => {  
 
             // Get image content
-            let image = slotImg.assignedNodes();
-            let imageAlt = slotAlt.assignedNodes();
-            let imageId = document.querySelector("[name='article_image_id']")
+            let image = imgSlot.assignedNodes();
+            let imageAlt = altSlot.assignedNodes();
 
             // If image exists
             if (image[0]) {
@@ -165,7 +162,7 @@ class ArticleImage extends HTMLElement {
                 imageAlt[0].remove();
 
                 // Remove hidden ID
-                imageId.remove();
+                hiddenId.remove();
             }
         }); 
 
@@ -191,11 +188,11 @@ class ArticleContent extends HTMLElement {
         const style = document.createElement("style");
 
         // Prepare elements    
-        const articleContentHeader = document.createElement("h2");
-        articleContentHeader.innerHTML = "Article Content"; 
+        const articleLabel = document.createElement("h2");
+        articleLabel.innerHTML = "Article Content"; 
 
-        const slotParagraphs = document.createElement("slot");
-        slotParagraphs.setAttribute("name", "slot-article-paragraphs");
+        const paragraphsSlot = document.createElement("slot");
+        paragraphsSlot.setAttribute("name", "slot-article-paragraphs");
 
         const addParaButton = document.createElement("button");
         addParaButton.setAttribute("type", "button");
@@ -210,8 +207,8 @@ class ArticleContent extends HTMLElement {
 
          // Append elements to shadow DOM
         shadow.appendChild(style);
-        shadow.appendChild(articleContentHeader);
-        shadow.appendChild(slotParagraphs);
+        shadow.appendChild(articleLabel);
+        shadow.appendChild(paragraphsSlot);
         shadow.appendChild(addParaButton);
 
         // Add paragraph to article
@@ -233,11 +230,11 @@ class ArticleContent extends HTMLElement {
         });
 
         // Display delete-paragraph button for last paragraph only (LIFO)
-        slotParagraphs.addEventListener("slotchange", () => {
+        paragraphsSlot.addEventListener("slotchange", () => {
             
             // Get all paragraphs
-            let paragraphs = slotParagraphs.assignedNodes({flatten: true});
-            
+            let paragraphs = paragraphsSlot.assignedNodes({flatten: true});
+
             // Get last paragraph
             let lastParagraph = paragraphs[paragraphs.length -1];
 
@@ -247,8 +244,12 @@ class ArticleContent extends HTMLElement {
                 let controls = paragraph.shadowRoot.querySelector(".article-form-paragraph-controls");
                 let button = controls.querySelector(".del-para-button");
 
-                // If this is the last paragraph and it is empty 
-                if (paragraph == lastParagraph && paragraph.childElementCount == 0) {
+                // paragraph wont be empty due to the paragraph index
+                let header = paragraph.getElementsByTagName("paragraph-header");
+                let image = paragraph.getElementsByTagName("paragraph-image");
+
+                // If this is the last paragraph and it has no header or image
+                if (paragraph == lastParagraph && header.length == 0 && image.length == 0) {
                     
                     // If no button exists
                     if (!controls.contains(button)) {
@@ -293,8 +294,8 @@ class ArticleParagraph extends HTMLElement {
         const paragraphIndex = this.getAttribute("data-paragraph-index");
         
         // Generate labels
-        const paragraphName = `paragraph-${paragraphIndex}`;
-        const indexName = paragraphName + "-paragraph_index"
+        const paragraphName = "paragraph-" + paragraphIndex;
+        const indexName = paragraphName + "-paragraph_index";
         
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
@@ -303,26 +304,29 @@ class ArticleParagraph extends HTMLElement {
         const style = document.createElement("style");
 
         // Prepare elements
+        const ParagraphLabel = document.createElement("h3");
+        ParagraphLabel.innerHTML = `Paragraph ${paragraphIndex}`;
+
+        const indexSlot = document.createElement("slot");
+        indexSlot.setAttribute("name", "slot-paragraph-index");
+
+        const imageSlot = document.createElement("slot");
+        imageSlot.setAttribute("name", "slot-paragraph-image");
+
+        const headerSlot = document.createElement("slot");
+        headerSlot.setAttribute("name", "slot-paragraph-header");
+
+        const levelsSlot = document.createElement("slot");
+        levelsSlot.setAttribute("name", "slot-paragraph-levels");
+
         const fieldList = document.createElement("ul");
         fieldList.setAttribute("id", paragraphName);
-        fieldList.setAttribute("slot", "slot-article-paragraphs")
+        fieldList.setAttribute("slot", "slot-paragraph-index")
 
         const hiddenIndex = document.createElement("input");
         hiddenIndex.setAttribute("type", "hidden");
         hiddenIndex.setAttribute("name", indexName);
         hiddenIndex.value = paragraphIndex;
-
-        const paragraphHeader = document.createElement("h3");
-        paragraphHeader.innerHTML = `Paragraph ${paragraphIndex}`; 
-
-        const slotImage = document.createElement("slot");
-        slotImage.setAttribute("name", "slot-paragraph-image");
-
-        const slotHeader = document.createElement("slot");
-        slotHeader.setAttribute("name", "slot-paragraph-header");
-
-        const slotLevels = document.createElement("slot");
-        slotLevels.setAttribute("name", "slot-paragraph-levels");
 
         const paragraphControls = document.createElement("div");
         paragraphControls.setAttribute("class", "article-form-paragraph-controls");
@@ -363,28 +367,42 @@ class ArticleParagraph extends HTMLElement {
 
         // Append elements to shadow DOM
         shadow.appendChild(style);
-        shadow.appendChild(paragraphHeader);
+        shadow.appendChild(ParagraphLabel);
         shadow.appendChild(paragraphControls);
-            paragraphControls.appendChild(slotImage);
+            paragraphControls.appendChild(indexSlot);
+            paragraphControls.appendChild(imageSlot);
             paragraphControls.appendChild(imageControls);
                 imageControls.appendChild(addImageButton);
-            paragraphControls.appendChild(slotHeader);
+            paragraphControls.appendChild(headerSlot);
             paragraphControls.appendChild(headerControls);
                 headerControls.appendChild(addHeaderButton);
-            paragraphControls.appendChild(slotLevels);
+            paragraphControls.appendChild(levelsSlot);
             paragraphControls.appendChild(levelControls);
                 levelControls.appendChild(addLevelButton);   
             paragraphControls.appendChild(delParaButton);
 
-        // Append hidden input for paragraph index to light DOM
+        // Append fallback paragraph index to DOM
         this.appendChild(fieldList);
             fieldList.appendChild(hiddenIndex);
+
+        // Overwrite paragraph index fallback 
+        indexSlot.addEventListener("slotchange", () => {
+            
+            // Get all paragraph indices (fallback and intended)
+            let indices = indexSlot.assignedNodes({flatten: true});
+
+            // If intended index exitsts
+            if (indices[1]) {
+
+                // Remove fallback index
+                indices[0].remove();
+            }
+        })
 
         // Add image to paragraph
         addImageButton.addEventListener("click", () => {
 
             // Get image content 
-            let imageSlot = this.shadowRoot.querySelector("[name='slot-paragraph-image']");
             let imageContent = imageSlot.assignedNodes({flatten: true});
             
             // If no image exists
@@ -413,7 +431,6 @@ class ArticleParagraph extends HTMLElement {
         addHeaderButton.addEventListener("click", () => {
 
             // Get header content
-            let headerSlot = this.shadowRoot.querySelector("[name='slot-paragraph-header']");
             let headerContent = headerSlot.assignedNodes({flatten: true});
             
             // If no header exists
@@ -499,7 +516,7 @@ class ArticleParagraph extends HTMLElement {
         delLevelButton.addEventListener("click", () => {
             
             // Get last level
-            let levelsSlot = this.shadowRoot.querySelector("[name='slot-paragraph-levels']");
+            // let levelsSlot = this.shadowRoot.querySelector("[name='slot-paragraph-levels']");
             let levels = levelsSlot.assignedNodes({flatten: true});
             let lastLevel = levels[levels.length -1];
             
@@ -508,10 +525,10 @@ class ArticleParagraph extends HTMLElement {
         })
 
         // Mark image slot as empty or filled
-        slotImage.addEventListener("slotchange", () => {
+        imageSlot.addEventListener("slotchange", () => {
             
             // Get image content
-            let content = slotImage.assignedNodes({flatten: true});
+            let content = imageSlot.assignedNodes({flatten: true});
             
             // If no image exists
             if (content.length < 1) {
@@ -536,10 +553,10 @@ class ArticleParagraph extends HTMLElement {
         });
 
         // Mark header slot as empty or filled
-        slotHeader.addEventListener("slotchange", () => {
+        headerSlot.addEventListener("slotchange", () => {
             
             // Get header content
-            let content = slotHeader.assignedNodes({flatten: true});
+            let content = headerSlot.assignedNodes({flatten: true});
 
             // If no header exists
             if (content.length < 1) {
@@ -564,10 +581,10 @@ class ArticleParagraph extends HTMLElement {
         });
 
         // Mark level slot as empty or filled
-        slotLevels.addEventListener("slotchange", () => {
+        levelsSlot.addEventListener("slotchange", () => {
 
             // Get level content
-            let levels = slotLevels.assignedNodes({flatten: true});
+            let levels = levelsSlot.assignedNodes({flatten: true});
 
             // If no level exists
             if (levels.length < 1) {     
@@ -593,10 +610,10 @@ class ArticleParagraph extends HTMLElement {
         });
 
         // Display delete-level button for last level only (LIFO)
-        slotLevels.addEventListener("slotchange", () => {
+        levelsSlot.addEventListener("slotchange", () => {
 
             // Get levels
-            let levels = slotLevels.assignedNodes({flatten: true});
+            let levels = levelsSlot.assignedNodes({flatten: true});
 
             // Get last level
             let lastLevel = levels[levels.length - 1];
@@ -655,52 +672,58 @@ class ParagraphImage extends HTMLElement {
     }
     connectedCallback() {    
 
-        // Get paragraph index from html attribute 
-        const paragraphIndex = this.getAttribute("data-paragraph-index");
-
-        // Generate labels
-        const labelName = `paragraph-${paragraphIndex}-image`;
-        const altLabelName = `${labelName}-alt`;
-        const imageIdName = `${labelName}-id`;
-                        
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
         // Add styling
         const style = document.createElement("style");
 
-        // Prepare elements       
-        const label = document.createElement("label");
-        label.setAttribute("for", labelName);
-        label.textContent = "Image:";
+        // Get paragraph index from html attribute 
+        const paragraphIndex = this.getAttribute("data-paragraph-index");
 
-        const fileInput = document.createElement("input");
-        fileInput.setAttribute("type", "file");
-        fileInput.setAttribute("name", labelName);
-        fileInput.setAttribute("class", "image-upload");
-        fileInput.setAttribute("accept", "image/*");
-        
-        const slotImg = document.createElement("slot");
-        slotImg.setAttribute("name", "slot-paragraph-image-src");
+        // Generate input names (matching WTForms)
+        const paragraphName = "paragraph-" + paragraphIndex;
+        const hiddenIdName = paragraphName + "-paragraph_image_id";
+        const imageAltName = paragraphName + "-paragraph_image_alt";   
 
-        const img = document.createElement("img");
-        img.setAttribute("slot", "slot-paragraph-image-src");
-        img.setAttribute("class", "article-form-image");
-        
-        const slotAlt = document.createElement("slot");
-        slotAlt.setAttribute("name", "slot-paragraph-image-alt");
+        // Prepare elements
+        const form = document.getElementById('article-form')
+
+        const fieldList = document.createElement("ul");
+        fieldList.setAttribute("id", paragraphName);
+        fieldList.setAttribute("name", "slot-paragraph-levels");
+
+        const imageSlot = document.createElement("slot");
+        imageSlot.setAttribute("name", "slot-paragraph-image-img");
+
+        const altSlot = document.createElement("slot");
+        altSlot.setAttribute("name", "slot-paragraph-image-alt");
+
+        const imageLabel = document.createElement("label");
+        imageLabel.setAttribute("for", "upload_image");
+        imageLabel.textContent = "Image:";
 
         const altLabel = document.createElement("label");
-        altLabel.setAttribute("for", altLabelName);
+        altLabel.setAttribute("for", imageAltName);
         altLabel.textContent = "Image description:";
-        
+
+        const imageInput = document.createElement("input");
+        imageInput.setAttribute("type", "file");
+        imageInput.setAttribute("name", "upload_image");
+        imageInput.setAttribute("class", "image-upload");
+        imageInput.setAttribute("accept", "image/*");
+                
         const altInput = document.createElement("input");
         altInput.setAttribute("slot", "slot-paragraph-image-alt");
-        altInput.setAttribute("name", altLabelName);
+        altInput.setAttribute("name", imageAltName);
 
-        const imageId = document.createElement("input");
-        imageId.setAttribute("type", "hidden");
-        imageId.setAttribute("name", imageIdName);
+        const img = document.createElement("img");
+        img.setAttribute("slot", "slot-paragraph-image-img");
+        img.setAttribute("class", "article-form-image");
+
+        const hiddenId = document.createElement("input");
+        hiddenId.setAttribute("type", "hidden");
+        hiddenId.setAttribute("name", hiddenIdName);
         
         const delImageButton = document.createElement("button");
         delImageButton.setAttribute("type", "button");
@@ -709,51 +732,76 @@ class ParagraphImage extends HTMLElement {
 
         // Append elements to shadow DOM
         shadow.appendChild(style);
-        shadow.appendChild(label);
-            label.appendChild(fileInput);
-        shadow.appendChild(slotImg);
-        shadow.appendChild(slotAlt);
-        shadow.appendChild(delImageButton); 
+        shadow.appendChild(imageLabel);
+            imageLabel.appendChild(imageInput);
+        shadow.appendChild(imageSlot);
+        shadow.appendChild(altSlot);
+
+        shadow.appendChild(delImageButton);
+
+        // Apppend fieldList to light DOM to be sent with form
+        this.appendChild(fieldList);
 
         // Add image
-        fileInput.addEventListener("change", () => {
+        imageInput.addEventListener("change", async () => {
 
             // Get file
-            let file = this.shadowRoot.querySelector(".image-upload").files[0];
+            let file = imageInput.files[0];
 
             if (file) {
 
+                // Reappend file input to light DOM before creation of form data
+                fieldList.appendChild(imageInput);
+
                 // Create image URL
                 img.src = URL.createObjectURL(file);
+                
+                // Create form data object 
+                let formData = new FormData(form);
 
-                // Post image to the server asynchronously 
-                postImageAsync(file).then(response => {
-                    
-                    // Save image ID to hidden input
-                    imageId.value = response.image_id;
-
-                    // Append elements to shadow DOM
-                    this.appendChild(imageId); // Must be first in db UPDATE
-                    this.appendChild(img);
-                    this.appendChild(altInput); 
+                // Post form data to server
+                return fetch("/add-image", {
+                    method: "POST",
+                    body: formData
                 })
+                .then(response => response.json()) 
+                .catch(error => {
+                    console.error(error)
+
+                    // Alert author
+                    alert('The file selected is invalid or not permitted.');
+                    
+                    // Reappend file input to shadow DOM
+                    imageLabel.appendChild(imageInput);
+                    imageInput.value = ""; 
+
+                }).then(response => {
+
+                    // Save image ID to hidden input
+                    hiddenId.value = response.image_id;
+
+                    // Append elements to light DOM
+                    this.appendChild(img);
+                    this.appendChild(altInput);
+                    fieldList.appendChild(hiddenId);                     
+                });
             }
         });
     
         // Update image inputs
-        slotImg.addEventListener("slotchange", () => {
+        imageSlot.addEventListener("slotchange", () => {
             
             // Get image
-            let images = slotImg.assignedNodes({flatten: true});
+            let images = imageSlot.assignedNodes({flatten: true});
             
             // If image exists
             if (images[0]) {
 
                 // Display image-alt label
-                shadow.insertBefore(altLabel, slotAlt);
+                shadow.insertBefore(altLabel, altSlot);
 
                 // Remove image input
-                label.removeChild(fileInput);
+                imageInput.remove();
             }
         });
 
@@ -790,12 +838,12 @@ class ParagraphHeader extends HTMLElement {
         const style = document.createElement("style");
 
         // Prepare elements       
-        const label = document.createElement("label");
-        label.setAttribute("for", headerName);
-        label.textContent = "Header:";
+        const headerLabel = document.createElement("label");
+        headerLabel.setAttribute("for", headerName);
+        headerLabel.textContent = "Header:";
 
-        const slotHeaderText = document.createElement("slot");
-        slotHeaderText.setAttribute("name", "slot-header-text");
+        const headerSlot = document.createElement("slot");
+        headerSlot.setAttribute("name", "slot-header-text");
 
         const headerText = document.createElement("textarea");
         headerText.setAttribute("slot", "slot-header-text");
@@ -809,8 +857,8 @@ class ParagraphHeader extends HTMLElement {
 
         // Append elements to shadow DOM
         shadow.append(style);
-        shadow.appendChild(label);
-            label.appendChild(slotHeaderText);
+        shadow.appendChild(headerLabel);
+            headerLabel.appendChild(headerSlot);
         shadow.appendChild(delHeaderButton);
  
         // n.b. The following listeners functions as a fallback for author-
@@ -822,10 +870,10 @@ class ParagraphHeader extends HTMLElement {
         this.appendChild(headerText);
 
         // Overwrite header fallback
-        slotHeaderText.addEventListener("slotchange", () => {
+        headerSlot.addEventListener("slotchange", () => {
 
             // Get all headers (fallback and intended)
-            let headers = slotHeaderText.assignedNodes({flatten: true});
+            let headers = headerSlot.assignedNodes({flatten: true});
 
             // If intended header exists
             if (headers[1]) {
@@ -865,12 +913,12 @@ class ParagraphLevel extends HTMLElement {
         const shadow = this.attachShadow({mode: "open"});
 
         // Prepare elements     
-        const label = document.createElement("label");
-        label.setAttribute("for", labelName);
-        label.textContent = `Level ${levelIndex}:`; 
+        const levelLabel = document.createElement("label");
+        levelLabel.setAttribute("for", labelName);
+        levelLabel.textContent = `Level ${levelIndex}:`; 
 
-        const slotLevelText = document.createElement("slot");
-        slotLevelText.setAttribute("name", "slot-level-text");
+        const levelSlot = document.createElement("slot");
+        levelSlot.setAttribute("name", "slot-level-text");
        
         const textarea = document.createElement("textarea");
         textarea.setAttribute("slot", "slot-level-text"); 
@@ -879,17 +927,17 @@ class ParagraphLevel extends HTMLElement {
         textarea.setAttribute("class", "form-text");
 
         // Append elements to shadow DOM
-        shadow.appendChild(label);
-            label.appendChild(slotLevelText);
+        shadow.appendChild(levelLabel);
+            levelLabel.appendChild(levelSlot);
 
         // Append fallback to light DOM
         this.appendChild(textarea);
 
         // Overwrite level fallback
-        slotLevelText.addEventListener("slotchange", () => {
+        levelSlot.addEventListener("slotchange", () => {
 
             // Get all levels (fallback and designated)
-            let levels = slotLevelText.assignedNodes();
+            let levels = levelSlot.assignedNodes();
                  
             // If designated level exists
             if (levels[1]) {

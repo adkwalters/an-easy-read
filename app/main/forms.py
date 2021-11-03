@@ -7,6 +7,8 @@ from wtforms.validators import DataRequired
 class ParagraphForm(Form):
     paragraph_index = HiddenField('Paragraph ID')
     paragraph_header = TextAreaField('Article Category') 
+    paragraph_image_id = IntegerField('Article Image ID')
+    paragraph_image_alt = StringField('Article Image Description') 
 
 
 class ArticleForm(FlaskForm):
