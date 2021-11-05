@@ -4,11 +4,17 @@ from wtforms import IntegerField, StringField, SubmitField, FieldList, HiddenFie
 from wtforms.validators import DataRequired
 
 
+class SummaryForm(Form):
+    level = HiddenField('Level')
+    text = TextAreaField('Summary') 
+
+
 class ParagraphForm(Form):
     paragraph_index = HiddenField('Paragraph ID')
-    paragraph_header = TextAreaField('Article Category') 
-    paragraph_image_id = IntegerField('Article Image ID')
-    paragraph_image_alt = StringField('Article Image Description') 
+    paragraph_header = TextAreaField('Paragraph Header') 
+    paragraph_image_id = HiddenField('Paragraph Image ID')
+    paragraph_image_alt = StringField('Paragraph Image Description')
+    summary = FieldList(FormField(SummaryForm))
 
 
 class ArticleForm(FlaskForm):
@@ -19,9 +25,9 @@ class ArticleForm(FlaskForm):
 
     article_category = FieldList(StringField('Article Category'))
     
-    source_title = StringField('Article Title')
-    source_author = StringField('Article Author')
-    source_link = StringField('Article Link')
+    source_title = StringField('Source Title')
+    source_author = StringField('Source Author')
+    source_link = StringField('Source Link')
     source_name = StringField('Source Name')
     source_contact = StringField('Source Contact Details')
 

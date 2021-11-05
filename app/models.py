@@ -52,8 +52,11 @@ class Article(db.Model):
         secondary=article_category,
         back_populates='articles')
     paragraphs = db.relationship('Paragraph', 
-        backref='paragraphs',
-        cascade="all, delete, delete-orphan")    
+        backref='article',
+        cascade="all, delete, delete-orphan")
+    summaries = db.relationship('Summary',
+        backref='article',
+        cascade="all, delete, delete-orphan")
 
 
 class Source(db.Model):
@@ -78,4 +81,14 @@ class Paragraph(db.Model):
     index = db.Column(db.Integer, primary_key=True)
     header = db.Column(db.String)
     image_id = db.Column(db.ForeignKey('image.id'))
+    summaries = db.relationship('Summary',
+        backref='paragraph',
+        cascade="all, delete, delete-orphan")
+
+
+class Summary(db.Model):
+    article_id = db.Column(db.ForeignKey('article.id'), primary_key=True)
+    paragraph_index = db.Column(db.ForeignKey('paragraph.index'), primary_key=True)
+    level = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String)
 

@@ -113,6 +113,19 @@
                                     <textarea slot="slot-header-text" name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_header" class="form-text form-text-header">{{ paragraph['Paragraph'].header }}</textarea>
                                 </paragraph-header>
                             {% endif %}
+                            <!-- Summaries -->
+                            {% if summaries %}
+                                {% for summary in summaries %}
+                                    {% if summary.paragraph_index == paragraph['Paragraph'].index %}
+                                        <paragraph-level slot="slot-paragraph-levels" data-paragraph-index="{{ summary.paragraph_index }}" data-level-index="{{ summary.level }}">
+                                            <ul slot="slot-level-index" id="paragraph-{{ summary.paragraph_index }}-summary-{{ summary.level }}">
+                                                <input type="hidden" name="paragraph-{{ summary.paragraph_index }}-summary-{{ summary.level }}-level" value="{{ summary.level }}"></input>
+                                            </ul>
+                                            <textarea slot="slot-level-text" name="paragraph-{{ summary.paragraph_index }}-summary-{{ summary.level }}-text">{{ summary.text }}</textarea>
+                                        </paragraph-level>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
                         </article-paragraph>
                     {% endfor %}
                 {% endif %}

@@ -391,7 +391,7 @@ class ArticleParagraph extends HTMLElement {
             // Get all paragraph indices (fallback and intended)
             let indices = indexSlot.assignedNodes({flatten: true});
 
-            // If intended index exitsts
+            // If intended index exists
             if (indices[1]) {
 
                 // Remove fallback index
@@ -906,38 +906,56 @@ class ParagraphLevel extends HTMLElement {
         const paragraphIndex = this.getAttribute("data-paragraph-index");
         const levelIndex = this.getAttribute("data-level-index");
 
-        // Generate label
-        const labelName = `paragraph-${paragraphIndex}-level-${levelIndex}`;
+        // Generate labels
+        const paragraphName = "paragraph-" + paragraphIndex;
+        const summaryName =  paragraphName + "-summary-" + levelIndex;
+        const levelName = summaryName + "-level";
+        const textName = summaryName + "-text";
         
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
 
         // Prepare elements     
-        const levelLabel = document.createElement("label");
-        levelLabel.setAttribute("for", labelName);
-        levelLabel.textContent = `Level ${levelIndex}:`; 
+        const textLabel = document.createElement("label");
+        textLabel.setAttribute("for", textName);
+        textLabel.textContent = `Level ${levelIndex}:`; 
 
-        const levelSlot = document.createElement("slot");
-        levelSlot.setAttribute("name", "slot-level-text");
+        const textSlot = document.createElement("slot");
+        textSlot.setAttribute("name", "slot-level-text");
+
+        const indexSlot = document.createElement("slot");
+        indexSlot.setAttribute("name", "slot-level-index");
        
-        const textarea = document.createElement("textarea");
-        textarea.setAttribute("slot", "slot-level-text"); 
-        textarea.setAttribute("name", labelName);
-        textarea.setAttribute("id", labelName);
-        textarea.setAttribute("class", "form-text");
+        const summaryText = document.createElement("textarea");
+        summaryText.setAttribute("slot", "slot-level-text"); 
+        summaryText.setAttribute("name", textName);
+        summaryText.setAttribute("id", textName);
+        summaryText.setAttribute("class", "form-text");
+
+        const summaryLevel = document.createElement("input");
+        summaryLevel.setAttribute("type", "hidden");
+        summaryLevel.setAttribute("name", levelName);
+        summaryLevel.value = levelIndex;
+
+        const fieldList = document.createElement("ul");
+        fieldList.setAttribute("id", summaryName);
+        fieldList.setAttribute("slot", "slot-level-index")
 
         // Append elements to shadow DOM
-        shadow.appendChild(levelLabel);
-            levelLabel.appendChild(levelSlot);
+        shadow.appendChild(textLabel);
+            textLabel.appendChild(textSlot);
+        shadow.appendChild(indexSlot)
 
         // Append fallback to light DOM
-        this.appendChild(textarea);
+        this.appendChild(summaryText);
+        this.appendChild(fieldList);
+            fieldList.appendChild(summaryLevel);
 
         // Overwrite level fallback
-        levelSlot.addEventListener("slotchange", () => {
+        textSlot.addEventListener("slotchange", () => {
 
             // Get all levels (fallback and designated)
-            let levels = levelSlot.assignedNodes();
+            let levels = textSlot.assignedNodes({flatten: true});
                  
             // If designated level exists
             if (levels[1]) {
@@ -946,6 +964,23 @@ class ParagraphLevel extends HTMLElement {
                 levels[0].remove();
             }
         });
+
+        // !! I added this to remove an index but there are still two
+        // Overwrite index fallback 
+        indexSlot.addEventListener("slotchange", () => {
+            
+            // Get all level indices (fallback and intended)
+            let indices = indexSlot.assignedNodes({flatten: true});
+
+            console.log(indices)
+
+            // If intended index exists
+            if (indices[1]) {
+
+                // Remove fallback index
+                indices[0].remove();
+            }
+        })
     }
 }
 customElements.define("paragraph-level", ParagraphLevel);

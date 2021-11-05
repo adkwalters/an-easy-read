@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 from app import db
 from app.main import bp
 from app.main.forms import ArticleForm, ImageForm
-from app.models import Article, Source, Category, Image, Paragraph
+from app.models import Article, Source, Category, Image, Paragraph, Summary
 from config import basedir
 
 
@@ -179,6 +179,23 @@ def create_article():
             # Append paragraph to article collection
             article.paragraphs.append(paragraph_in_database)
 
+        # Summaries
+            # Get submitted paragraphs
+            summaries_in_form = paragraph['summary']
+
+            # For each summary
+            for summary in summaries_in_form:
+
+                # Instantiate new level object
+                summary_in_database = Summary(
+                    article_id=article.id,
+                    paragraph_index=paragraph['paragraph_index'],
+                    level=summary['level'],
+                    text=summary['text'])
+                           
+                # Append summary to article collection
+                article.summaries.append(summary_in_database)
+
         # Save changes to database
         db.session.commit()
 
@@ -274,9 +291,10 @@ def edit_article():
             .values(alt=form.article_image_alt.data))
 
     # Paragraphs
-        # In order to reset paragraphs, delete and reinsert
+        # In order to reset paragraph data, delete and reinsert
         # Delete paragraphs collection
-        article.paragraphs = [] 
+        article.paragraphs = []
+        article.summaries = [] 
         
         # Flush to ensure delete query emitted before insert query 
         db.session.flush()
@@ -301,6 +319,23 @@ def edit_article():
             # Append paragraph to article collection
             article.paragraphs.append(paragraph_in_database)
 
+        # Summaries
+            # Get submitted summaries
+            summaries_in_form = paragraph['summary']
+
+            # For each summary
+            for summary in summaries_in_form:
+
+                # Instantiate new level object
+                summary_in_database = Summary(
+                    article_id=article.id,
+                    paragraph_index=paragraph['paragraph_index'],
+                    level=summary['level'],
+                    text=summary['text'])
+                            
+                # Append summary to article collection
+                article.summaries.append(summary_in_database)
+
         # Save changes to database
         db.session.commit()
 
@@ -317,6 +352,7 @@ def edit_article():
     paragraphs = db.session.query(Paragraph, Image) \
         .outerjoin(Image, Image.id == Paragraph.image_id) \
         .filter(Paragraph.article_id == article.id).all()
+    summaries = article.summaries
     
     # Render prefilled article form (edit mode)  
     return render_template('edit-article.html', 
@@ -325,8 +361,8 @@ def edit_article():
         source=source, 
         categories=categories, 
         article_image=article_image,
-        paragraphs=paragraphs)
-
+        paragraphs=paragraphs,
+        summaries=summaries)
 
 @bp.route('/delete-article')
 @login_required
