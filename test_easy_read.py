@@ -521,7 +521,7 @@ class ParagraphModelCase(unittest.TestCase):
                 'paragraph-3-paragraph_header': 'Initial Paragraph 3 Header',
                 })
         article = db.session.query(Article).filter_by(title='Title').one()
-        # Get article with category data
+        # Get article with initial headers
         get_initial_article = self.client.get('/edit-article',
             query_string={
                 'article-id': article.id}) 
@@ -601,3 +601,99 @@ class ParagraphModelCase(unittest.TestCase):
         updated_article_html = get_updated_article.get_data(as_text=True)
         assert updated_image.src in updated_article_html
         assert 'Updated image description' in updated_article_html
+
+
+class LevelModelCase(unittest.TestCase):    
+    def setUp(self):
+        self.app = create_app()
+        self.app.config['WTF_CSRF_ENABLED'] = False   
+        self.appctx = self.app.app_context()
+        self.appctx.push()
+        self.client = self.app.test_client()
+        db.create_all()
+        self.populate_db()
+        self.login()
+
+    def tearDown(self):
+        db.drop_all()
+        self.appctx.pop()
+        self.app = None
+        self.appctx = None
+        self.client = None
+    
+    def populate_db(self):
+        andrew = User(username='Andrew', email='andrew@email.com')
+        andrew.set_password('password')
+        db.session.add(andrew)
+        db.session.commit()
+
+    def login(self):
+        self.client.post('/login', 
+            data=dict(
+                username='Andrew', 
+                password='password'))
+
+    def test_add_and_update_summaries(self):
+        # Post article with initial summaries 
+        self.client.post('/create-article',
+            data={
+                'article_title': 'Title',
+                'article_desc': 'Description',
+                'paragraph-1-paragraph_index': '1',
+                'paragraph-1-summary-1-level': '1',
+                'paragraph-1-summary-1-text': 'Initial paragraph 1 level 1 summary',
+                'paragraph-2-paragraph_index': '2',
+                'paragraph-2-summary-1-level': '1',
+                'paragraph-2-summary-1-text': 'Initial paragraph 2 level 1 summary',
+                'paragraph-2-summary-2-level': '2',
+                'paragraph-2-summary-2-text': 'Initial paragraph 2 level 2 summary',
+                'paragraph-3-paragraph_index': '3',
+                'paragraph-3-summary-1-level': '1',
+                'paragraph-3-summary-1-text': 'Initial paragraph 3 level 1 summary',
+                'paragraph-3-summary-2-level': '2',
+                'paragraph-3-summary-2-text': 'Initial paragraph 3 level 2 summary',
+                'paragraph-3-summary-3-level': '3',
+                'paragraph-3-summary-3-text': 'Initial paragraph 3 level 3 summary'})
+        article = db.session.query(Article).filter_by(title='Title').one()
+        # Get article with initial summaries
+        get_initial_article = self.client.get('/edit-article',
+            query_string={
+                'article-id': article.id}) 
+        initial_article_html = get_initial_article.get_data(as_text=True)
+        assert 'Initial paragraph 1 level 1 summary' \
+            and 'Initial paragraph 2 level 1 summary' \
+            and 'Initial paragraph 2 level 2 summary' \
+            and 'Initial paragraph 3 level 1 summary' in initial_article_html
+        # Post article with updated summaries
+        self.client.post('/edit-article',
+            query_string={
+                'article-id': article.id},
+            data={
+                'article_title': 'Title',
+                'article_desc': 'Description',
+                'paragraph-1-paragraph_index': '1',
+                'paragraph-1-summary-1-level': '1',
+                'paragraph-1-summary-1-text': 'Updated paragraph 1 level 1 summary',
+                'paragraph-1-summary-2-level': '2',
+                'paragraph-1-summary-2-text': 'Updated paragraph 1 level 2 summary',
+                'paragraph-2-paragraph_index': '2',
+                'paragraph-2-summary-1-level': '1',
+                'paragraph-2-summary-1-text': 'Updated paragraph 2 level 1 summary',
+                'paragraph-3-paragraph_index': '3',
+                'paragraph-3-summary-1-level': '1',
+                'paragraph-3-summary-1-text': 'Updated paragraph 3 level 1 summary'})
+        # Get article with updated summaries
+        get_updated_article = self.client.post('/edit-article',
+            query_string={
+                'article-id': article.id},
+            follow_redirects=True)
+        updated_article_html = get_updated_article.get_data(as_text=True)
+        assert 'Updated paragraph 1 level 1 summary' \
+            and 'Updated paragraph 1 level 2 summary' \
+            and 'Updated paragraph 2 level 1 summary' \
+            and 'Updated paragraph 3 level 1 summary' in updated_article_html
+        assert 'Initial' not in updated_article_html
+        assert 'paragraph-2-summary-2' \
+            and 'paragraph-3-summary-2' \
+            and 'paragraph-2-summary-3' not in updated_article_html
+
