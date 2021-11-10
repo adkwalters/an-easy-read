@@ -24,7 +24,13 @@ class Config(object):
     UPLOAD_PATH = r'static\images'
     MAX_CONTENT_LENGTH = 1024 * 1024    # 1MB
     UPLOAD_EXTENSIONS = ['.jpg', '.png', '.gif']
+
+    # Configure mail settings 
+    MAIL_SERVER = os.environ.get('MAIL_SERVER')    # $env  smtp.googlemail.com
+    MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)    # $env 587
+    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None    # $env 1
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')    # $env email.easyread@gmail.com
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')    # $env <app password>
+    ADMINS = ['email.easyread@gmail.com', 'adkwalters@gmail.com']
     
-
-
     
