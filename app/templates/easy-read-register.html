@@ -1,0 +1,55 @@
+{% extends "easy-read-layout.html" %}
+
+<!-- Page metadata -->
+{% block description %}
+    <meta name="description" content="">
+{% endblock %}
+
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/easy-read-navigation.css"/>  
+    <link rel="stylesheet" href="/static/easy-read-general.css"/> 
+{% endblock %}
+
+<!-- JavaScript -->
+{% block scripts %}
+    <script src="/static/easy-read-header.js" defer></script>
+{% endblock %}
+
+<!-- Main -->
+{% block main %}
+    <div id="register" class="small-page">
+        <h1>Register</h1>
+        <form class="auth-form" action="" method="post" novalidate>  
+            {{ form.hidden_tag() }}
+            <div class="auth-form label-colour">
+                <!-- Username -->
+                {{ form.username.label }}
+                {{ form.username(size=32, autocomplete="off", autofocus=True) }}
+                {% for error in form.username.errors %}
+                    <span class="form-alert alert-error">{{ error }}</span>
+                {% endfor %}   
+                <!-- Email -->
+                {{ form.email.label }}
+                {{ form.email(size=32, autocomplete="off") }}
+                {% for error in form.email.errors %}
+                    <span class="form-alert alert-error">{{ error }}</span>
+                {% endfor %}   
+                <!-- Password -->
+                {{ form.password.label }}
+                {{ form.password }}
+                {% for error in form.password.errors %}
+                    <span class="form-alert alert-error">{{ error }}</span>
+                {% endfor %} 
+                <!-- Confirm password -->
+                {{ form.confirm_password.label }}
+                {{ form.confirm_password }}
+                {% for error in form.confirm_password.errors %}
+                    <span class="form-alert alert-error">{{ error }}</span>
+                {% endfor %}     
+            </div>
+                {{ form.submit(class="label-colour big-button") }}
+        </form>
+        <p>Already have an account? <a href="{{ url_for('auth.login') }}">Click to login</a></p>
+    </div>
+{% endblock %}

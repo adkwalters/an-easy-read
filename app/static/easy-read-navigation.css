@@ -71,15 +71,16 @@
 
 
 
-/* || Login || */
+/* || Registration and Login || */
 
-    .login-form {
-        display: flex;
-            flex-direction: column;
-            gap: 1rem;
+    #register h1,
+    #login h1 {
+        padding-left: 2rem;
+    }
+    .auth-form {
         padding: 1rem;
     }
-    .login-form input{
+    .auth-form input{
         width: 100%;
         margin: 1rem auto;
         padding: 1rem;
@@ -87,8 +88,21 @@
         border: none;
         font-size: 1rem;
     }
-    .login p {
-        text-align: center;
+    .auth-form input[type="checkbox"] {
+        width: max-content;
+        margin-top: 0;
+    }
+    .auth-form span {
+        display: block;
+        margin-bottom: 1rem;
+    }
+    .auth-form input[type="submit"] {
+        margin-top: 2rem;
+    }
+    #register p,
+    #login p {
+        padding-top: 0;
+        padding-left: 2rem;
     }
 
 

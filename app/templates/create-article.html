@@ -1,0 +1,68 @@
+{% extends "easy-read-layout.html" %}
+
+<!-- Page metadata -->
+{% block description %}
+    <meta name="description" content="">
+{% endblock %}
+
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/easy-read-navigation.css"/>  
+    <link rel="stylesheet" href="/static/easy-read-general.css"/> 
+    <link rel="stylesheet" href="/static/easy-read-article.css"/> 
+{% endblock %}
+
+<!-- JavaScript -->
+{% block scripts %}
+    <script src="/static/easy-read-header.js" defer></script>
+    <script src="/static/easy-read-cms.js" defer></script>    
+    <script src="/static/easy-read-create-components.js"></script> 
+{% endblock %}
+
+<!-- Main -->
+{% block main %}    
+    <form id="article-form" class="full-page" action="" method="post" autocomplete="off" novalidate>
+        {{ form.hidden_tag() }}
+        <h1>Create Article</h1>
+        <section id="article-form-meta" class="label-colour">
+            <h2>Article Data</h2>
+            <!-- Article meta data -->
+            {{ form.article_title.label }} {{ form.article_title }}
+            {{ form.article_desc.label }} {{ form.article_desc }}
+            <!-- Article Image -->
+            <article-image></article-image>
+            <!-- Article Categories -->
+            <label for="article-form-categories">Categories:
+                <input list="article-form-categories-input"> 
+                <datalist id="article-form-categories-input"> 
+                    <option value="Technology"></option>
+                    <option value="Science"></option>
+                    <option value="Nature"></option>
+                    <option value="Culture"></option>
+                    <option value="Language"></option>
+                </datalist>
+                <div class="article-form-categories-controls">
+                    <button type="button" id="article-form-add-category-button" class="button">Add Category</button>
+                    <button type="button" id="article-form-del-category-button" class="button delete">Delete Category</button>
+                </div>
+                <ul id="article-form-categories-selected">
+                <!-- Article Categories -->
+                {{ form.article_category }}
+                </ul>
+            </label>
+        </section>
+        <section id="article-form-source" class="label-colour">
+            <h2>Source Data</h2>
+            <!-- Article Source Data -->
+            {{ form.source_title.label }} {{ form.source_title }}
+            {{ form.source_author.label }} {{ form.source_author }}
+            {{ form.source_link.label }} {{ form.source_link }}
+            {{ form.source_name.label }} {{ form.source_name }}
+            {{ form.source_contact.label }} {{ form.source_contact }}
+        </section>
+        <section class="label-colour">
+            <article-content></article-content>
+        </section>
+        {{ form.submit(class="button big-button", value="Create Article") }}    
+    </form>
+{% endblock %}

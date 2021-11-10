@@ -2,7 +2,7 @@
 
 <!-- Page metadata -->
 {% block description %}
-    <meta name="description" content="">
+    <meta name="description" content="A place to read progressively summarised content">
 {% endblock %}
 
 <!-- CSS -->
@@ -12,25 +12,18 @@
     <link rel="stylesheet" href="/static/easy-read-article.css"/> 
 {% endblock %}
 
-<!-- JavaScript -->
+<!-- JavaScript --> 
 {% block scripts %}
     <script src="/static/easy-read-header.js" defer></script>
 {% endblock %}
 
 <!-- Main -->
 {% block main %}
-    <div class="full-spread">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message | safe }}
-                    <button type="button" class="close-message"><span>&times;</span></button>
-                </div>                
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <h1>My Articles</h1>
-        <section id="author-articles" class="articles-display-pannel">
+    <div id="index-page" class="full-spread">
+
+        <h1>Welcome to Easy Read{% if current_user.is_authenticated %}, {{ current_user.username }}{% endif %}</h1>
+           
+        <!-- <section id="all-articles" class="articles-display-pannel">
             <ul>
                 {% if articles is not none %}
                     {% for article in articles %}
@@ -50,8 +43,7 @@
                     </li>
                     {% endfor %}
                 {% endif %}
-                <a id="add-article-button" href="/create-article"><i class="far fa-plus-square"></i></a>
             </ul>
-        </section>
+        </section> -->
     </div>
 {% endblock %}
