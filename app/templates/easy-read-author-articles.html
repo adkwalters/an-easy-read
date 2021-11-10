@@ -41,8 +41,8 @@
                                 <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                 <button type="submit" class="button grey-out edit-article-button">Edit</button></a>
                             </form>
-                            <form action="">
-                                <input type="hidden" value="{{ article['Article'].id }}">
+                            <form action="{{ url_for('main.publish_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                 <button type="submit" class="button grey-out edit-article-button">Publish</button>
                             </form>
                             <form action="{{ url_for('main.delete_article') }}" method="get" onSubmit="return confirm('Click OK to delete this article.')">

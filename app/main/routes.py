@@ -3,10 +3,11 @@ import imghdr
 
 from flask import render_template, redirect, url_for, flash, request, current_app, abort
 from flask_login import login_required, current_user
+from flask_mail import Message
 from sqlalchemy import update
 from werkzeug.utils import secure_filename
 
-from app import db
+from app import db, mail
 from app.main import bp
 from app.main.forms import ArticleForm, ImageForm
 from app.models import Article, Source, Category, Image, Paragraph, Summary
@@ -363,6 +364,40 @@ def edit_article():
         article_image=article_image,
         paragraphs=paragraphs,
         summaries=summaries)
+
+
+@bp.route('/publish-article')
+@login_required
+def publish_article():
+
+    # Get article ID from URL 
+    article_id = request.args.get('article-id')
+
+    # Get article from article ID
+    article = db.session.query(Article).filter_by(id=article_id).one()
+
+    # If the author selects an article that is not theirs
+    if current_user != article.author:
+
+        # Alert author
+        flash('You do not have access to delete that article.', 'error')
+
+        # Return author to author's articles page
+        return redirect(url_for('main.author_articles'))
+
+    msg = Message('Request to publish article', sender=current_app.config['ADMINS'][0],
+        recipients=['adkwalters@gmail.com'])
+    # msg.body = f'Request to publish article'
+    msg.html = f"""
+        <h3>Request To Publish Article</h3>
+        <p><b>{current_user.username}</b> has made a request to publish the following article:</p>
+        <blockquote>{article.title}</blockquote> """
+    mail.send(msg)
+
+    flash('Your article has been sent to your publisher for approval. Please await a response.', 'success')
+
+    # Return author to author's articles page
+    return redirect(url_for('main.author_articles'))
 
 @bp.route('/delete-article')
 @login_required
