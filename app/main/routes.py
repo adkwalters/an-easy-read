@@ -261,8 +261,7 @@ def edit_article():
             .values(
                 id=article.id,
                 title=form.article_title.data,
-                description=form.article_desc.data,
-                user_id=current_user.id))
+                description=form.article_desc.data))
 
     # Source data
         # Update source object
@@ -396,13 +395,15 @@ def publish_article():
     # Get article from article ID
     article = db.session.query(Article).filter_by(id=article_id).one()
 
+    # Compose message to publisher
     msg = Message('Request to publish article', sender=current_app.config['ADMINS'][0],
         recipients=['adkwalters@gmail.com'])
-    # msg.body = f'Request to publish article'
     msg.html = f"""
         <h3>Request To Publish Article</h3>
         <p><b>{current_user.username}</b> has made a request to publish the following article:</p>
-        <blockquote>{article.title}</blockquote> """
+        <p>ID: {article.id}</p>
+        <p>Title: {article.title}</p>"""
+    
     mail.send(msg)
 
     flash('Your article has been sent to your publisher for approval. Please await a response.', 'success')
