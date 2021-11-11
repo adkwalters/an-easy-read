@@ -121,8 +121,11 @@ class ArticleModelCase(unittest.TestCase):
         andrew.set_password('password')
         david = User(username='David', email='david@email.com')
         david.set_password('password')
+        admin = User(username='Admin', email='adkwalters@gmail.com')
+        admin.set_password('password')
         db.session.add(andrew)
         db.session.add(david)
+        db.session.add(admin)
         db.session.commit()
 
     def login(self):
@@ -233,6 +236,65 @@ class ArticleModelCase(unittest.TestCase):
         assert get_article_as_david.request.path != '/edit-article'
         get_article_as_david_html = get_article_as_david.get_data(as_text=True)
         assert 'You do not have access to edit that article.' in get_article_as_david_html
+
+    def test_allow_admins_to_read_and_write_all_articles(self):
+        # Post initial article as user
+        self.client.post('/create-article',
+            data=dict(
+                article_title='Title',
+                article_desc='Description'))
+        user_article = db.session.query(Article).filter_by(title='Title').one()
+        user = db.session.query(User).filter_by(username='Andrew').one()
+        assert user_article.author == user
+        # Get initial article as user
+        get_article_as_user = self.client.get('/edit-article',
+            query_string={
+                'article-id': user_article.id},
+            follow_redirects=True)
+        assert get_article_as_user.request.path == '/edit-article'
+        # Log user out and admin in
+        self.client.get('/logout')
+        self.client.post('/login',
+            data=dict(
+                username='Admin',
+                password='password'),
+            follow_redirects=True)
+        # Get initial article as Admin
+        get_initial_article_as_admin = self.client.get('/edit-article',
+            query_string={
+                'article-id': user_article.id},
+            follow_redirects=True)
+        assert get_initial_article_as_admin.request.path == '/edit-article'
+        # Post updated article as admin
+        post_updated_article_as_admin = self.client.post('/edit-article',
+            query_string={
+                'article-id': user_article.id},
+            data=dict(
+                article_title='Updated Title',
+                article_desc='Updated Description'),
+            follow_redirects=True)
+        assert post_updated_article_as_admin.request.path == '/author-articles'
+        # Get updated article as admin
+        get_updated_article_as_admin = self.client.post('/edit-article', 
+            query_string={
+                'article-id': user_article.id},
+            follow_redirects=True)
+        updated_article_html = get_updated_article_as_admin.get_data(as_text=True)
+        assert 'updated Title' and 'Updated Description' in updated_article_html
+        # Log admin out and user in
+        self.client.get('/logout')
+        self.client.post('/login',
+            data=dict(
+                username='Andrew',
+                password='password'),
+            follow_redirects=True)
+        # Get updated article as user
+        get_updated_article_as_user = self.client.get('/edit-article',
+            query_string={
+                'article-id': user_article.id},
+            follow_redirects=True)
+        admin_updated_article_html = get_updated_article_as_user.get_data(as_text=True)
+        assert 'updated Title' and 'Updated Description' in admin_updated_article_html
 
 
 class SourceModelCase(unittest.TestCase):    
