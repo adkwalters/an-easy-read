@@ -1,5 +1,6 @@
 import os
 import imghdr
+import functools
 
 from flask import render_template, redirect, url_for, flash, request, current_app, abort
 from flask_login import login_required, current_user
@@ -23,6 +24,32 @@ def validate_image(stream):
     if not format:
         return None
     return '.' + (format if format != 'jpeg' else 'jpg') 
+
+
+def author_or_admin_access(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+
+        # Get list of admin email addresses from app config
+        admins = current_app.config.get('ADMINS')
+
+        # Get article ID from URL parameters 
+        article_id = request.args.get('article-id')
+
+        # Get article from article ID
+        article = db.session.query(Article).filter_by(id=article_id).one()
+
+        # If the author selects an article that is not theirs
+        if current_user != article.author and current_user.email not in admins:
+            
+            # Alert author
+            flash('You do not have access to edit that article.', 'error')
+
+            # Redirect author to their own articles page
+            return redirect(url_for('main.author_articles'))
+
+        return func(*args, **kwargs)
+    return wrapper
 
 
 @bp.route('/')
@@ -212,6 +239,7 @@ def create_article():
 
 @bp.route('/edit-article', methods=['GET', 'POST'])
 @login_required
+@author_or_admin_access
 def edit_article():
 
     # Get article form data
@@ -222,15 +250,6 @@ def edit_article():
 
     # Get article from article ID
     article = db.session.query(Article).filter_by(id=article_id).one()
-
-    # If the author selects an article that is not theirs
-    if current_user != article.author:
-
-        # Alert author
-        flash('You do not have access to edit that article.', 'error')
-
-        # Redirect author to their own articles page
-        return redirect(url_for('main.author_articles'))
 
     # If author posts valid article 
     if form.validate_on_submit():
@@ -368,6 +387,7 @@ def edit_article():
 
 @bp.route('/publish-article')
 @login_required
+@author_or_admin_access
 def publish_article():
 
     # Get article ID from URL 
@@ -375,15 +395,6 @@ def publish_article():
 
     # Get article from article ID
     article = db.session.query(Article).filter_by(id=article_id).one()
-
-    # If the author selects an article that is not theirs
-    if current_user != article.author:
-
-        # Alert author
-        flash('You do not have access to delete that article.', 'error')
-
-        # Return author to author's articles page
-        return redirect(url_for('main.author_articles'))
 
     msg = Message('Request to publish article', sender=current_app.config['ADMINS'][0],
         recipients=['adkwalters@gmail.com'])
@@ -401,6 +412,7 @@ def publish_article():
 
 @bp.route('/delete-article')
 @login_required
+@author_or_admin_access
 def delete_article():
 
     # Get article ID from URL 
@@ -408,15 +420,6 @@ def delete_article():
 
     # Get article from article ID
     article = db.session.query(Article).filter_by(id=article_id).one()
-
-    # If the author selects an article that is not theirs
-    if current_user != article.author:
-
-        # Alert author
-        flash('You do not have access to delete that article.', 'error')
-
-        # Return author to author's articles page
-        return redirect(url_for('main.author_articles'))
     
     db.session.delete(article)
     db.session.commit()
