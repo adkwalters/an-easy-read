@@ -1069,6 +1069,7 @@ function updateStyle(element) {
         }    
         .del-image-button,
         .del-header-button {
+            position: relative;
             float: right;
         }
     `;
