@@ -247,9 +247,11 @@ class ArticleContent extends HTMLElement {
                 // paragraph wont be empty due to the paragraph index
                 let header = paragraph.getElementsByTagName("paragraph-header");
                 let image = paragraph.getElementsByTagName("paragraph-image");
-
+                let level = paragraph.getElementsByTagName("paragraph-level");
+ 
                 // If this is the last paragraph and it has no header or image
-                if (paragraph == lastParagraph && header.length == 0 && image.length == 0) {
+                if (paragraph == lastParagraph && header.length == 0 &&
+                    image.length == 0 && level.length == 0) {
                     
                     // If no button exists
                     if (!controls.contains(button)) {
