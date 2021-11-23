@@ -384,6 +384,36 @@ def edit_article():
         summaries=summaries)
 
 
+@bp.route('/preview-article')
+@login_required
+@author_or_admin_access
+def preview_article():
+
+    # Get article ID from URL 
+    article_id = request.args.get('article-id')
+
+    # Get article from article ID
+    article = db.session.query(Article).filter_by(id=article_id).one()
+
+    # Get article data
+    source = article.source
+    categories = article.categories
+    article_image = db.session.query(Image).filter_by(id=article.image_id).one_or_none()
+    paragraphs = db.session.query(Paragraph, Image) \
+        .outerjoin(Image, Image.id == Paragraph.image_id) \
+        .filter(Paragraph.article_id == article.id).all()
+    summaries = article.summaries
+    
+    # Render article  
+    return render_template('preview-article.html', 
+        article=article, 
+        source=source, 
+        categories=categories, 
+        article_image=article_image,
+        paragraphs=paragraphs,
+        summaries=summaries)
+
+
 @bp.route('/publish-article')
 @login_required
 @author_or_admin_access
