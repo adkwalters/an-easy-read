@@ -57,7 +57,7 @@ def author_or_admin_access(func):
 def index():
     
     # Render index page
-    return render_template('easy-read-index.html')
+    return render_template('index.html')
 
 
 @bp.route('/author-articles', methods=['GET'])
@@ -69,7 +69,7 @@ def author_articles():
         .filter(Article.author == current_user).all()
     
     # Render author's articles pages
-    return render_template('easy-read-author-articles.html', articles=articles)
+    return render_template('author-articles.html', articles=articles)
 
 
 @bp.route('/add-image', methods=['POST'])

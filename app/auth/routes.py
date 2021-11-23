@@ -39,7 +39,7 @@ def register():
         return redirect(url_for('main.index'))
 
     # Render user registration page
-    return render_template('easy-read-register.html', form=form)
+    return render_template('register.html', form=form)
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -84,7 +84,7 @@ def login():
         return redirect(target_page)
 
     # Render login page
-    return render_template('easy-read-login.html', form=form)
+    return render_template('login.html', form=form)
 
 
 @bp.route('/logout')
