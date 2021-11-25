@@ -428,11 +428,7 @@ def publish_article():
     # Compose message to publisher
     msg = Message('Request to publish article', sender=current_app.config['ADMINS'][0],
         recipients=['adkwalters@gmail.com'])
-    msg.html = f"""
-        <h3>Request To Publish Article</h3>
-        <p><b>{current_user.username}</b> has made a request to publish the following article:</p>
-        <p>ID: {article.id}</p>
-        <p>Title: {article.title}</p>"""
+    msg.html = render_template('/email/email-request-to-publish.html', article=article)
     
     mail.send(msg)
 
