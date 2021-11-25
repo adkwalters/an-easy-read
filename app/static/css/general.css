@@ -69,6 +69,7 @@
 
 /* || Utility classes || */
 
+    /* Page */
     .full-spread {
         display: flex;
             flex-direction: column;
@@ -93,6 +94,7 @@
         max-width: 30rem;
         margin: 6rem auto;
     }
+    /* General */
     .label-size {
         width: max-content;
         margin: 0.2rem 0.1rem;
@@ -103,6 +105,11 @@
         background: #EEE;
         border-radius: 10px;
     }
+    .hidden {
+        visibility: hidden;
+    }
+
+    /* Buttons */
     .button {
         width: max-content;
         height: max-content;
@@ -136,9 +143,46 @@
     .delete:hover {
         color: red;
     }
-    .hidden {
-        visibility: hidden;
+
+    /* Dropdown */
+    .dropdown-panel {
+        display: flex;
+        font-size: 1.2rem;
     }
+    .dropdown-tab {
+        padding: 0.6rem 1rem;
+    }
+    .dropdown-tab-right {
+        position: relative;
+        margin-left: auto;
+    }
+    .dropdown-tab-right ul {
+        right: 0;
+        width: max-content;
+        text-align: right;
+    }
+    .dropdown-tab-dropdown {
+        position: absolute;
+        display: none;
+        margin-top: 0.6rem;
+        margin-left: -1rem;
+        box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.1);
+        z-index: 1;
+    }
+    .dropdown-tab:hover .dropdown-tab-dropdown {
+        display: block;
+    }
+    .dropdown-tab-dropdown>li {
+        padding: 0.3rem 1rem;
+    }
+    .dropdown-tab:hover,
+    .dropdown-tab-dropdown>li:hover {
+        background: #DDD;
+        border-radius: 10px;
+    }
+
+
+    /* Flashed messages */
     .alert {
         position: fixed;
             bottom: 2rem;

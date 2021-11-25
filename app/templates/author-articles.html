@@ -25,7 +25,7 @@
             <ul>
                 {% if articles is not none %}
                     {% for article in articles %}
-                    <li class="label-colour article-preview">
+                    <li class="label-colour article-display">
                         {% if article['Image'].src %}
                             <figure>
                                 <img src="{{ article['Image'].src }}">
