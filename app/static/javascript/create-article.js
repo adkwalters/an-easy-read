@@ -100,6 +100,7 @@ class ArticleImage extends HTMLElement {
 
                     // Save image ID to hidden input
                     hiddenId.value = response.image_id;
+                    imageInput.value = "";
                     
                     // Append elements to light DOM                                   
                     this.appendChild(img);
@@ -781,6 +782,7 @@ class ParagraphImage extends HTMLElement {
 
                     // Save image ID to hidden input
                     hiddenId.value = response.image_id;
+                    imageInput.value = ""; 
 
                     // Append elements to light DOM
                     this.appendChild(img);
