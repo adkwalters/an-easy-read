@@ -31,6 +31,6 @@ class Config(object):
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None    # $env 1
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')    # $env email.easyread@gmail.com
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')    # $env <app password>
-    ADMINS = ['email.easyread@gmail.com', 'adkwalters@gmail.com']
+    ADMIN = ['email.easyread@gmail.com', 'adkwalters@gmail.com']
     
     

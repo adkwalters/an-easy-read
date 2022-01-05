@@ -30,7 +30,7 @@ class TestWebApp(unittest.TestCase):
         assert current_app == self.app
 
     def test_home_page_redirect(self):
-        get_response = self.client.get('/author-articles', 
+        get_response = self.client.get('/display-author-articles', 
             follow_redirects=True)
         assert get_response.status_code == 200
         assert get_response.request.path == '/login'
@@ -90,7 +90,7 @@ class UserModelCase(unittest.TestCase):
                 password='password'), 
             follow_redirects=True)
         html = post_login.get_data(as_text=True)
-        assert post_login.request.path == '/author-articles'
+        assert post_login.request.path == '/display-author-articles'
         post_logout = self.client.get('/logout', 
             follow_redirects=True)
         html = post_logout.get_data(as_text=True)
@@ -136,10 +136,10 @@ class ArticleModelCase(unittest.TestCase):
         ))
 
     def test_setup(self):
-        get_response = self.client.get('/author-articles', 
+        get_response = self.client.get('/display-author-articles', 
             follow_redirects=True)
         assert get_response.status_code == 200
-        assert get_response.request.path == '/author-articles'
+        assert get_response.request.path == '/display-author-articles'
 
     def test_add_and_display_article(self):
         post_article = self.client.post('/create-article', 
@@ -147,7 +147,7 @@ class ArticleModelCase(unittest.TestCase):
                 article_title='Article Title',
                 article_desc='Article description'),
             follow_redirects=True)
-        assert post_article.request.path == '/author-articles'
+        assert post_article.request.path == '/display-author-articles'
         html = post_article.get_data(as_text=True)
         assert 'Article successfully saved' in html
         assert 'Article Title' in html
@@ -235,7 +235,7 @@ class ArticleModelCase(unittest.TestCase):
             follow_redirects=True)
         assert get_article_as_david.request.path != '/edit-article'
         get_article_as_david_html = get_article_as_david.get_data(as_text=True)
-        assert 'You do not have access to edit that article.' in get_article_as_david_html
+        assert 'You do not have access to that article.' in get_article_as_david_html
 
     def test_allow_admins_to_read_and_write_all_articles(self):
         # Post initial article as user
@@ -273,7 +273,7 @@ class ArticleModelCase(unittest.TestCase):
                 article_title='Updated Title',
                 article_desc='Updated Description'),
             follow_redirects=True)
-        assert post_updated_article_as_admin.request.path == '/author-articles'
+        assert post_updated_article_as_admin.request.path == '/display-author-articles'
         # Get updated article as admin
         get_updated_article_as_admin = self.client.post('/edit-article', 
             query_string={

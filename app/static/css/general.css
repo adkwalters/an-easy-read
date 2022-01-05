@@ -48,6 +48,9 @@
         text-decoration: none;
         cursor: pointer;
     }
+    a:hover {
+        font-weight: bolder;
+    }
     ul {
         list-style: none;
     }
@@ -137,12 +140,34 @@
     .grey-out:hover {
         color: black;
     }
+    .action {
+        color: #DDD;
+    }
+    .action:hover {
+        color: green;
+    }
     .delete {
         color: #DDD;        
     }
     .delete:hover {
         color: red;
     }
+    .big-add-button {
+        margin: auto;
+        color: #EEE;
+        font-size: 15rem;
+        cursor: pointer;
+    }
+    .big-add-button:hover {
+        color: #DDD;
+    }
+    .no-results-icon {
+        width: 100%;
+        text-align: center;
+        color: #EEE;
+        font-size: 10rem;
+    }
+    
 
     /* Dropdown */
     .dropdown-panel {
@@ -175,6 +200,7 @@
     .dropdown-tab-dropdown>li {
         padding: 0.3rem 1rem;
     }
+    .dropdown-tab-active,
     .dropdown-tab:hover,
     .dropdown-tab-dropdown>li:hover {
         background: #DDD;
@@ -189,12 +215,18 @@
             right: 2rem;
         display: flex;
             align-items: center;
+        
         margin: auto;
         margin-left: 1rem;
         padding: 0.4rem 0.8rem;
         border-radius: 10px;
         font-size: 1.3rem;
         text-align: center;
+        z-index: 1;
+    }
+    .alert a {
+        margin-left: 0.3rem; /* compensate for flash message trimming */ 
+        text-decoration: underline;
     }
     .form-alert {
         padding: 0.5rem;
@@ -233,7 +265,7 @@
 /* || Responsive design || */
 
     /* - large portrait  
-            - show header-name */
+            - show brand name */
 
     @media (min-width: 17.5rem) {
         #brand-name {
@@ -245,7 +277,7 @@
             - Expand navigation
             - Reposition flashed messages*/
             
-    @media (min-width: 42rem) {
+    @media (min-width: 50rem) {
         .full-spread,
         .full-page,
         .small-page {
@@ -262,10 +294,5 @@
         }
         #header-nav-icon {
             font-size: 0; /* hide icon */
-        }
-        .alert {
-            position: absolute;
-                bottom: calc(100vh - 9rem); /* this doesn't work as expected on some screen sizes */
-            font-size: 1rem;
         }
     }

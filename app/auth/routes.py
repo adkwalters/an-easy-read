@@ -78,7 +78,7 @@ def login():
         if not target_page or url_parse(target_page).netloc != '':
 
             # Reassign author's articles page as index
-            target_page = url_for('main.author_articles')
+            target_page = url_for('main.display_author_articles')
 
         # Redirect user to target page
         return redirect(target_page)

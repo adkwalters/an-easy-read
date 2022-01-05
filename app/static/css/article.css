@@ -104,32 +104,68 @@ paragraph-level {
 
 
 /* ||  Articles Display || */
-
-.articles-display-panel ul {
+#admin-navigation,
+#publisher-navigation {
+    display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        align-items: flex-end;
+}
+#articles-display-panel ul {
     display: grid;
         grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
         grid-gap: 2rem;
 }
 .article-display {
+    position: relative;
     display: flex;
         flex-direction: column;
         align-items: center;
     height: max-content;
     padding: 1rem;
 }
+.article-display-none {
+    display: none;
+}
+.status-published-writer,
+.status-unpublished-writer,
+.status-remove-publisher {
+    flex-direction: row;
+    justify-content: space-between;
+}
 .article-display img {
     display: block;
     margin: auto;
+    margin-bottom: 1rem;
     width: 90%;
     border-radius: 10px;
 }
-.article-display i {
+.no-image-icon {
     margin: -1rem;
+    margin-bottom: -0.5rem;
     color: #DDD;
     font-size: 10rem;
 }
+.status-icon {
+    position: absolute;
+        top: -0.5rem;
+        left: -0.5rem; 
+    color: #777;
+    font-size: 2rem;
+}
+.status-explanation {
+    position: absolute;
+        top: -0.5rem;
+        left: 2.5rem;
+    display: none;
+    width: max-content;
+    font-size: 1.2rem;
+}
+.status-icon:hover .status-explanation {
+    display: block;
+}
 .article-display h3 {
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
     text-align: center;
 }
 .article-display p {
@@ -144,17 +180,25 @@ paragraph-level {
         grid-template-columns: 1fr 1fr;
     width: 100%;
 }
-.article-preview button {
-    width: 100%;
+.article-action-review {
+    grid-column: span 2;
+    display: flex;
+        justify-items: stretch;
 }
-#add-article-button {
-    margin: auto;
+#create-article,
+#add-user-by-email {
+    display: none;
 }
-#add-article-button i {
-    color: #EEE;
-    font-size: 15rem;
-    cursor: pointer;
-}
-#add-article-button i:hover {
-    color: #DDD;
-}
+
+
+/* || Responsive design || */
+
+     /* - small landscape 
+            - Reposition navigation */
+            
+    @media (min-width: 42rem) {
+        #admin-navigation,
+        #publisher-navigation {
+            justify-content: flex-start;
+        }
+    }
