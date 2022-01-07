@@ -19,7 +19,8 @@ publishers.
 
 In order to protect against accidental or malicious deletion of content, 
 published articles that are deleted are taken offline and reassigned to admin. 
-Admin can then select to permanently delete or transfer these articles. 
+Admin can then select to permanently delete or transfer these articles. Until
+transfer, deleted articles will have public view access revoked.
 
 Acting upon an article changes its status. An article's status helps to:
  - provide feedback to the user. Labels and alerts allow user actions to 
@@ -1065,12 +1066,15 @@ def publish_article():
     """Publish a copy of the selected article
     
     Create a deep copy* of the selected article, to be displayed live, under 
-    the control of the publisher. Create a publishing note to track both 
-    versions and the time of publication. 
+    the control of the publisher. 
+    
+    Create a publishing note to track the published and draft versions of a
+    published article, as well as its date of publication and subsequent
+    updates, and slugified version of the article's title.
     
     If the article is already published, delete the outdated published version,
     update the publishing note with the newly published version, and track the
-    time of update. 
+    date of update. 
 
     *Instantiate new objects for Article, Source, Category, Paragraph, and 
     Summary models, and serialise directly from the selected article, using 
@@ -1133,21 +1137,21 @@ def publish_article():
         db.session.delete(outdated_article)
         
         # Update publishing note
-        db.session.execute(update(PublishingNote)
-            .where(PublishingNote.id == draft_article.is_published.id)
-            .values(
-                published_article_id = published_article.id,
-                date_published = draft_article.is_published.date_published,
-                date_updated = datetime.datetime.utcnow()))
+        publishing_note = db.session.query(PublishingNote) \
+            .filter_by(id = draft_article.is_published.id).one()
+        publishing_note.published_article_id = published_article.id
+        publishing_note.date_updated = datetime.datetime.utcnow()
+        publishing_note.to_slug(published_article.title)
+
     else:
 
         # Create new publishing note
         publishing_note = PublishingNote(
             draft_article_id = draft_article.id,
             published_article_id = published_article.id,
-            url = published_article.title,
             date_published = datetime.datetime.utcnow(),
             is_active = True)
+        publishing_note.to_slug(published_article.title)
         db.session.add(publishing_note)
 
     # Update article statuses
@@ -1409,19 +1413,54 @@ def index():
     return render_template('index.html')
 
 
-@bp.route('/<article_url>')
-def view_live_article(article_url):
-    """Display the selected article live for public viewing"""
+@bp.route('/<int:id>/')
+@bp.route('/<int:id>/<string:slug>', methods=['GET', 'POST'])
+def view_article(id, slug=None):
+    """Display the selected article for public view
+    
+    Display only active articles. An article marked inactive due to deletion
+    is only be redisplayed if transferred to another publisher.  
+    
+    Restore a published article's partial, misspelt, or missing URL slug using 
+    the article's publishing note.
+    """
 
     # Get publishing note from URL
-    published_article = db.session.query(PublishingNote) \
-        .filter_by(url = article_url).first_or_404()
-
-    # !! To do:
-    #       - research url slugs and routing
-    #       - create template
-
-    # Get URL from publishing note
-    article_url = published_article.url
+    publishing_note = db.session.query(PublishingNote) \
+        .filter_by(id = id).first_or_404()
     
-    return('TODO')
+    # Restore full url
+    if slug != publishing_note.slug:
+        return redirect(url_for('main.view_article', 
+            id=id, 
+            slug=publishing_note.slug))
+
+    if publishing_note.is_active:
+
+        # Get article and article data
+        article = db.session.query(Article) \
+            .filter_by(id = publishing_note.published_article_id).one()
+        source = article.source
+        categories = article.categories
+        article_image = db.session.query(Image) \
+            .filter_by(id = article.image_id).one_or_none()
+        paragraphs = db.session.query(Paragraph, Image) \
+            .outerjoin(Image, Image.id == Paragraph.image_id) \
+            .filter(Paragraph.article_id == article.id).all()
+        summaries = article.summaries
+        
+        # Render article  
+        return render_template('view-article.html', 
+            article=article, 
+            source=source, 
+            categories=categories, 
+            article_image=article_image,
+            paragraphs=paragraphs,
+            summaries=summaries)
+
+    else: # Article marked inactive
+
+        # Alert and return to index
+        flash('That article has been taken offline.', 'error')
+        return redirect(url_for('main.index'))
+

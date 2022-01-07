@@ -54,14 +54,13 @@
                                     <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                     <button type="submit" class="button grey-out">Edit</button>
                                 </form>
-                                <form class="article-action-preview" action="{{ url_for('main.preview_article') }}" method="get">
-                                    <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
-                                    <button type="submit" class="button grey-out">Preview</button>
-                                </form>
                                 {% if article['Article'].status == 'pub_live' %}
-                                    <!-- Reappend preview as live after route created -->
+                                    <form class="article-action-preview" action="{{ url_for('main.view_article', id=article['PublishingNote'].id, slug=article['PublishingNote'].slug ) }}" method="post">
+                                        <button type="submit" class="button grey-out">View</button>
+                                    </form>
                                     <div class="article-action-link">
-                                        <input type="hidden" name="article-link" value="{{ article['PublishingNote'].url }}">
+                                        <input type="hidden" name="pub-id" value="{{ article['PublishingNote'].id }}">
+                                        <input type="hidden" name="article-slug" value="{{ article['PublishingNote'].slug }}">
                                         <button type="submit" class="button grey-out">Link</button>
                                     </div>
                                     <form class="article-action-delete" action="{{ url_for('main.delete_article') }}" method="get">
@@ -69,6 +68,10 @@
                                         <button type="submit" class="button delete">Delete</button>
                                     </form>  
                                 {% else %}
+                                    <form class="article-action-preview" action="{{ url_for('main.preview_article') }}" method="get">
+                                        <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
+                                        <button type="submit" class="button grey-out">Preview</button>
+                                    </form>
                                     <form class="article-action-publish" action="{{ url_for('main.publish_article') }}" method="get">
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                         <button type="submit" class="button action publish-article-button">Publish</button>

@@ -1,5 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from slugify import slugify
 
 from app import db, login
 
@@ -196,13 +197,23 @@ class PublishingNote(db.Model):
     Currently, outdated versions of published articles are deleted during 
     publication. These could be saved to provide fuller version control if it 
     proves more valuable than the memory cost.
+    
+    Methods
+    -------
+    to_slug
+        Generate a URL slug from the article title
+    -------
     """
     # Attributes
     id = db.Column(db.Integer, primary_key=True)
     draft_article_id = db.Column(db.ForeignKey('article.id'))
     published_article_id = db.Column(db.ForeignKey('article.id'))
-    url = db.Column(db.String)
+    slug = db.Column(db.String)
     date_published = db.Column(db.DateTime)
     date_updated = db.Column(db.DateTime)
     is_active = db.Column(db.Boolean)
+    # Methods
+    def to_slug(self, value):
+        self.slug = slugify(value)
+
 

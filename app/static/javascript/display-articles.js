@@ -490,12 +490,17 @@ if (transferForm) {
     }
 }
 
-// Hyperlink article
+
+// Alert article hyperlink
 let linkArticleButton = document.getElementsByClassName("article-action-link");
 for (let button of linkArticleButton) {
     button.addEventListener("click", () => {
-        let hyperlink = button.querySelector("input");
-        alert(hyperlink.value);
+        // Get published article's metadata 
+        let pubNoteId = button.querySelector("input[name='pub-id']").value;
+        let slug = button.querySelector("input[name='article-slug']").value;
+        // Generate and alert hyperlink
+        let hyperlink = "http://127.0.0.1:5000/" + pubNoteId + "/" + slug // !! to be updated
+        alert(hyperlink);
     });
 }
 
