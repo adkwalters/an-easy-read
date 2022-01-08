@@ -8,7 +8,7 @@ from flask import current_app
 # Configure before local application to avoid triggering fallback in Config object
 os.environ['DATABASE_URL'] = 'sqlite://'  
 
-from app import create_app, db
+from app import create_app, db, mail
 from app.models import User, Article, Image
 
 
@@ -39,11 +39,13 @@ class TestWebApp(unittest.TestCase):
 class UserModelCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
-        self.app.config['WTF_CSRF_ENABLED'] = False    # Disable CSRF during tests
+        self.app.config['WTF_CSRF_ENABLED'] = False # Disable CSRF during tests
+        self.app.config['TESTING'] = True           # Enable testing > suppress emails
         self.appctx = self.app.app_context()
         self.appctx.push()
         self.client = self.app.test_client()
         db.create_all()
+        mail.init_app(current_app)                  # Initialise Flask-Mail to allow email suppression
 
     def tearDown(self):
         db.drop_all()
@@ -71,8 +73,7 @@ class UserModelCase(unittest.TestCase):
                 username='Andrew',
                 email='andrew@email.com',
                 password='password',
-                confirm_password='password',
-                remember_me=True), 
+                confirm_password='password'),
             follow_redirects=True)
         html = post_registration.get_data(as_text=True)
         assert post_registration.request.path == '/index'
