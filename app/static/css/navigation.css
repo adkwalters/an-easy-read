@@ -65,11 +65,17 @@
 
 /* || Registration and Login || */
 
-    #register h1,
-    #login h1 {
+    #auth-page a {
+        padding: 0 0 0 1rem;
+        font-size: 1.1rem;
+        text-decoration: underline;
+    }
+    #auth-page h1 {
         padding-left: 2rem;
     }
     .auth-form {
+        display: flex;
+            flex-direction: column;
         padding: 1rem;
     }
     .auth-form input{
@@ -88,13 +94,11 @@
         display: block;
         margin-bottom: 1rem;
     }
+    .auth-form a {
+        align-self: flex-end;
+    }
     .auth-form input[type="submit"] {
         margin-top: 2rem;
+        font-size: 1.3rem;
     }
-    #register p,
-    #login p {
-        padding-top: 0;
-        padding-left: 2rem;
-    }
-
 

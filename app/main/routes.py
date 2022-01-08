@@ -913,6 +913,10 @@ def request_article():
     BCC admin to keep a record of communiciation. 
     """
 
+    if not current_user.email_confirmed:
+        flash('Please confirm your email address. Click to <a href="/resend-email-confirmation">resend confirmation</a>.', 'info')
+        return redirect(url_for('main.display_author_articles'))
+
     # Get article 
     article_id = request.args.get('article-id')
     article = db.session.query(Article) \

@@ -1,6 +1,9 @@
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import current_app
 from flask_login import UserMixin
 from slugify import slugify
+from time import time
+import jwt
 
 from app import db, login
 
@@ -31,12 +34,17 @@ class User(UserMixin, db.Model):
         to securely store the user's password
     check_password
         Check the user's inputted password against the stored hash
+    send_token
+        Encrypt the user's ID to be sent as JSON Web Token 
+    check_token
+        Decrypt the token and return the user's ID
     -------
     """
     # Attributes
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
     email = db.Column(db.String, unique=True)
+    email_confirmed = db.Column(db.Boolean, default=False)
     password_hash = db.Column(db.String, unique=True)
     published_by = db.Column(db.ForeignKey('publisher.id',
         use_alter=True)) # Resolve dependency cycle to allow DROP emission
@@ -48,11 +56,29 @@ class User(UserMixin, db.Model):
     authored_articles = db.relationship('Article',
         backref='author',
         foreign_keys='Article.author_id')
-    # Methods
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
+
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def send_token(self, expires_in=600):
+        return jwt.encode({
+            'user_id': self.id, 
+            'exp': time() + expires_in,},
+            current_app.config['SECRET_KEY'], 
+            algorithm = 'HS256')
+            
+    @staticmethod
+    def check_token(token):
+        try:
+            id = jwt.decode(token,
+                current_app.config['SECRET_KEY'],
+                algorithms=['HS256'])['user_id']
+        except:
+            return
+        return User.query.get(id)
 
 
 class Publisher(db.Model):
@@ -212,7 +238,7 @@ class PublishingNote(db.Model):
     date_published = db.Column(db.DateTime)
     date_updated = db.Column(db.DateTime)
     is_active = db.Column(db.Boolean)
-    # Methods
+
     def to_slug(self, value):
         self.slug = slugify(value)
 

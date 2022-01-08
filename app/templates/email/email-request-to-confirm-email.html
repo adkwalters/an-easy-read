@@ -1,0 +1,4 @@
+<h3>Confirm Your Email Address</h3>
+<p>A request to create an EasyRead account has been made.</p>
+<p>To confirm, please click the following link or paste it into your browser</p>
+{{ url_for('auth.confirm_email', token=token, _external=True)}}
