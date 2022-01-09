@@ -1090,6 +1090,11 @@ def publish_article():
     draft_article = db.session.query(Article) \
         .filter_by(id = draft_article_id).one()
 
+    # Halt articles not under review
+    if draft_article.status not in ("pending", "pub_pending"):
+        flash('You do not have access to do that.', 'error')
+        return redirect(url_for('main.display_requests'))
+
     # Copy Article object 
     published_article = Article(
         title = draft_article.title,
