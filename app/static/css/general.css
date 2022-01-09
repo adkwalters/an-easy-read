@@ -260,6 +260,20 @@
         font-size: 1.3rem;
     }
 
+/* || View Input Password */
+
+    .auth-form div {
+        position: relative;
+    }
+    /* Password Icons */
+    .see-password-icon,
+    .hide-password-icon {
+        position: absolute;
+        bottom: 2rem;
+        right: 1rem;
+        color: #DDD;
+        cursor: pointer;
+    }
 
 
 /* || Responsive design || */

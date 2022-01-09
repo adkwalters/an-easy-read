@@ -14,6 +14,7 @@
 <!-- JavaScript -->
 {% block scripts %}
     <script src="/static/javascript/header.js" defer></script>
+    <script src="/static/javascript/support-auth.js" defer></script>
 {% endblock %}
 
 <!-- Main -->
@@ -23,18 +24,22 @@
         <form class="auth-form" action="" method="post" novalidate>
             {{ form.hidden_tag() }}
             <div class="auth-form label-colour">
-                <!-- Username -->
-                {{ form.username.label }}
-                {{ form.username(size=32, autocomplete="off", autofocus=True) }}
-                {% for error in form.username.errors %}
-                    <span class="form-alert alert-error">{{ error }}</span>
-                {% endfor %}   
-                <!-- Password -->
-                {{ form.password.label }}
-                {{ form.password }}
-                {% for error in form.password.errors %}
-                    <span class="form-alert alert-error">{{ error }}</span>
-                {% endfor %}   
+                <div>
+                    <!-- Username -->
+                    {{ form.username.label }}
+                    {{ form.username(size=32, autocomplete="off", autofocus=True) }}
+                    {% for error in form.username.errors %}
+                        <span class="form-alert alert-error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div>
+                    <!-- Password -->
+                    {{ form.password.label }}
+                    {{ form.password }}
+                    {% for error in form.password.errors %}
+                        <span class="form-alert alert-error">{{ error }}</span>
+                    {% endfor %}
+                </div>
                 <a href="{{ url_for('auth.request_password_reset') }}">Reset password</a>
             </div>
                 {{ form.submit(class="label-colour big-button") }}
