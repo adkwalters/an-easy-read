@@ -37,7 +37,7 @@
                         <li class="label-colour article-display status-{{ article['Article'].status }}">
                             {% if article['Image'].src %}
                                 <figure>
-                                    <img src="{{ article['Image'].src }}">
+                                    <img src="{{ url_for('main.return_image', filename=article['Image'].src) }}">
                                     <figcaption><h3>{{ article['Article'].title }}</h3></figcaption>
                                 </figure>
                             {% else %}

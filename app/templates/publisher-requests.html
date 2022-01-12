@@ -44,7 +44,7 @@
                     <li class="label-colour article-display status-my-writers {% if request['Article'].status == 'pub_requested' %} status-published {% endif %}">
                         {% if request['Image'].src %}
                             <figure>
-                                <img src="{{ request['Image'].src }}">
+                                <img src="{{ url_for('main.return_image', filename=request['Image'].src) }}">
                                 <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
                             </figure>
                         {% else %}
@@ -53,7 +53,7 @@
                         {% endif %}
                         <p>{{ request['Article'].description }}</p>
                         <div class="article-actions">
-                            <form class="article-action-edit" action="{{ url_for('main.edit_article', next=request.endpoint) }}" method="get">
+                            <form class="article-action-edit" action="{{ url_for('main.edit_article') }}" method="get">
                                 <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
                                 <input type="hidden" name="user-route" value="display-requests">
                                 <button type="submit" class="button grey-out">Edit</button>
@@ -75,7 +75,7 @@
                     <li class="label-colour article-display status-my-requests {% if request['Article'].status == 'pub_requested' %} status-published {% endif %}">
                         {% if request['Image'].src %}
                             <figure>
-                                <img src="{{ request['Image'].src }}">
+                                <img src="{{ url_for('main.return_image', filename=request['Image'].src) }}">
                                 <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
                             </figure>
                         {% else %}
@@ -84,7 +84,7 @@
                         {% endif %}
                         <p>{{ request['Article'].description }}</p>
                         <div class="article-actions">
-                            <form class="article-action-edit" action="{{ url_for('main.edit_article', next=request.endpoint) }}" method="get">
+                            <form class="article-action-edit" action="{{ url_for('main.edit_article') }}" method="get">
                                 <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
                                 <input type="hidden" name="user-route" value="display-requests">
                                 <button type="submit" class="button grey-out">Edit</button>
@@ -106,7 +106,7 @@
                     <li class="label-colour article-display status-all-requests {% if request['Article'].status == 'pub_requested' %} status-published {% endif %}">
                         {% if request['Image'].src %}
                             <figure>
-                                <img src="{{ request['Image'].src }}">
+                                <img src="{{ url_for('main.return_image', filename=request['Image'].src) }}">
                                 <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
                             </figure>
                         {% else %}

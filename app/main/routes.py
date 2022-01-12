@@ -78,7 +78,7 @@ import imghdr
 import functools
 import datetime
 
-from flask import render_template, redirect, url_for, flash, request, current_app, abort
+from flask import render_template, redirect, url_for, flash, request, current_app, abort, send_from_directory
 from flask_login import login_required, current_user
 from flask_mail import Message
 from sqlalchemy import update, or_
@@ -604,15 +604,12 @@ def add_image():
                     or file_ext != validate_image(file.stream):
                 abort(400)
 
-        # Generate image src attribute
-        src = os.path.join(
-            current_app.config.get('UPLOAD_PATH'), filename)
-
-        # Save image to file
-        file.save(os.path.join(basedir + '\\app\\' + src))
+        # # Save image to file
+        file.save(os.path.join(
+            basedir + current_app.config.get('UPLOAD_PATH'), filename))
 
         # Create database object
-        image = Image(src=src)
+        image = Image(src=filename)
         
         # Add object to session 
         db.session.add(image)
@@ -625,6 +622,11 @@ def add_image():
 
     # Abort invalid image upload
     abort(400)
+
+
+@bp.route('/static/images/<filename>')
+def return_image(filename):
+    return send_from_directory('static/images', filename)
 
 
 @bp.route('/create-article', methods=['GET', 'POST'])

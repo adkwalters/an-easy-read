@@ -22,7 +22,7 @@
 {% block main %}
 <article class="full-page article-page">
     <!-- Image needs proper labelling and referencing  -->
-    <img src="{{ article_image.src }}" alt="{{ article_image.alt }}"/>
+    <img src="{{ url_for('main.return_image', filename=article['Image'].src) }}" alt="{{ article_image.alt }}"/>
     <!-- Article header -->
     <div class="article-header">
         <ul class="article-categories-list">

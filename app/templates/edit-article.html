@@ -37,7 +37,7 @@
             <!-- Article Image -->
             {% if article_image %}
                 <article-image>
-                    <img slot="slot-article-image" class="article-form-image" src="{{ article_image.src }}">
+                    <img slot="slot-article-image" class="article-form-image" src="{{ url_for('main.return_image', filename=article_image.src) }}">
                     <input slot="slot-article-image-alt" name="article_image_alt" value="{{ article_image.alt }}">
                     <input type="hidden" name="article_image_id" value="{{ article_image.id }}">
                 </article-image>
@@ -102,7 +102,7 @@
                             <!-- Image -->
                             {% if paragraph['Paragraph'].image_id %}
                             <paragraph-image slot="slot-paragraph-image" data-paragraph-index="{{ paragraph['Paragraph'].index }}">
-                                <img slot="slot-paragraph-image-img" class="article-form-image" src="{{ paragraph['Image'].src }}"/>
+                                <img slot="slot-paragraph-image-img" class="article-form-image" src="{{ url_for('main.return_image', filename=paragraph['Image'].src) }}"/>
                                 <input slot="slot-paragraph-image-alt" name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_image_alt" value="{{ paragraph['Image'].alt }}"/>
                                 <input type="hidden" name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_image_id" value="{{ paragraph['Image'].id }}"/>
                             </paragraph-image>
