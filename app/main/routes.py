@@ -1227,13 +1227,23 @@ def update_article():
     for category in published_article.categories:
         draft_article.categories.append(category)
 
-    # Update draft paragraphs
+    # Copy paragraphs
     for paragraph in published_article.paragraphs:
-        draft_article.paragraphs.append(paragraph)
+        paragraph_copy = Paragraph(
+            article_id = published_article.id,
+            index = paragraph.index,
+            header = paragraph.header,
+            image_id = paragraph.image_id)
+        draft_article.paragraphs.append(paragraph_copy) 
 
-    # Update draft summaries
+    # Copy summaries
     for summary in published_article.summaries:
-        draft_article.summaries.append(summary)
+        summary_copy = Summary(
+            article_id = summary.article_id,
+            paragraph_index = summary.paragraph_index,
+            level = summary.level,
+            text = summary.text)    
+        draft_article.summaries.append(summary_copy)
     
     # Record and alert
     db.session.commit()    
