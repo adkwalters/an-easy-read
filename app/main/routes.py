@@ -1134,8 +1134,8 @@ def publish_article():
     # Copy summaries
     for summary in draft_article.summaries:
         summary_copy = Summary(
-            article_id = paragraph_copy.article_id,
-            paragraph_index = paragraph_copy.index, # !? Is it here the rel is conflated?
+            article_id = summary.article_id,
+            paragraph_index = summary.paragraph_index,
             level = summary.level,
             text = summary.text)    
         published_article.summaries.append(summary_copy)
