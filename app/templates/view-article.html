@@ -15,14 +15,17 @@
 <!-- JavaScript -->
 {% block scripts %}
     <script src="/static/javascript/header.js" defer></script>
-    <script src="/static/javascript/create-article.js"></script> 
+    <script src="/static/javascript/view-article-control.js" defer></script>
+    <script src="/static/javascript/view-article-components.js"></script> 
 {% endblock %}
 
 <!-- Main -->
 {% block main %}
 <article class="full-page article-page">
     <!-- Image needs proper labelling and referencing  -->
-    <img src="{{ url_for('main.return_image', filename=article_image.src) }}" alt="{{ article_image.alt }}"/>
+    {% if article_image %}
+        <img src="{{ url_for('main.return_image', filename=article_image.src) }}" alt="{{ article_image.alt }}"/>
+    {% endif %}
     <!-- Article header -->
     <div class="article-header">
         <ul class="article-categories-list">
@@ -41,34 +44,53 @@
             <span id="original-artile"> Source: <a href="{{ source.link }}">{{ source.title }}</a></span>
             {% endif %}
         </div>
-    <!-- Article control panel -->
-    <ul class="dropdown-panel label-colour">
-        <li class="dropdown-tab">
-            <a>Level</a>
-            <ul class="dropdown-tab-dropdown label-colour">
-                <li><a id="select-level-1">Intermediate</a></li>
-                <li><a id="select-level-2">Beginner</a></li>
-            </ul>
-        </li>
-        <li class="dropdown-tab">
-            <a>Font Size</a>
-            <ul class="dropdown-tab-dropdown label-colour">
-                <li><a id="font-size-small">Small</a></li>
-                <li><a id="font-size-medium">Medium</a></li>
-                <li><a id="font-size-large">Large</a></li>
-            </ul>
-        </li>
-        <li class="dropdown-tab dropdown-tab-right">
-            <a>File</a>
-            <ul class="dropdown-tab-dropdown label-colour">
-                <li><a id="save-as-pdf">Save as PDF</a></li>
-                <li><a id="print-article">Print</a></li>
-            </ul>
-        </li>
-    </ul>
+        <!-- Article control panel -->
+        <ul class="dropdown-panel label-colour">
+            <li class="dropdown-tab">
+                <a>Level</a>
+                <ul class="dropdown-tab-dropdown label-colour">
+                    <li><a id="easiest-level">Easiest</a></li>
+                    <li><a id="hardest-level">Hardest</a></li>
+                </ul>
+            </li>
+            <li class="dropdown-tab">
+                <a>Font Size</a>
+                <ul class="dropdown-tab-dropdown label-colour">
+                    <li><a id="font-size-small">Small</a></li>
+                    <li><a id="font-size-medium">Medium</a></li>
+                    <li><a id="font-size-large">Large</a></li>
+                </ul>
+            </li>
+            <li class="dropdown-tab dropdown-tab-right">
+                <a>Save or Print</a>
+                <ul class="dropdown-tab-dropdown label-colour">
+                    <li><a id="with-images">With Images</a></li>
+                    <li><a id="without-images">Without Images</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
     <!-- Article body -->
     <div class="article-body">
-
+    {% if paragraphs %}
+        {% for paragraph in paragraphs %}
+            <summary-paragraph>
+                {% if paragraph['Image'] %}
+                    <img slot="slot-image" src="{{ url_for('main.return_image', filename=paragraph['Image'].src) }}" alt="{{ paragraph['Image'].alt }}"/>
+                {% endif %}
+                {% if paragraph['Paragraph'].header %}
+                    <h3 slot="slot-header">{{ paragraph['Paragraph'].header }}</h3>
+                {% endif %}
+                {% if summaries %}
+                    {% for summary in summaries %}
+                        {% if summary.paragraph_index == paragraph['Paragraph'].index %}
+                            <p slot="slot-summary">{{ summary.text }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </summary-paragraph>
+        {% endfor %}
+    {% endif %}
     </div> 
 </article>
 {% endblock %}

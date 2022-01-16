@@ -13,7 +13,8 @@
     max-width: 60rem;
     padding: 0 1rem;
 }
-.article-header {
+.article-header,
+.article-body {
     width: 100%;
     max-width: 42rem;
     margin: auto;
@@ -34,18 +35,30 @@
 }
 .article-categories-list>li:hover {
     background: #DDD;
+
+}
+.article-page img {
+    border-radius: 10px;
+}
+summary-paragraph [slot="slot-header"] {
+    margin: 0.5rem 0 0.5rem 1rem;
+}
+
+summary-paragraph [slot="slot-summary"] {
+    margin: 1.5rem 0 1.5rem 0;
+    padding: 1rem;
 }
     
 /* - Font size */
-.small-font .article-text p {
+.small-font {
     font-size: 1.1rem;
     line-height: 1.4rem;
 }
-.medium-font .article-text p {
+.medium-font {
     font-size: 1.2rem;
     line-height: 1.6rem;
 }
-.large-font .article-text p {
+.large-font {
     font-size: 1.4rem;
     line-height: 1.8rem;
 }
@@ -102,8 +115,8 @@ paragraph-level {
 }
 
 
+/* || Display Articles || */
 
-/* ||  Articles Display || */
 #admin-navigation,
 #publisher-navigation {
     display: flex;
@@ -165,11 +178,10 @@ paragraph-level {
     display: block;
 }
 .article-display h3 {
-    /* margin-top: 1rem; */
     text-align: center;
 }
 .article-display p {
-    margin-bottom: 0;
+    margin-bottom: 1rem;
     text-align: left;
 }
 .article-display button {
@@ -188,6 +200,24 @@ paragraph-level {
 #create-article,
 #add-user-by-email {
     display: none;
+}
+
+
+/* || Print Article */
+
+@media print {
+    #header-main,
+    .dropdown-panel,
+    .article-categories-list {
+        display: none;
+    }
+    img {
+        display: block;
+        max-width: 300px;
+        height: auto;
+        margin: auto; 
+    }
+
 }
 
 
