@@ -1151,7 +1151,7 @@ def publish_article():
         publishing_note = db.session.query(PublishingNote) \
             .filter_by(id = draft_article.is_published.id).one()
         publishing_note.published_article_id = published_article.id
-        publishing_note.date_updated = datetime.datetime.utcnow()
+        publishing_note.date_updated = datetime.date.today()
         publishing_note.to_slug(published_article.title)
 
     else:
@@ -1160,7 +1160,7 @@ def publish_article():
         publishing_note = PublishingNote(
             draft_article_id = draft_article.id,
             published_article_id = published_article.id,
-            date_published = datetime.datetime.utcnow(),
+            date_published = datetime.date.today(),
             is_active = True)
         publishing_note.to_slug(published_article.title)
         db.session.add(publishing_note)
@@ -1472,7 +1472,8 @@ def view_article(id, slug=None):
         
         # Render article  
         return render_template('view-article.html', 
-            article=article, 
+            article=article,
+            publishing_note=publishing_note,
             source=source, 
             categories=categories, 
             article_image=article_image,

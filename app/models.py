@@ -235,8 +235,8 @@ class PublishingNote(db.Model):
     draft_article_id = db.Column(db.ForeignKey('article.id'))
     published_article_id = db.Column(db.ForeignKey('article.id'))
     slug = db.Column(db.String)
-    date_published = db.Column(db.DateTime)
-    date_updated = db.Column(db.DateTime)
+    date_published = db.Column(db.Date)
+    date_updated = db.Column(db.Date)
     is_active = db.Column(db.Boolean)
 
     def to_slug(self, value):
