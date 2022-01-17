@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+<!-- Page metadata -->
+{% block description %}
+    <meta name="description" content="">
+{% endblock %}
+
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/css/navigation.css"/>  
+    <link rel="stylesheet" href="/static/css/general.css"/> 
+    <link rel="stylesheet" href="/static/css/article.css"/> 
+{% endblock %}
+
+<!-- JavaScript -->
+{% block scripts %}
+    <script src="/static/javascript/header.js" defer></script>
+    <script src="/static/javascript/display-articles.js" defer></script>
+{% endblock %}
+
+<!-- Main -->
+{% block main %}
+    <div id="admin-page" class="full-spread">
+        <ul id="admin-navigation">
+            <li><a href="{{ url_for('main.display_admin_articles') }}">Articles</a></li>
+            <li><h1>Publishers</h1></li>
+        </ul>        
+        <ul class="dropdown-panel label-colour">
+            <li class="dropdown-tab">
+                <a id="add-publisher-tab">Add Publisher</a>
+            </li>
+            <li class="dropdown-tab dropdown-tab-right">
+                <a id="remove-publisher-tab">Remove Publisher</a>
+            </li>
+        </ul>
+        <section id="articles-display-panel">
+            <ul>              
+                {% if publishers %}
+                    {% for publisher in publishers %}
+                        <li class="label-colour article-display status-remove-publisher">
+                            <h3>{{ publisher['User'].username }}</h3>
+                            <div class="writer-actions">
+                                <form class="publisher-action-remove" action="{{ url_for('main.remove_publisher') }}" method="get">
+                                    <input type="hidden" name="publisher" value="{{ publisher['User'].id }}">
+                                    <button type="submit" class="button delete">Remove</button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+                <form id="add-user-by-email" action="{{ url_for('main.add_publisher') }}" method="post">
+                    {{ form.hidden_tag() }}
+                </form>
+            </ul>
+        </section>
+    </div>
+{% endblock %}

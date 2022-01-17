@@ -1,0 +1,136 @@
+{% extends "layout.html" %}
+
+<!-- Page metadata -->
+{% block description %}
+    <meta name="description" content="">
+{% endblock %}
+
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/css/navigation.css"/>  
+    <link rel="stylesheet" href="/static/css/general.css"/> 
+    <link rel="stylesheet" href="/static/css/article.css"/> 
+{% endblock %}
+
+<!-- JavaScript -->
+{% block scripts %}
+    <script src="/static/javascript/header.js" defer></script>
+    <script src="/static/javascript/create-article-components.js"></script> 
+    <script src="/static/javascript/create-article-control.js" defer></script>    
+{% endblock %}
+
+<!-- Main -->
+{% block main %}    
+    <form id="article-form" class="full-page" action="" method="post" autocomplete="off" novalidate>
+        {{ form.hidden_tag() }}
+        <h1>Create Article</h1>
+        <section id="article-form-meta" class="label-colour">
+            <h2>Article Data</h2>
+            <!-- Article meta data -->
+            {% if article %}
+                {{ form.article_title.label }} {{ form.article_title(value=article.title) }}
+                {{ form.article_desc.label }} {{ form.article_desc(value=article.description) }}
+            {% else %}
+                {{ form.article_title.label }} {{ form.article_title }}
+                {{ form.article_desc.label }} {{ form.article_desc }}
+            {% endif %}
+            <!-- Article Image -->
+            {% if article_image %}
+                <article-image>
+                    <img slot="slot-article-image" class="article-form-image" src="{{ url_for('main.return_image', filename=article_image.src) }}">
+                    <input slot="slot-article-image-alt" name="article_image_alt" value="{{ article_image.alt }}">
+                    <input type="hidden" name="article_image_id" value="{{ article_image.id }}">
+                </article-image>
+            {% else %}
+            <article-image></article-image>
+            {% endif %}
+            <!-- Article Categories -->
+            <label for="article-form-categories">Categories:
+                <input list="article-form-categories-input"> 
+                <datalist id="article-form-categories-input"> 
+                    <option value="Technology"></option>
+                    <option value="Science"></option>
+                    <option value="Nature"></option>
+                    <option value="Culture"></option>
+                    <option value="Language"></option>
+                </datalist>
+                <div class="article-form-categories-controls">
+                    <button type="button" id="article-form-add-category-button" class="button">Add Category</button>
+                    <button type="button" id="article-form-del-category-button" class="button delete">Delete Category</button>
+                </div>
+                <ul id="article-form-categories-selected">
+                <!-- Article Categories -->
+                {{ form.article_category }}
+
+                {% if categories %} 
+                    {% for category in categories %}   
+                        <li class="label-size label-colour">{{ category.name }}</li>
+                        <input type="hidden" name="article_category-{{ loop.index }}" value="{{ category.name }}">
+                    {% endfor %}
+                {% endif %}
+                </ul>
+            </label>
+        </section>
+        <section id="article-form-source" class="label-colour">
+            <h2>Source Data</h2>
+            <!-- Article Source Data -->
+            {% if source %}
+                {{ form.source_title.label }} {{ form.source_title(value=source.title) }}
+                {{ form.source_author.label }} {{ form.source_author(value=source.author) }}
+                {{ form.source_link.label }} {{ form.source_link(value=source.link) }}
+                {{ form.source_name.label }} {{ form.source_name(value=source.name) }}
+                {{ form.source_contact.label }} {{ form.source_contact(value=source.contact) }}
+            {% else %}
+                {{ form.source_title.label }} {{ form.source_title }}
+                {{ form.source_author.label }} {{ form.source_author }}
+                {{ form.source_link.label }} {{ form.source_link }}
+                {{ form.source_name.label }} {{ form.source_name }}
+                {{ form.source_contact.label }} {{ form.source_contact }}
+            {% endif %}
+            </section>
+            <section class="label-colour">
+                <article-content>
+                <!-- Article Content -->
+                {% if paragraphs %}
+                    <!-- Paragraphs -->
+                    {% for paragraph in paragraphs %}
+                        <article-paragraph slot="slot-article-paragraphs" data-paragraph-index="{{ paragraph['Paragraph'].index }}">
+                            <!-- Index -->
+                            <ul slot="slot-paragraph-index" id="paragraph-{{ paragraph['Paragraph'].index }}">
+                                <input type=hidden name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_index" value="{{ paragraph['Paragraph'].index }}">
+                            </ul>
+                            <!-- Image -->
+                            {% if paragraph['Paragraph'].image_id %}
+                            <paragraph-image slot="slot-paragraph-image" data-paragraph-index="{{ paragraph['Paragraph'].index }}">
+                                <img slot="slot-paragraph-image-img" class="article-form-image" src="{{ url_for('main.return_image', filename=paragraph['Image'].src) }}"/>
+                                <input slot="slot-paragraph-image-alt" name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_image_alt" value="{{ paragraph['Image'].alt }}"/>
+                                <input type="hidden" name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_image_id" value="{{ paragraph['Image'].id }}"/>
+                            </paragraph-image>
+                            {% endif %}
+                            <!-- Header -->
+                            {% if paragraph['Paragraph'].header %}
+                                <paragraph-header slot="slot-paragraph-header" data-paragraph-index="{{ paragraph['Paragraph'].index }}">
+                                    <textarea slot="slot-header-text" name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_header" class="form-text form-text-header">{{ paragraph['Paragraph'].header }}</textarea>
+                                </paragraph-header>
+                            {% endif %}
+                            <!-- Summaries -->
+                            {% if summaries %}
+                                {% for summary in summaries %}
+                                    {% if summary.paragraph_index == paragraph['Paragraph'].index %}
+                                        <paragraph-level slot="slot-paragraph-levels" data-paragraph-index="{{ summary.paragraph_index }}" data-level-index="{{ summary.level }}">
+                                            <ul slot="slot-level-index" id="paragraph-{{ summary.paragraph_index }}-summary-{{ summary.level }}">
+                                                <input type="hidden" name="paragraph-{{ summary.paragraph_index }}-summary-{{ summary.level }}-level" value="{{ summary.level }}"></input>
+                                            </ul>
+                                            <textarea slot="slot-level-text" name="paragraph-{{ summary.paragraph_index }}-summary-{{ summary.level }}-text">{{ summary.text }}</textarea>
+                                        </paragraph-level>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </article-paragraph>
+                    {% endfor %}
+                {% endif %}
+                </article-content>
+            </section> 
+        {{ form.submit(class="button big-button", value="Update Article") }}    
+    </form>
+{% endblock %}

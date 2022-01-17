@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+<!-- Page metadata -->
+{% block description %}
+    <meta name="description" content="A place to read progressively summarised content">
+{% endblock %}
+
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/css/navigation.css"/>  
+    <link rel="stylesheet" href="/static/css/general.css"/> 
+    <link rel="stylesheet" href="/static/css/article.css"/> 
+{% endblock %}
+
+<!-- JavaScript --> 
+{% block scripts %}
+    <script src="/static/javascript/header.js" defer></script>
+{% endblock %}
+
+<!-- Main -->
+{% block main %}
+    <div id="index-page" class="full-spread">
+
+        <h1>Welcome to Easy Read{% if current_user.is_authenticated %}, {{ current_user.username }}{% endif %}</h1>
+           
+        <!-- <section id="all-articles" class="articles-display-pannel">
+            <ul>
+                {% if articles is not none %}
+                    {% for article in articles %}
+                    <li class="label-colour article-preview">
+                        {% if article['src'] is not none %}
+                            <figure>
+                                <img src="{{ article['src'] }}">
+                                <figcaption><h3>{{ article['title'] }}</h3></figcaption>
+                            </figure>
+                        {% else %}
+                            <i class="far fa-image"></i>
+                            <h3>{{ article['title'] }}</h3>
+                        {% endif %}
+                        <p>{{ article['description'] }}</p>
+                        <a href="/create-article?article_id={{ article['id'] }}"><button type="button" class="button grey-out edit-article-button">Edit Article</button></a>
+                        <a href=""><button type="button" class="button grey-out edit-article-button">Publish Article</button></a>
+                    </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </section> -->
+    </div>
+{% endblock %}

@@ -1,0 +1,4 @@
+<h3>Invitation to Write</h3>
+<p>You have been invited to become a writer for {{ publisher.username }}!</p>
+<p>As a writer, your requests to publish articles will be sent directly to {{ publisher.username }}.</p>
+<p><a href="{{ url_for('main.display_author_articles', **{'_external':True}) }}">Request an article to be published<a></p>

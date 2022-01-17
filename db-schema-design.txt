@@ -1,0 +1,78 @@
+CREATE TABLE article (
+    id INTEGER,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    image_id INT,
+    published TEXT,
+    updated TEXT,
+    FOREIGN KEY(image_id) REFERENCES image(id),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE article_author (
+    article_id INTEGER NOT NULL,
+    author_email INTEGER NOT NULL,
+    FOREIGN KEY(article_id) REFERENCES article(id),
+    FOREIGN KEY(author_email) REFERENCES author(email),
+    PRIMARY KEY(article_id)
+);
+
+CREATE TABLE author (
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    username TEXT,
+    PRIMARY KEY(email)
+);
+
+CREATE TABLE source (
+    article_id INTEGER NOT NULL,
+    name TEXT,
+    author TEXT,
+    title TEXT, 
+    contact TEXT,
+    hyperlink TEXT,
+    FOREIGN KEY(article_id) REFERENCES article(id),
+    PRIMARY KEY(article_id)
+);
+
+CREATE TABLE article_category (
+    article_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    FOREIGN KEY(article_id) REFERENCES article(id),
+    FOREIGN KEY(category_id) REFERENCES category(id),
+    PRIMARY KEY(article_id, category_id)
+);
+
+CREATE TABLE category (
+    id INTEGER,
+    category TEXT NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE image (
+    id INTEGER,
+    alt TEXT,
+    src TEXT NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE article_paragraph (
+    article_id INTEGER NOT NULL,
+    paragraph_id INTEGER NOT NULL,
+    header TEXT,
+    image_id INTEGER,
+    FOREIGN KEY(article_id) REFERENCES article(id),
+    FOREIGN KEY(image_id) REFERENCES image(id),
+    PRIMARY KEY(article_id, paragraph_id)
+);
+
+CREATE TABLE level (
+    article_id INTEGER NOT NULL,
+    paragraph_id INTEGER NOT NULL,
+    level INTEGER NOT NULL,
+    content NOT NULL,
+    FOREIGN KEY(article_id, paragraph_id) REFERENCES article_paragraph(article_id, paragraph_id),
+    PRIMARY KEY(article_id, paragraph_id, level)
+);
+
+PRAGMA foreign_keys = ON;

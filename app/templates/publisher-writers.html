@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+<!-- Page metadata -->
+{% block description %}
+    <meta name="description" content="">
+{% endblock %}
+
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/css/navigation.css"/>  
+    <link rel="stylesheet" href="/static/css/general.css"/> 
+    <link rel="stylesheet" href="/static/css/article.css"/> 
+{% endblock %}
+
+<!-- JavaScript -->
+{% block scripts %}
+    <script src="/static/javascript/header.js" defer></script>
+    <script src="/static/javascript/display-articles.js" defer></script>
+{% endblock %}
+
+<!-- Main -->
+{% block main %}
+    <div id="publisher-writers" class="full-spread">
+        <ul id="publisher-navigation">
+            <li><a href="{{ url_for('main.display_publisher_articles') }}">Articles</a></li>
+            <li><h1>Writers</h1></li>
+            <li><a href="{{ url_for('main.display_requests') }}">Requests</a></li>
+        </ul>
+        <ul class="dropdown-panel label-colour">
+            <li class="dropdown-tab">
+                <a id="published-writers-tab">Published Writers</a>
+            </li>
+            <li class="dropdown-tab dropdown-tab-right">
+                <a id="unpublished-writers-tab">Unpublished Writers</a>
+            </li>
+        </ul>
+        <section id="articles-display-panel">
+            <ul>
+                {% if published_writers %}
+                    {% for writer in published_writers %}
+                        <li class="label-colour article-display status-published-writer">
+                            <h3>{{ writer.username }}</h3>
+                            <div class="writer-actions">
+                                <form class="writer-action-remove" action="{{ url_for('main.remove_writer') }}" method="get">
+                                    <input type="hidden" name="writer" value="{{ writer.id }}">
+                                    <button type="submit" class="button delete">Remove</button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+                {% if unpublished_writers %}
+                    {% for writer in unpublished_writers %}
+                        <li class="label-colour article-display status-unpublished-writer">
+                            <h3>{{ writer.username }}</h3>
+                            <div class="writer-actions">
+                                <form class="writer-action-remove" action="{{ url_for('main.remove_writer') }}" method="get">
+                                    <input type="hidden" name="writer" value="{{ writer.id }}">
+                                    <button type="submit" class="button delete">Remove</button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+                <form id="add-user-by-email" action="{{ url_for('main.add_writer') }}" method="post">
+                    {{ form.hidden_tag() }}
+                </form>            
+            </ul>
+        </section>
+    </div>
+{% endblock %}

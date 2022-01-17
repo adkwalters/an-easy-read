@@ -1,0 +1,234 @@
+/* Property order (https://webdesign.tutsplus.com/articles/outside-in-ordering-css-properties-by-importance--cms-21685)
+    - layout (position, display)
+    - box model (outside-in)
+    - visual (colour, background, border)
+    - text
+    - other */
+
+
+/* || View Article || */
+
+.article-page {
+    gap: 1rem;
+    max-width: 60rem;
+    padding: 0 1rem;
+}
+.article-header,
+.article-body {
+    width: 100%;
+    max-width: 42rem;
+    margin: auto;
+}
+.article-categories-list {
+    display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;        
+}
+.article-meta {
+    display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    margin: 1rem 0;
+}
+#article-form-categories-selected>li {
+    background: #DDD;
+}
+.article-categories-list>li:hover {
+    background: #DDD;
+
+}
+.article-page img {
+    border-radius: 10px;
+}
+summary-paragraph [slot="slot-header"] {
+    margin: 0.5rem 0 0.5rem 1rem;
+}
+
+summary-paragraph [slot="slot-summary"] {
+    margin: 1.5rem 0 1.5rem 0;
+    padding: 1rem;
+}
+    
+/* - Font size */
+.small-font {
+    font-size: 1.1rem;
+    line-height: 1.4rem;
+}
+.medium-font {
+    font-size: 1.2rem;
+    line-height: 1.6rem;
+}
+.large-font {
+    font-size: 1.4rem;
+    line-height: 1.8rem;
+}
+
+
+/* || Create Article || */
+
+#article-form {
+    display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding: 0 1rem;
+}
+#article-form section {
+    padding: 1rem;
+}
+#article-form h2 { 
+    margin: 0;
+    margin-bottom: 1rem;
+}
+.form-text {
+    resize: vertical;
+}
+textarea.form-text-header {
+    font-size: 1.4rem;
+    height: 3.8rem;
+}
+.article-form-image {
+    display: block;
+    padding: 1rem 0;
+    width: 75%;
+    margin: auto;
+}
+.article-form-categories-controls {
+    display: flex;
+        justify-content: space-between;
+}
+#article-form-categories-selected {
+    display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+    padding: 1rem;
+}
+paragraph-header,
+paragraph-level {
+    margin-top: -1rem; /*tighten up whitespace between content slots*/
+}
+#submit-form-button {
+    position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+    box-shadow: 0 0px 12px 0 rgba(0,0,0,0.4);
+}
+
+
+/* || Display Articles || */
+
+#admin-navigation,
+#publisher-navigation {
+    display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        align-items: flex-end;
+}
+#articles-display-panel ul {
+    display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+        grid-gap: 2rem;
+}
+.article-display {
+    position: relative;
+    display: flex;
+        flex-direction: column;
+        align-items: center;
+    height: max-content;
+    padding: 1rem;
+}
+.article-display-none {
+    display: none;
+}
+.status-published-writer,
+.status-unpublished-writer,
+.status-remove-publisher {
+    flex-direction: row;
+    justify-content: space-between;
+}
+.article-display img {
+    display: block;
+    margin: auto;
+    margin-bottom: 1rem;
+    width: 90%;
+    border-radius: 10px;
+}
+.no-image-icon {
+    margin: -1rem;
+    margin-bottom: -0.5rem;
+    color: #DDD;
+    font-size: 10rem;
+}
+.status-icon {
+    position: absolute;
+        top: -0.5rem;
+        left: -0.5rem; 
+    color: #777;
+    font-size: 2rem;
+}
+.status-explanation {
+    position: absolute;
+        top: -0.5rem;
+        left: 2.5rem;
+    display: none;
+    width: max-content;
+    font-size: 1.2rem;
+}
+.status-icon:hover .status-explanation {
+    display: block;
+}
+.article-display h3 {
+    text-align: center;
+}
+.article-display p {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+.article-display button {
+    width: 100%;
+}
+.article-actions {
+    display: grid;
+        grid-template-columns: 1fr 1fr;
+    width: 100%;
+}
+.article-action-review {
+    grid-column: span 2;
+    display: flex;
+        justify-items: stretch;
+}
+#create-article,
+#add-user-by-email {
+    display: none;
+}
+
+
+/* || Print Article */
+
+@media print {
+    #header-main,
+    .dropdown-panel,
+    .article-categories-list {
+        display: none;
+    }
+    img {
+        display: block;
+        max-width: 300px;
+        height: auto;
+        margin: auto; 
+    }
+
+}
+
+
+/* || Responsive design || */
+
+     /* - small landscape 
+            - Reposition navigation */
+            
+    @media (min-width: 42rem) {
+        #admin-navigation,
+        #publisher-navigation {
+            justify-content: flex-start;
+        }
+    }

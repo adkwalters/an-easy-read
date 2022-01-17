@@ -1,0 +1,104 @@
+/* Property order (https://webdesign.tutsplus.com/articles/outside-in-ordering-css-properties-by-importance--cms-21685)
+    - layout (position, display)
+    - box model (outside-in)
+    - visual (colour, background, border)
+    - text
+    - other */
+
+
+/* || Header || */
+
+    #page {
+        min-width: 10rem;
+    }
+    #header-main {
+        position: fixed;
+            top: 0;
+        display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        width: 100%;
+        padding: 1rem 1.5rem;
+        background: #fbfdfe;
+        box-shadow: 0 0px 12px 0 rgba(0,0,0,0.8);
+        z-index: 1;
+        overflow: hidden;  
+    }
+    #brand-logo {
+        float: left;
+        width: max-content;
+        font-size: 2.1rem;
+        font-weight: 730;  
+    }
+    #brand-name {
+        display: none;
+        float: left;
+        width: max-content;
+        margin-left: 5px;
+        font-size: 1.8rem;
+    }
+    #header-nav {
+        display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+    }
+    #header-nav-list {
+        display: none;
+        align-items: flex-end;
+        margin-top: 1rem;
+    }
+    #header-nav-list a {
+        color: black;
+        font-size: 1.4rem;
+        font-weight: 730;
+        line-height: 2rem;
+    }
+    .display-menu #header-nav-list {
+        display: flex;
+            flex-direction: column;
+    }
+    #header-nav-icon {
+        font-size: 2.2rem;
+    }
+
+    
+
+/* || Registration and Login || */
+
+    #auth-page a {
+        padding: 0 0 0 1rem;
+        font-size: 1.1rem;
+        text-decoration: underline;
+    }
+    #auth-page h1 {
+        padding-left: 2rem;
+    }
+    .auth-form {
+        display: flex;
+            flex-direction: column;
+        padding: 1rem;
+    }
+    .auth-form input{
+        width: 100%;
+        margin: 1rem auto;
+        padding: 1rem;
+        border-radius: 10px;
+        border: none;
+        font-size: 1rem;
+    }
+    .auth-form input[type="checkbox"] {
+        width: max-content;
+        margin-top: 0;
+    }
+    .auth-form span {
+        display: block;
+        margin-bottom: 1rem;
+    }
+    .auth-form a {
+        align-self: flex-end;
+    }
+    .auth-form input[type="submit"] {
+        margin-top: 2rem;
+        font-size: 1.3rem;
+    }
+

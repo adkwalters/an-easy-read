@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+<!-- Page metadata -->
+{% block description %}
+    <meta name="description" content="">
+{% endblock %}
+
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/css/navigation.css"/>  
+    <link rel="stylesheet" href="/static/css/general.css"/> 
+{% endblock %}
+
+<!-- JavaScript -->
+{% block scripts %}
+    <script src="/static/javascript/header.js" defer></script>
+    <script src="/static/javascript/support-auth.js" defer></script>
+{% endblock %}
+
+<!-- Main -->
+{% block main %}
+    <div id="auth-page" class="small-page">
+        <h1>Login</h1>
+        <form class="auth-form" action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="auth-form label-colour">
+                <div>
+                    <!-- Username -->
+                    {{ form.username.label }}
+                    {{ form.username(size=32, autocomplete="off", autofocus=True) }}
+                    {% for error in form.username.errors %}
+                        <span class="form-alert alert-error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div>
+                    <!-- Password -->
+                    {{ form.password.label }}
+                    {{ form.password }}
+                    {% for error in form.password.errors %}
+                        <span class="form-alert alert-error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <a href="{{ url_for('auth.request_password_reset') }}">Reset password</a>
+            </div>
+                {{ form.submit(class="label-colour big-button") }}
+        </form>
+        <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Click to register</a></p>
+    </div>
+{% endblock %}

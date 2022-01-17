@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+
+<!-- Page metadata -->
+{% block description %}
+    <meta name="description" content="">
+{% endblock %}
+
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/css/navigation.css"/>  
+    <link rel="stylesheet" href="/static/css/general.css"/> 
+    <link rel="stylesheet" href="/static/css/article.css"/> 
+{% endblock %}
+
+<!-- JavaScript -->
+{% block scripts %}
+    <script src="/static/javascript/header.js" defer></script>
+    <script src="/static/javascript/display-articles.js" defer></script>
+{% endblock %}
+
+<!-- Main -->
+{% block main %}
+    <div id="publisher-requests" class="full-spread">
+        <ul id="publisher-navigation">
+            <li><a href="{{ url_for('main.display_publisher_articles') }}">Articles</a></li>
+            <li><a href="{{ url_for('main.display_writers') }}">Writers</a></li>
+            <li><h1>Requests</h1></li>
+        </ul>
+        <ul class="dropdown-panel label-colour">
+            <li class="dropdown-tab">
+                <a id="my-writers-tab">My Writers {% if associated %} ({{ associated|length }}) {% endif %}</a>
+            </li>
+            <li class="dropdown-tab">
+                <a id="my-requests-tab">My Articles {% if disassociated %} ({{ disassociated|length }}) {% endif %}</a>
+            </li>
+            <li class="dropdown-tab dropdown-tab-right">
+                <a id="all-writers-tab">{% if unassociated %} ({{ unassociated|length }}) {% endif %} New Writers</a>
+            </li>
+        </ul>
+        <section id="articles-display-panel">
+            <ul>
+                {% if associated %}
+                    {% for request in associated %}
+                    <li class="label-colour article-display status-my-writers {% if request['Article'].status == 'pub_requested' %} status-published {% endif %}">
+                        {% if request['Image'].src %}
+                            <figure>
+                                <img src="{{ url_for('main.return_image', filename=request['Image'].src) }}">
+                                <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
+                            </figure>
+                        {% else %}
+                            <i class="no-image-icon far fa-image"></i>
+                            <h3>{{ request['Article'].title }}</h3>
+                        {% endif %}
+                        <p>{{ request['Article'].description }}</p>
+                        <div class="article-actions">
+                            <form class="article-action-edit" action="{{ url_for('main.edit_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
+                                <input type="hidden" name="user-route" value="display-requests">
+                                <button type="submit" class="button grey-out">Edit</button>
+                            </form>
+                            <form class="article-action-preview" action="{{ url_for('main.preview_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
+                                <button type="submit" class="button grey-out">Preview</button>
+                            </form>
+                            <form class="article-action-review" action="{{ url_for('main.review_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
+                                <button type="submit" class="button grey-out">Review</button>
+                            </form>
+                        </div>
+                    </li>
+                    {% endfor %}
+                {% endif %}
+                {% if disassociated %}
+                    {% for request in disassociated %}
+                    <li class="label-colour article-display status-my-requests {% if request['Article'].status == 'pub_requested' %} status-published {% endif %}">
+                        {% if request['Image'].src %}
+                            <figure>
+                                <img src="{{ url_for('main.return_image', filename=request['Image'].src) }}">
+                                <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
+                            </figure>
+                        {% else %}
+                            <i class="no-image-icon far fa-image"></i>
+                            <h3>{{ request['Article'].title }}</h3>
+                        {% endif %}
+                        <p>{{ request['Article'].description }}</p>
+                        <div class="article-actions">
+                            <form class="article-action-edit" action="{{ url_for('main.edit_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
+                                <input type="hidden" name="user-route" value="display-requests">
+                                <button type="submit" class="button grey-out">Edit</button>
+                            </form>
+                            <form class="article-action-preview" action="{{ url_for('main.preview_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
+                                <button type="submit" class="button grey-out">Preview</button>
+                            </form>
+                            <form class="article-action-review" action="{{ url_for('main.review_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
+                                <button type="submit" class="button grey-out">Review</button>
+                            </form>
+                        </div>
+                    </li>
+                    {% endfor %}
+                {% endif %}
+                {% if unassociated %}
+                    {% for request in unassociated %}
+                    <li class="label-colour article-display status-all-requests {% if request['Article'].status == 'pub_requested' %} status-published {% endif %}">
+                        {% if request['Image'].src %}
+                            <figure>
+                                <img src="{{ url_for('main.return_image', filename=request['Image'].src) }}">
+                                <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
+                            </figure>
+                        {% else %}
+                            <i class="no-image-icon far fa-image"></i>
+                            <h3>{{ request['Article'].title }}</h3>
+                        {% endif %}
+                        <p>{{ request['Article'].description }}</p>
+                        <div class="article-actions">
+                            <form class="article-action-edit" action="{{ url_for('main.edit_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
+                                <input type="hidden" name="user-route" value="display-requests">
+                                <button type="submit" class="button grey-out">Edit</button></a>
+                            </form>
+                            <form class="article-action-preview" action="{{ url_for('main.preview_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
+                                <button type="submit" class="button grey-out">Preview</button></a>
+                            </form>
+                            <form class="article-action-review" action="{{ url_for('main.review_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
+                                <button type="submit" class="button grey-out">Review</button></a>
+                            </form>
+                        </div>
+                    </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </section>
+    </div>
+{% endblock %}
