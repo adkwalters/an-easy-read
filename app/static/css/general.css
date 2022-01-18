@@ -149,7 +149,7 @@
     .delete {
         color: #DDD;        
     }
-    .delete:hover {
+    .delete:active {
         color: red;
     }
     .big-add-button {
@@ -308,5 +308,12 @@
         }
         #header-nav-icon {
             font-size: 0; /* hide icon */
+        }
+    }
+
+    
+    @media (hover: hover) {
+        .delete:hover {
+            color: red;
         }
     }

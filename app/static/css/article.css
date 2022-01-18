@@ -121,7 +121,6 @@ paragraph-level {
 #publisher-navigation {
     display: flex;
         justify-content: space-between;
-        gap: 2rem;
         align-items: flex-end;
 }
 #articles-display-panel ul {
@@ -168,10 +167,11 @@ paragraph-level {
 }
 .status-explanation {
     position: absolute;
-        top: -0.5rem;
+        top: 0rem;
         left: 2.5rem;
     display: none;
     width: max-content;
+    font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
     font-size: 1.2rem;
 }
 .status-icon:hover .status-explanation {
@@ -181,21 +181,40 @@ paragraph-level {
     text-align: center;
 }
 .article-display p {
-    margin-bottom: 1rem;
+    margin: 1rem 0 0.5rem 0;
     text-align: left;
 }
-.article-display button {
-    width: 100%;
+.article-action-delete button {
+    position: absolute;
+        top: 0;
+        right: 0;
+    width: max-content;
+    margin: 0.5rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
 }
-.article-actions {
-    display: grid;
-        grid-template-columns: 1fr 1fr;
+.article-actions-icon {
+    position: relative;
+        align-self: flex-start;
     width: 100%;
+    padding-right: 1rem;
+    font-size: 2rem;
+    color: #DDD;
 }
-.article-action-review {
-    grid-column: span 2;
+.article-actions-icon:hover {
+    color: #777;
+}
+.article-actions-dropdown {
+    display: none;
+}
+.article-actions-icon:hover .article-actions-dropdown {
+    position: absolute;
+        top: -5px;
+        left: 2.5rem;
     display: flex;
-        justify-items: stretch;
+        flex-direction: row;
+        flex-wrap: wrap;
 }
 #create-article,
 #add-user-by-email {
@@ -232,3 +251,4 @@ paragraph-level {
             justify-content: flex-start;
         }
     }
+

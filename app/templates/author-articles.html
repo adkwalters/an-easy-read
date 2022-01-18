@@ -46,12 +46,17 @@
                                 <h3>{{ article['Article'].title }}</h3>
                             {% endif %}
                             <p>{{ article['Article'].description }}</p>
-                            <div class="article-actions">
-                                <form class="article-action-edit" action="{{ url_for('main.edit_article') }}" method="get">
-                                    <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
-                                    <input type="hidden" name="user-route" value="author-articles">
-                                    <button type="submit" class="button grey-out">Edit</button></a>
-                                </form>
+                            <form class="article-action-delete" action="{{ url_for('main.delete_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
+                                <button type="submit" class="delete"><i class="far fa-trash-alt"></i></button>
+                            </form>                            
+                            <i class="article-actions-icon fas fa-edit">
+                                <div class="article-actions-dropdown">
+                                    <form class="article-action-edit" action="{{ url_for('main.edit_article') }}" method="get">
+                                        <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
+                                        <input type="hidden" name="user-route" value="author-articles">
+                                        <button type="submit" class="button grey-out">Edit</button></a>
+                                    </form>
                                 {% if article['Article'].status == 'published' %}
                                     <form class="article-action-preview" action="{{ url_for('main.view_article', id=article['PublishingNote'].id, slug=article['PublishingNote'].slug ) }}" method="post">
                                         <button type="submit" class="button grey-out">View</button>
@@ -71,17 +76,14 @@
                                         <button type="submit" class="button grey-out">Publish</button>
                                     </form>
                                 {% endif %}
-                                <form class="article-action-delete" action="{{ url_for('main.delete_article') }}" method="get">
-                                    <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
-                                    <button type="submit" class="button delete">Delete</button>
-                                </form>
                                 {% if article['Article'].status in ('pub_draft', 'pub_requested') %}
                                     <form class="article-action-update" action="{{ url_for('main.update_article') }}" method="get">
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
-                                        <button type="submit" class="button grey-out">Update</button>
+                                        <button type="submit" class="button grey-out">Revert</button>
                                     </form>
                                 {% endif %}
-                            </div>
+                                </div>
+                            </i>
                         </li>
                     {% endfor %}
                 {% endif %}
