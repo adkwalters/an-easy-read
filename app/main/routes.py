@@ -451,6 +451,10 @@ def remove_writer():
         flash('You are not the publisher of that writer.', 'error')
         return redirect(url_for('main.display_writers'))
 
+    # Get articles published by current publisher
+    publisher_articles = db.session.query(Article) \
+        .filter_by(publisher_id = current_user.is_publisher.id).all()
+
     # Disassociate non-published articles
     writers_articles = db.session.query(Article) \
         .filter_by(author_id = writer.id) \
@@ -462,7 +466,11 @@ def remove_writer():
             article.status = 'draft';
 
     # Disassociate writer
-    current_user.is_publisher.writers.remove(writer)
+    writer.published_by = None;
+
+    # Reassign articles published by current publisher
+    for article in publisher_articles:
+        article.publisher_id = current_user.is_publisher.id
     
     # Record and alert
     db.session.commit()    
