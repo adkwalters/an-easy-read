@@ -50,6 +50,7 @@
                             <h3>{{ request['Article'].title }}</h3>
                         {% endif %}
                         <p>{{ request['Article'].description }}</p>
+                        <p>Author: {{ request['User'].username }}</p>
                         <i class="article-actions-icon fas fa-edit">
                             <div class="article-actions-dropdown">
                                 <form class="article-action-review" action="{{ url_for('main.review_article') }}" method="get">
@@ -74,6 +75,7 @@
                             <h3>{{ request['Article'].title }}</h3>
                         {% endif %}
                         <p>{{ request['Article'].description }}</p>
+                        <p>Author: {{ request['User'].username }}</p>
                         <i class="article-actions-icon fas fa-edit">
                             <div class="article-actions-dropdown">
                                 <form class="article-action-review" action="{{ url_for('main.review_article') }}" method="get">
@@ -98,6 +100,7 @@
                             <h3>{{ request['Article'].title }}</h3>
                         {% endif %}
                         <p>{{ request['Article'].description }}</p>
+                        <p>Author: {{ request['User'].username }}</p>
                         <i class="article-actions-icon fas fa-edit">
                             <div class="article-actions-dropdown">
                                 <form class="article-action-review" action="{{ url_for('main.review_article') }}" method="get">
