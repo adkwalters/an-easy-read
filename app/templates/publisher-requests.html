@@ -56,15 +56,6 @@
                                     <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
                                     <button type="submit" class="button grey-out">Review</button>
                                 </form>
-                                <form class="article-action-edit" action="{{ url_for('main.edit_article') }}" method="get">
-                                    <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
-                                    <input type="hidden" name="user-route" value="display-requests">
-                                    <button type="submit" class="button grey-out">Edit</button>
-                                </form>
-                                <form class="article-action-preview" action="{{ url_for('main.preview_article') }}" method="get">
-                                    <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
-                                    <button type="submit" class="button grey-out">Preview</button>
-                                </form>
                             </div>
                         </i>
                     </li>
@@ -89,15 +80,6 @@
                                     <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
                                     <button type="submit" class="button grey-out">Review</button>
                                 </form>
-                                <form class="article-action-edit" action="{{ url_for('main.edit_article') }}" method="get">
-                                    <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
-                                    <input type="hidden" name="user-route" value="display-requests">
-                                    <button type="submit" class="button grey-out">Edit</button>
-                                </form>
-                                <form class="article-action-preview" action="{{ url_for('main.preview_article') }}" method="get">
-                                    <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
-                                    <button type="submit" class="button grey-out">Preview</button>
-                                </form>
                             </div>
                         </i>
                     </li>
@@ -121,15 +103,6 @@
                                 <form class="article-action-review" action="{{ url_for('main.review_article') }}" method="get">
                                     <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
                                     <button type="submit" class="button grey-out">Review</button></a>
-                                </form>
-                                <form class="article-action-edit" action="{{ url_for('main.edit_article') }}" method="get">
-                                    <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
-                                    <input type="hidden" name="user-route" value="display-requests">
-                                    <button type="submit" class="button grey-out">Edit</button></a>
-                                </form>
-                                <form class="article-action-preview" action="{{ url_for('main.preview_article') }}" method="get">
-                                    <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
-                                    <button type="submit" class="button grey-out">Preview</button></a>
                                 </form>
                             </div>
                         </i>
