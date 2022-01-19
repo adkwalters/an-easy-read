@@ -525,7 +525,7 @@ def display_requests():
 @bp.route('/display-admin-articles')
 @admin_access
 def display_admin_articles():
-    """Display a list of deleted articles for administration
+    """Display a list of published articles for administration
     
     Deleted articles can be permanently delete or transferred to another
     publisher from this view.
@@ -534,10 +534,13 @@ def display_admin_articles():
     # Get email form
     form = EmailForm()
 
-    articles = db.session.query(Article, Image) \
+    display_admin_articles = ['pub_live', 'pub_deleted']
+
+    articles = db.session.query(Article, Image, PublishingNote) \
         .outerjoin(Image, Image.id == Article.image_id) \
-        .filter(Article.status == 'pub_deleted').all()
-        
+        .outerjoin(PublishingNote, PublishingNote.published_article_id == Article.id) \
+        .filter(Article.status.in_(display_admin_articles)).all()
+            
     return render_template('admin-articles.html', articles=articles, form=form)
 
 

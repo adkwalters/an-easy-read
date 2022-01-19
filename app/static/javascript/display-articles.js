@@ -203,7 +203,8 @@ if (pubLiveArticlesTab) {
         pubLiveArticlesTab.parentElement.classList.add("dropdown-tab-active");
         pubDeletedArticlesTab.parentElement.classList.remove("dropdown-tab-active");
         // Articles
-        switchArticleDisplay("pub-delete", "hide");
+        switchArticleDisplay("pub_live", "show");
+        switchArticleDisplay("pub_deleted", "hide");
         // No results icon
         reportNoResults();
     })
@@ -215,7 +216,8 @@ if (pubDeletedArticlesTab) {
         pubLiveArticlesTab.parentElement.classList.remove("dropdown-tab-active");
         pubDeletedArticlesTab.parentElement.classList.add("dropdown-tab-active");
         // Articles
-        switchArticleDisplay("pub-live", "hide");
+        switchArticleDisplay("pub_live", "hide");
+        switchArticleDisplay("pub_deleted", "show");
         // No results icon
         reportNoResults();
     })
@@ -389,7 +391,7 @@ window.addEventListener('load', () => {
         // Show live articles
         pubLiveArticlesTab.parentElement.classList.add("dropdown-tab-active");
         pubDeletedArticlesTab.parentElement.classList.remove("dropdown-tab-active");
-        switchArticleDisplay("pub-delete", "hide");
+        switchArticleDisplay("pub_deleted", "hide");
         reportNoResults();
     } 
 
