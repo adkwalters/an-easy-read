@@ -50,10 +50,12 @@
                                 <h3>{{ article['Article'].title }}</h3>
                             {% endif %}
                             <p>{{ article['Article'].description }}</p>
+                            {% if article['Article'].status == 'pub_live' %}
                             <form class="article-action-delete" action="{{ url_for('main.delete_article') }}" method="get">
                                 <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                 <button type="submit" class="button delete"><i class="far fa-trash-alt"></i></button>
-                            </form>  
+                            </form>
+                            {% endif %}
                             <i class="article-actions-icon fas fa-edit">
                                 <div class="article-actions-dropdown">
                                     <form class="article-action-edit" action="{{ url_for('main.edit_article') }}" method="get">
