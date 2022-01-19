@@ -916,7 +916,7 @@ def request_article():
     """
 
     if not current_user.email_confirmed:
-        flash('Please confirm your email address. Click to <a href="/resend-email-confirmation">resend confirmation</a>.', 'info')
+        flash('<div>Please confirm your email address. Click to <a href="/resend-email-confirmation">resend confirmation</a>.</div>', 'info')
         return redirect(url_for('main.display_author_articles'))
 
     # Get article 
@@ -1022,15 +1022,15 @@ def review_article():
             author.published_by = current_user.is_publisher.id
 
             db.session.commit()
-            flash('You are now reviewing a <a href="/display-publisher-articles">new article</a>. You have also recruited a <a href="/display-writers">new writer</a>.', 'success')
+            flash('<div>You are now reviewing a <a href="/display-publisher-articles">new article</a>. You have also recruited a <a href="/display-writers">new writer</a>.</div>', 'success')
             return redirect(url_for('main.display_requests'))
 
         db.session.commit()        
-        flash('You are now reviewing a <a href="/display-publisher-articles">new article</a>.', 'success')
+        flash('<div>You are now reviewing a <a href="/display-publisher-articles">new article</a>.</div>', 'success')
         return redirect(url_for('main.display_requests'))
     
     db.session.commit()        
-    flash('You are now reviewing a <a href="/display-publisher-articles">published article</a>.', 'success')
+    flash('<div>You are now reviewing a <a href="/display-publisher-articles">published article</a>.</div>', 'success')
     return redirect(url_for('main.display_requests'))
 
 

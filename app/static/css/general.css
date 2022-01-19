@@ -214,9 +214,6 @@
             bottom: 2rem;
             right: 2rem;
         display: flex;
-            align-items: center;
-        
-        margin: auto;
         margin-left: 1rem;
         padding: 0.4rem 0.8rem;
         border-radius: 10px;
@@ -225,7 +222,6 @@
         z-index: 1;
     }
     .alert a {
-        margin-left: 0.3rem; /* compensate for flash message trimming */ 
         text-decoration: underline;
     }
     .form-alert {
