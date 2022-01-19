@@ -120,8 +120,9 @@ paragraph-level {
 #admin-navigation,
 #publisher-navigation {
     display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: flex-end;
+        gap: 2rem;
 }
 #articles-display-panel ul {
     display: grid;
@@ -238,17 +239,4 @@ paragraph-level {
     }
 
 }
-
-
-/* || Responsive design || */
-
-     /* - small landscape 
-            - Reposition navigation */
-            
-    @media (min-width: 42rem) {
-        #admin-navigation,
-        #publisher-navigation {
-            justify-content: flex-start;
-        }
-    }
 

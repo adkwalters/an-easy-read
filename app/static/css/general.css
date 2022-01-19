@@ -29,7 +29,7 @@
         font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
     }
     h1 {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
     h2 {
         font-size: 1.4rem;
@@ -304,6 +304,9 @@
         }
         #header-nav-icon {
             font-size: 0; /* hide icon */
+        }
+        h1 {
+            font-size: 2.4rem;
         }
     }
 
