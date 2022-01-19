@@ -81,7 +81,7 @@ import datetime
 from flask import render_template, redirect, url_for, flash, request, current_app, abort, send_from_directory
 from flask_login import login_required, current_user
 from flask_mail import Message
-from sqlalchemy import update, or_
+from sqlalchemy import update, or_, and_
 from werkzeug.utils import secure_filename
 
 from app import db, mail
@@ -495,14 +495,17 @@ def display_requests():
         
     associated = requests \
         .filter(User.published_by == current_user.is_publisher.id) \
-        .filter(or_(Article.publisher_id == None, Article.publisher_id == current_user.is_publisher.id)).all()       
+        .filter(or_(Article.publisher_id == None, 
+                    Article.publisher_id == current_user.is_publisher.id)).all()       
 
     disassociated = requests \
-        .filter(or_(User.published_by == None, User.published_by != current_user.is_publisher.id)) \
+        .filter(or_(User.published_by == None, 
+                    User.published_by != current_user.is_publisher.id)) \
         .filter(Article.publisher_id == current_user.is_publisher.id).all()
 
     unassociated = requests \
-        .filter(User.published_by == None).all()
+        .filter(and_(User.published_by == None,
+                Article.publisher_id == None)).all()
 
     # Render requests to publish
     return render_template('publisher-requests.html',

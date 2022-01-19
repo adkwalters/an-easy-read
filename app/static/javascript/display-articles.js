@@ -188,7 +188,6 @@ const pendingArticlesTab = document.getElementById("pending-articles-tab");
 const pubWritersTab = document.getElementById("published-writers-tab");
 const unpubWritersTab = document.getElementById("unpublished-writers-tab");
 // Publisher's requests
-const myWritersTab = document.getElementById("my-writers-tab");
 const myRequestsTab = document.getElementById("my-requests-tab");
 const allWritersTab = document.getElementById("all-writers-tab");
 // Author's articles
@@ -315,30 +314,13 @@ if (unpubWritersTab) {
 }
 
 // Publisher's requests
-// Display requests from publisher's writers
-if (myWritersTab) {
-    myWritersTab.addEventListener("click", () => {
-        // Tab
-        myWritersTab.parentElement.classList.add("dropdown-tab-active");
-        myRequestsTab.parentElement.classList.remove("dropdown-tab-active");
-        allWritersTab.parentElement.classList.remove("dropdown-tab-active");
-        // Articles
-        switchArticleDisplay("my-writers", "show");
-        switchArticleDisplay("my-requests", "hide");
-        switchArticleDisplay("all-requests", "hide");
-        // No results icon
-        reportNoResults();
-    })
-}
 // Display requests from disassociated writers
 if (myRequestsTab) {
     myRequestsTab.addEventListener("click", () => {
         // Tab
-        myWritersTab.parentElement.classList.remove("dropdown-tab-active");
         myRequestsTab.parentElement.classList.add("dropdown-tab-active");
         allWritersTab.parentElement.classList.remove("dropdown-tab-active");
         // Articles
-        switchArticleDisplay("my-writers", "hide");
         switchArticleDisplay("my-requests", "show");
         switchArticleDisplay("all-requests", "hide");
         // No results icon
@@ -349,11 +331,9 @@ if (myRequestsTab) {
 if (allWritersTab) {
     allWritersTab.addEventListener("click", () => {
         // Tab
-        myWritersTab.parentElement.classList.remove("dropdown-tab-active");
         myRequestsTab.parentElement.classList.remove("dropdown-tab-active");
         allWritersTab.parentElement.classList.add("dropdown-tab-active");
         // Articles
-        switchArticleDisplay("my-writers", "hide");
         switchArticleDisplay("my-requests", "hide");
         switchArticleDisplay("all-requests", "show");
         // No results icon
@@ -454,11 +434,9 @@ window.addEventListener('load', () => {
 
     else if (requestsPage) {
         // Show requests from publisher's writers
-        myWritersTab.parentElement.classList.add("dropdown-tab-active");
-        myRequestsTab.parentElement.classList.remove("dropdown-tab-active");
+        myRequestsTab.parentElement.classList.add("dropdown-tab-active");
         allWritersTab.parentElement.classList.remove("dropdown-tab-active");
-        switchArticleDisplay("my-writers", "show");
-        switchArticleDisplay("my-requests", "hide");
+        switchArticleDisplay("my-requests", "show");
         switchArticleDisplay("all-requests", "hide");
         reportNoResults();    
     }
