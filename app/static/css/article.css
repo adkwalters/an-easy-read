@@ -6,6 +6,24 @@
     - other */
 
 
+/* || Index */
+#index-page.full-spread {
+    gap: 1rem;
+}
+#index-page h3 {
+    margin: 1rem;
+}
+#index-page a {
+    font-weight: normal;
+}
+#index-page a:hover li {
+    box-shadow: 0 0px 12px 0 rgba(0,0,0,0.4);
+}
+#demo [slot="slot-summary"] {
+    margin: 0;
+}
+
+
 /* || View Article || */
 
 .article-page {
@@ -224,6 +242,18 @@ paragraph-level {
     display: none;
 }
 
+
+/* || Responsive design || */
+
+    /* - small landscape 
+            - Expand navigation
+            - Reposition flashed messages*/
+            
+    @media (min-width: 50rem) {
+        #index-page.full-spread {
+            gap: 2rem;
+        }
+    }
 
 /* || Print Article */
 

@@ -435,7 +435,7 @@ def add_writer():
 def remove_writer():
     """Disassociate the selected author from the current user as publisher
 
-    Reject the author's outstanding publication requests to the publisher. !! Didn't happen for draft (good thing?)
+    Reject the author's outstanding publication requests to the publisher.
 
     Remove the publisher's access to the author's articles not published with
     the publisher. Any published articles remain assigned to the publisher. 
@@ -886,9 +886,6 @@ def edit_article():
 @author_and_publisher_access
 def preview_article():
     """Display the selected article as it would be seen live"""
-
-    # !! To do:
-    #       - update template
 
     # Get article
     article_id = request.args.get('article-id')
@@ -1440,12 +1437,13 @@ def permadelete_article():
 def index():
     """Display live, published articles """
 
-    # !! To do:
-    #       - query database
-    #       - update template
+    articles = db.session.query(Article, Image, PublishingNote) \
+        .outerjoin(Image, Image.id == Article.image_id) \
+        .outerjoin(PublishingNote, PublishingNote.published_article_id == Article.id) \
+        .filter(Article.status == 'pub_live').all()
         
     # Render index page
-    return render_template('index.html')
+    return render_template('index.html', articles=articles)
 
 
 @bp.route('/<int:id>/')

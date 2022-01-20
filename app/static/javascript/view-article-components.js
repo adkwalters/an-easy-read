@@ -105,6 +105,7 @@ class SummaryParagraph extends HTMLElement {
             .prev:hover,
             .next:hover {
                 color: black;
+                text-shadow: 0 0 1rem rgba(0,0,0,0.4);
             }
             .no-display {
                 display: none;
@@ -160,6 +161,7 @@ class SummaryParagraph extends HTMLElement {
         // Append slotted summaries to object array
         summarySlot.addEventListener("slotchange", () => {
             this.summaries = summarySlot.assignedNodes();
+            this.displayArrows();
         })
 
         // Increase reading level and configure arrow controls

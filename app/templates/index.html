@@ -16,35 +16,40 @@
 <!-- JavaScript --> 
 {% block scripts %}
     <script src="/static/javascript/header.js" defer></script>
+    <script src="/static/javascript/view-article-components.js"></script> 
 {% endblock %}
 
 <!-- Main -->
 {% block main %}
     <div id="index-page" class="full-spread">
 
-        <h1>Welcome to Easy Read{% if current_user.is_authenticated %}, {{ current_user.username }}{% endif %}</h1>
-           
-        <!-- <section id="all-articles" class="articles-display-pannel">
+        <h1>Welcome to Easy Read{% if current_user.is_authenticated %}, {{ current_user.username }} {% endif %}</h1>
+        <summary-paragraph id="demo">
+            <h3 slot="slot-header">How it works</h3>
+            <p slot="slot-summary" class="cursor">Can you read this? Is it too easy? Let's make it harder. Use the button on the right and see how the words change.</p>
+            <p slot="slot-summary" class="no-display">Increasing the reading level gives you a challenge. Once you've understood a paragraph, you can move on to the next level towards fluency.</p>
+            <p slot="slot-summary" class="no-display">This would be the highest level, serving as the reading level closest to fluency. If it is too challenging, the level can be reduced to a point of comfort and comprehension.</p>
+        </summary-paragraph>
+        <section id="articles-display-panel">
+            <h3>Articles</h3>
             <ul>
-                {% if articles is not none %}
+                {% if articles %}
                     {% for article in articles %}
-                    <li class="label-colour article-preview">
-                        {% if article['src'] is not none %}
-                            <figure>
-                                <img src="{{ article['src'] }}">
-                                <figcaption><h3>{{ article['title'] }}</h3></figcaption>
-                            </figure>
-                        {% else %}
-                            <i class="far fa-image"></i>
-                            <h3>{{ article['title'] }}</h3>
-                        {% endif %}
-                        <p>{{ article['description'] }}</p>
-                        <a href="/create-article?article_id={{ article['id'] }}"><button type="button" class="button grey-out edit-article-button">Edit Article</button></a>
-                        <a href=""><button type="button" class="button grey-out edit-article-button">Publish Article</button></a>
-                    </li>
+                        <a href="{{ url_for('main.view_article', id=article['PublishingNote'].id, slug=article['PublishingNote'].slug ) }}">
+                            <li class="label-colour article-display status-{{ article['Article'].status }}">
+                                {% if article['Image'].src %}
+                                    <figure>
+                                        <img src="{{ url_for('main.return_image', filename=article['Image'].src) }}">
+                                        <figcaption><h3>{{ article['Article'].title }}</h3></figcaption>
+                                    </figure>
+                                {% else %}
+                                    <h3>{{ article['Article'].title }}</h3>
+                                {% endif %}
+                                <p>{{ article['Article'].description }}</p>
+                            </li>
+                        </a>
                     {% endfor %}
-                {% endif %}
-            </ul>
-        </section> -->
+                {% endif%}
+        </section>
     </div>
 {% endblock %}
