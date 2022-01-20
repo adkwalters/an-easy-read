@@ -22,13 +22,15 @@
 .article-categories-list {
     display: flex;
         gap: 0.5rem;
-        flex-wrap: wrap;        
+        flex-wrap: wrap;
+    margin-bottom: 1rem;     
 }
 .article-meta {
     display: flex;
         flex-direction: column;
         gap: 0.5rem;
-    margin: 1rem 0;
+    margin: 1rem;
+    margin-bottom: 2rem;
 }
 #article-form-categories-selected>li {
     background: #DDD;

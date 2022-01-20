@@ -37,11 +37,8 @@
         <h1 class="article-title">{{ article.title }}</h1>
         <div class="article-meta">
             <author id="article-author">Author: {{ article.author.username }}</author>
-            <span id="original-artile"> Source: <a href="{{ source.link }}">{{ source.title }}</a></span>
-            <time id="article-date-published">Published: {{ publishing_note.date_published }}</time>
-            {% if publishing_note.date_updated %}
-            <time id="article-date-updated">Updated: {{ publishing_note.date_updated }}</time>
-            {% endif %}
+            <time id="article-date-published">Published: {{ publishing_note.date_published.strftime("%b %d %Y") }} {% if publishing_note.date_updated %}, Updated: {{ publishing_note.date_updated.strftime("%b %d %Y") }} {% endif %}</time>
+            <span> Source: <a href="{{ source.link }}">{{ source.title }}</a> by {{ source.author }}</span>
         </div>
         <!-- Article control panel -->
         <ul class="dropdown-panel label-colour">
