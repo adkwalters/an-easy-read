@@ -253,14 +253,16 @@ textarea {
 
 /* || Responsive design || */
 
-/* small landscape  */
+/* Tablet and larger  */
 
-@media (min-width: 50rem) {
+@media (min-width: 48rem) {
     h1 {
         font-size: 2.4rem;
     }
 }
-    
+
+/* Hover capable */
+
 @media (hover: hover) {
     .delete:hover {
         color: red;

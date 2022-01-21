@@ -111,7 +111,7 @@ class SummaryParagraph extends HTMLElement {
                 display: none;
             }
 
-            @media (min-width: 42rem) {
+            @media (min-width: 48rem) {
                 .prev {
                     left: -2rem;
                 }

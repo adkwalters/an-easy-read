@@ -76,7 +76,7 @@
     min-width: 10rem;
     max-width: 49rem;
     margin: 6rem auto;
-    padding: 0 1rem;
+    padding: 0 2rem;
 }
 .full-page section {
     padding: 1rem;
@@ -85,7 +85,7 @@
 
 /* || Responsive design || */
 
-/* Large portrait */
+/* Extra-small */
 
 @media (min-width: 17.5rem) {
     #brand-name {
@@ -93,9 +93,9 @@
     }
 }
 
-/* Small landscape  */
+/* Tablet and larger  */
 
-@media (min-width: 50rem) {
+@media (min-width: 48rem) {
     #header-nav {
         align-self: center;
     }
@@ -112,6 +112,9 @@
     .full-page {
         gap: 2rem;
         margin: 7rem auto;
+    }
+    .full-page {
+        padding: 0 3rem;
     }
 }
 
