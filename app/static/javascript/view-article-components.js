@@ -80,7 +80,7 @@ class SummaryParagraph extends HTMLElement {
             }            
             ::slotted([slot=slot-summary]) {
                 margin: 1rem;
-                background: #EEE;
+                background: var(--foreground);
                 border-radius: 10px;
             }
             div.summary-div {
@@ -104,7 +104,7 @@ class SummaryParagraph extends HTMLElement {
             }
             .prev:hover,
             .next:hover {
-                color: black;
+                color: var(--contrast-dark);
                 text-shadow: 0 0 1rem rgba(0,0,0,0.4);
             }
             .no-display {

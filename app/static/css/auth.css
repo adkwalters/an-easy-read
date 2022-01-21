@@ -1,0 +1,51 @@
+/* Property order (https://webdesign.tutsplus.com/articles/outside-in-ordering-css-properties-by-importance--cms-21685)
+    - layout (position, display)
+    - box model (outside-in)
+    - visual (colour, background, border)
+    - text
+    - other */
+
+
+/* || Registration and Login || */
+
+#auth-page {
+    min-width: 10rem;
+    max-width: 30rem;
+    margin: 6rem auto;
+    padding: 0 1rem;
+}
+#auth-page a {
+    padding-left: 1rem;
+    text-decoration: underline;
+}
+#auth-page h1,
+#auth-page p {
+    padding-left: 2rem;
+}
+.auth-form {
+    display: flex;
+        flex-direction: column;
+    padding: 1rem;
+}
+.auth-form input{
+    margin: 1rem auto;
+}
+.auth-form a {
+    align-self: flex-end;
+    font-size: 1.1rem;
+}
+
+/* view password */
+
+.auth-form div {
+    position: relative;
+}
+.see-password-icon,
+.hide-password-icon {
+    position: absolute;
+    bottom: 2rem;
+    right: 1rem;
+    color: #DDD;
+    cursor: pointer;
+}
+

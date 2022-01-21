@@ -8,9 +8,9 @@
 
 <!-- CSS -->
 {% block stylesheets %}
-    <link rel="stylesheet" href="/static/css/navigation.css"/>  
     <link rel="stylesheet" href="/static/css/general.css"/> 
-    <link rel="stylesheet" href="/static/css/article.css"/> 
+    <link rel="stylesheet" href="/static/css/sitewide.css"/>  
+    <link rel="stylesheet" href="/static/css/article-pages.css"/> 
 {% endblock %}
 
 <!-- JavaScript -->
@@ -43,7 +43,7 @@
                     <option value="Language"></option>
                 </datalist>
                 <div class="article-form-categories-controls">
-                    <button type="button" id="article-form-add-category-button" class="button">Add Category</button>
+                    <button type="button" id="article-form-add-category-button" class="button grey-out">Add Category</button>
                     <button type="button" id="article-form-del-category-button" class="button delete">Delete Category</button>
                 </div>
                 <ul id="article-form-categories-selected">

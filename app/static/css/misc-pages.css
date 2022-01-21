@@ -1,0 +1,23 @@
+/* Property order (https://webdesign.tutsplus.com/articles/outside-in-ordering-css-properties-by-importance--cms-21685)
+    - layout (position, display)
+    - box model (outside-in)
+    - visual (colour, background, border)
+    - text
+    - other */
+
+
+/* || Index || */
+
+#index-page h3 {
+    margin: 1rem;
+}
+#index-page a {
+    font-weight: normal;
+}
+#index-page a:hover li {
+    box-shadow: 0 0px 12px 0 rgba(0,0,0,0.4);
+}
+#demo [slot="slot-summary"] {
+    margin: 0;
+}
+

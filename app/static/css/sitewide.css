@@ -1,0 +1,117 @@
+/* Property order (https://webdesign.tutsplus.com/articles/outside-in-ordering-css-properties-by-importance--cms-21685)
+    - layout (position, display)
+    - box model (outside-in)
+    - visual (colour, background, border)
+    - text
+    - other */
+
+
+/* || Header Navigation || */
+
+#header-main {
+    position: fixed;
+        top: 0;
+    display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: var(--background);
+    box-shadow: 0 0px 12px 0 rgba(0,0,0,0.8);
+    z-index: 1;
+    overflow: hidden;  
+}
+#brand-logo {
+    float: left;
+    width: max-content;
+    font-size: 2.1rem;
+    font-weight: 730;  
+}
+#brand-name {
+    display: none;
+    float: left;
+    width: max-content;
+    margin-left: 5px;
+    font-size: 1.8rem;
+}
+#header-nav {
+    display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+}
+#header-nav-list {
+    display: none;
+    align-items: flex-end;
+    margin-top: 1rem;
+}
+#header-nav-list a {
+    color: var(--contrast-dark);
+    font-size: 1.4rem;
+    font-weight: 730;
+    line-height: 2rem;
+}
+.display-menu #header-nav-list {
+    display: flex;
+        flex-direction: column;
+}
+#header-nav-icon {
+    font-size: 2.2rem;
+}
+
+
+/* || Page Layout || */
+
+.full-spread {
+    display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    min-width: 10rem;
+    max-width: 80vw;
+    margin: 6rem auto;
+}
+.full-page {
+    display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    min-width: 10rem;
+    max-width: 49rem;
+    margin: 6rem auto;
+    padding: 0 1rem;
+}
+.full-page section {
+    padding: 1rem;
+}
+
+
+/* || Responsive design || */
+
+/* Large portrait */
+
+@media (min-width: 17.5rem) {
+    #brand-name {
+        display: inline-block;
+    }
+}
+
+/* Small landscape  */
+
+@media (min-width: 50rem) {
+    #header-nav {
+        align-self: center;
+    }
+    #header-nav-list {
+        display: flex;
+            flex-direction: row;
+            gap: 2rem;
+        margin: 0;
+    }
+    #header-nav-icon {
+        font-size: 0; /* hide icon */
+    }
+    .full-spread,
+    .full-page {
+        gap: 2rem;
+        margin: 7rem auto;
+    }
+}
+

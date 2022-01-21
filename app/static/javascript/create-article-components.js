@@ -1012,28 +1012,29 @@ function updateStyle(element) {
         }
         input,
         button {
-            background-color: #fbfdfe;
+            background-color: var(--background);
             font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
         }
         .button {
             width: max-content;
             height: max-content;
             padding: 0.4rem 0.8rem;
-            border: 1px solid #DDD;
+            background: var(--background);
+            border: 1px solid var(--foreground-dark);
             border-radius: 10px;
             font-size: 1.1rem;
             cursor: pointer;
         }
         .grey-out {
-            color: #DDD;
+            color: var(--foreground-dark);
         }
         .grey-out:hover {
-            color: black;
+            color: var(--contrast-dark);
         }
         .delete {
-            color: #DDD;        
+            color: var(--foreground-dark);        
         }
-        .delete:hover {
+        .delete:active {
             color: red;
         }
         .content-placeholder {
@@ -1041,8 +1042,8 @@ function updateStyle(element) {
             width: 100%; 
             margin: 1rem 0;
             padding: 1rem 0;
-            background: #fbfdfe;
-            border: 1px solid #DDD;
+            background: var(--background);
+            border: 1px solid var(--foreground-dark);
             border-radius: 10px;
             font-size: 1.1rem;
         }   
@@ -1075,6 +1076,12 @@ function updateStyle(element) {
         .del-header-button {
             position: relative;
             float: right;
+        }
+        
+        @media (hover: hover) {
+            .delete:hover {
+                color: red;
+            }
         }
     `;
 }
