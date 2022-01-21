@@ -102,13 +102,21 @@ class SummaryParagraph extends HTMLElement {
             .next {
                 right: -1rem;
             }
-            .prev:hover,
-            .next:hover {
+            .prev:active,
+            .next:active {
                 color: var(--contrast-dark);
                 text-shadow: 0 0 1rem rgba(0,0,0,0.4);
             }
             .no-display {
                 display: none;
+            }
+
+            @media (hover: hover) {
+                .prev:hover,
+                .next:hover  {
+                    color: var(--contrast-dark);
+                    text-shadow: 0 0 1rem rgba(0,0,0,0.4);
+                }
             }
 
             @media (min-width: 48rem) {
