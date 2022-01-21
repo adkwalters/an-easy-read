@@ -79,7 +79,7 @@
                                 {% if article['Article'].status in ('pub_draft', 'pub_requested') %}
                                     <form class="article-action-update" action="{{ url_for('main.update_article') }}" method="get">
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
-                                        <button type="submit" class="button grey-out">Revert</button>
+                                        <button type="submit" class="button hidden"></button>
                                     </form>
                                 {% endif %}
                                 </div>

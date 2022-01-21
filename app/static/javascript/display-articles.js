@@ -95,7 +95,7 @@ if (addEmailForm) {
 // Get actions requiring confirmation
 const actionsToConfirm = ["article-action-delete", "article-action-request", 
     "article-action-reject", "article-action-review", "article-action-publish", 
-    "article-action-update", "writer-action-remove", "publisher-action-remove"];
+    "writer-action-remove", "publisher-action-remove"];
 // Confirm user action
 for (let action of actionsToConfirm) {
     let forms = document.getElementsByClassName(action);
@@ -123,11 +123,6 @@ for (let action of actionsToConfirm) {
             }
             else if (action == "article-action-publish") {
                 if (!confirm("Publish this article?")) {
-                    event.preventDefault();
-                }
-            }
-            else if (action == "article-action-update") {
-                if (!confirm("Update this article to its live version?")) {
                     event.preventDefault();
                 }
             }
@@ -487,39 +482,58 @@ for (let button of linkArticleButton) {
 
 // || Article Status Icons
 
-// Get articles displayed
+// Get displayed articles
 let articlesDisplayed = document.querySelectorAll("li.article-display");
-// Create blank article decorations (icon and tool tip)
+// Prepare article decorations (icon and tool tip)
 let statusIcon = document.createElement("i");
 let iconToolTip = document.createElement("div");
 iconToolTip.setAttribute("class", "status-explanation")
 statusIcon.appendChild(iconToolTip);
-// Match decorations to article by status
+// Match and configure decorations to article by status
 for (let article of articlesDisplayed) {
     for (let status of article.classList) {
+        // Articles requested for publication
         if (status.includes("requested")) {
-            // configure and add decorations
             statusIcon.setAttribute("class", "status-icon fas fa-envelope");
             iconToolTip.innerHTML = "Publication request sent";
             article.appendChild(statusIcon.cloneNode(true));
         }
+        // Articles under review
         else if (status.includes("pending")) {
+            // Publisher's view
             let pendingTab = document.getElementById("pending-articles-tab");
             if (pendingTab) {
                 statusIcon.setAttribute("class", "status-icon fas fa-search");
                 iconToolTip.innerHTML = "You are reviewing this article";
                 article.appendChild(statusIcon.cloneNode(true));
-            } 
+            }
+            // Author's view
             else {
                 statusIcon.setAttribute("class", "status-icon fas fa-lock");
                 iconToolTip.innerHTML = "Article is being reviewed";
                 article.appendChild(statusIcon.cloneNode(true));
             }
         }
-        else if (status.includes("published") || status.includes("pub_")) {
+        // Published articles (omitting published writers)
+        else if (status.includes("pub") && !status.includes("published-writer")) {
             statusIcon.setAttribute("class", "status-icon fas fa-book-open");
-            iconToolTip.innerHTML = "Article is published";
+            iconToolTip.innerHTML = "Article is published and live";
             article.appendChild(statusIcon.cloneNode(true));
+            // Outdated daft article
+            if (status.includes("pub_draft")) {
+                let toolTip = article.querySelector(".status-explanation");
+                toolTip.innerHTML = "Outdated: click to copy live version";                 
+                let icon = article.querySelector(".status-icon");
+                icon.setAttribute("class", "status-icon fas fa-exclamation-circle");
+                // Click to trigger update
+                icon.addEventListener("click", () => {
+                    let form = article.querySelector("form.article-action-update");
+                    if (confirm("Update this article to its live version?")) {
+                        form.submit()
+                    }
+                }); 
+            }
         }
     }  
-}  
+}
+
