@@ -38,14 +38,12 @@
                 {% endif %}
                 {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('main.display_author_articles') }}">Write</a></li>
+                {% endif %}
                 <li><a href="">Read</a></li>                
-                <li><a href="">About</a></li>
-                <li><a href="">Contact</a></li>
+                <li><a href="{{ url_for('main.about') }}">About</a></li>
+                {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
                 {% else %}
-                <li><a href="">Read</a></li>
-                <li><a href="">About</a></li>
-                <li><a href="">Contact</a></li>
                 <li><a href="{{ url_for('auth.login') }}">Log in</a></li>
                 {% endif %}
             </ul> 

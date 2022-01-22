@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+<!-- Page metadata -->
+{% block pagemeta %}
+    <title>Easy Read | About Us</title>
+    <meta name="description" content="Learn why Easy Read was created and how you can use it">
+{% endblock %}
+
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/css/general.css"/> 
+    <link rel="stylesheet" href="/static/css/sitewide.css"/>  
+    <link rel="stylesheet" href="/static/css/article-pages.css"/> 
+    <link rel="stylesheet" href="/static/css/misc-pages.css"/> 
+{% endblock %}
+
+<!-- JavaScript --> 
+{% block scripts %}
+    <script src="/static/javascript/header.js" defer></script>
+    <script src="/static/javascript/view-article-control.js" defer></script>
+    <script src="/static/javascript/view-article-components.js"></script> 
+{% endblock %}
+
+<!-- Main -->
+{% block main %}
+    <div id="about-page" class="full-page">
+        <h1>About Easy Read</h1>
+        <ul class="dropdown-panel label-colour">
+            <li class="dropdown-tab">
+                <a>Level</a>
+                <ul class="dropdown-tab-dropdown label-colour">
+                    <li><a id="easiest-level">Easiest</a></li>
+                    <li><a id="hardest-level">Hardest</a></li>
+                </ul>
+            </li>
+            <li class="dropdown-tab">
+                <a>Font Size</a>
+                <ul class="dropdown-tab-dropdown label-colour">
+                    <li><a id="font-size-small">Small</a></li>
+                    <li><a id="font-size-medium">Medium</a></li>
+                    <li><a id="font-size-large">Large</a></li>
+                </ul>
+            </li>
+            <li class="dropdown-tab dropdown-tab-right">
+                <a>Save or Print</a>
+                <ul class="dropdown-tab-dropdown label-colour">
+                    <li><a id="with-images">With Images</a></li>
+                    <li><a id="without-images">Without Images</a></li>
+                </ul>
+            </li>
+        </ul>
+        <article>
+            <summary-paragraph>
+                <h3 slot="slot-header">Too much speaking, not enough reading</h3>
+                <p slot="slot-summary">Learning a new language is really fun. We feel great when we can speak to someone in their own language. But many students and teachers speak too much. They don't read enough. If we spend all our time speaking and chatting with people, we might think that reading is too hard. Hard words in a long sentence can look scary.</p>
+                <p slot="slot-summary">Learning a foreign language is a great experience. Students feel proud of themselves when they are able to speak to someone in their own language. For many students, speaking to someone from a different country is the whole point of learning a new language. However, when studying in a classroom, students and teachers often concentrate too much on speaking and listening, and they forget to practise reading. This creates problems for the students later on. They can find it difficult to read simple paragraphs and become worried at the thought of reading new words.</p>
+                <p slot="slot-summary">When learning a foreign language in a classroom setting, teachers and students often place too great an emphasis on speaking and conversation. After all, speaking a foreign language is incredibly rewarding and is often the ultimate goal of many students. However, focusing disproportionately on speaking and listening in the early stages of learning a foreign language can lead to imbalances in comprehension later on. Students can often find themselves struggling to progress beyond simple, rehearsed sentences, and develop anxiety toward the prospect of reading even short paragraphs of text.</p>
+            </summary-paragraph>
+            <summary-paragraph>
+                <p slot="slot-summary">Reading is really helpful when we are learning a new language. We can take our time to read. We don't need to go fast like we do when speaking or listening. If we have lots of time to read, we can learn new words and see how to put them together. This can help us get better at understanding a new language.</p>
+                <p slot="slot-summary">Reading is a really valuable skill when learning a foreign language. Students don't need to rush when reading. Instead, they can take their time to read new words and new sentence structures. This helps new students improve their spelling and grammar. It also helps more advanced students understand the connections between what they have read and what they already know. Reading gives students a clear example of how to use the language that they are learning.</p>
+                <p slot="slot-summary">Reading is an invaluable skill in the pursuit of language acquisition. Having the time to observe language in its most explicit form allows students to decode new vocabulary and syntax at their own pace. This leads to dramatic improvements in spelling and grammar for early learners and supports the development of language inference and integration for more advanced students. In short, reading allows students to model excellence.</p>
+            </summary-paragraph>
+            <summary-paragraph>
+                <p slot="slot-summary">People who work with children already know how reading can help people learn. For example, they often give young children building blocks with letters on them. These toys help children to learn new letters. They can play with the blocks and make new words.</p>
+                <p slot="slot-summary">For anyone who has experience teaching other people, like teachers and parents, it is clear that reading is important. For example, young children are normally given a set of building blocks with the alphabet written on them. Children can play with the blocks and build new words.</p>
+                <p slot="slot-summary">For those with pedagogical experience, whether it be teachers or parents, the value of reading for young learners is clear. Consider the typical toy for toddlers; a set of building blocks inlaid with the letters of the alphabet. This simple toy provides young learners with the opportunity to physically and literally play with words.</p>
+            </summary-paragraph>
+            <summary-paragraph>
+                <h3 slot="slot-header">The problem</h3>
+                <p slot="slot-summary">It's not only children who want to learn a new language. Adults sometimes want to learn a new language, too. But adults don't want to play with blocks and read children's books. They want books for adults, not books for children. They might feel bad if they play with children's toys.</p>
+                <p slot="slot-summary">This itself can be a problem. People often assume that it is only children who want to learn a new language. Anyone who has decided to learn a foreign language as an adult will agree that it can be difficult to find suitable books. Although it can be helpful to read children's books, adults may feel as though they are being treated like children.</p>
+                <p slot="slot-summary">Herein lies the problem. Early learners are often equated with young learners. Anyone who has challenged themselves to learn a new language later in life can attest to the lack of suitable material. Reading children's books, while certainly helpful, can feel patronising.</p>
+            </summary-paragraph>
+            <summary-paragraph>
+                <h3 slot="slot-header">The solution</h3>
+                <p slot="slot-summary">Easy Read wants to help these people. Easy Read is a place for adults and older students who want to learn a new language by reading. They don't need to feel bad by reading picture books like 'The Very Hungry Caterpillar'. Instead, they can feel good about themselves by reading things made for them. No one should feel bad for trying to learn.</p>
+                <p slot="slot-summary">Easy Read is made to solve this problem. Here, mature students can find articles that are designed to be easy to read. Adults and older students no longer need to feel like children by reading picture books like 'The Very Hungry Caterpillar' in order to learn a new language. No one should be made to feel like a child for trying to learn.</p>
+                <p slot="slot-summary">Easy Read seeks to fill this requirement by providing content aimed at mature, early language learners. Older students need not subject themselves to the ridicule of reading picture books like 'The Very Hungry Caterpillar' in order to undertake the noble act of learning. No one should feel childish when seeking self-improvement.</p>
+            </summary-paragraph>
+            <summary-paragraph>
+                <p slot="slot-summary">Easy Read makes reading even better. If an article is too hard, you can make it easier. If an article is too easy, you can make it harder. You can do this in other places, too. For example, you can read Wikipedia in simple English. But changing the reading level isn't as easy. You need to change the page that you're on. That can make reading hard. You might lose where you are. It might slow you down. With Easy Read, you can stay in the same place.</p>
+                <p slot="slot-summary">Easy Read takes this a step further by providing multiple summaries of the same text. This allows readers to raise and lower the reading level of an article as they progress through it. Some other websites also provide summaries of content that is difficult to read. For example, Wikipedia can be read in simple English. However, these sites are limited to providing a single reading level per page. If a student wants to change the reading level of an article, they must go to a new page. This can cause them to lose their place and slow them down. In contrast, Easy Read provides a method for students to change the reading level of an article while remaining in the same place.</p>
+                <p slot="slot-summary">Easy Read takes this a step further with its mechanic of progressive summarisation, allowing users to increase and decrease the reading level of an article. A few other websites offer similar features whereby complex concepts are offered in summary form. For example, Wikipedia provides its content in simple English. However, these sites tend to be inflexible, offering only a single reading level per webpage. Should a student wish to change the reading level of an article, they must navigate to a new page, leading to the loss of position and momentum. Contrastingly, Easy Read provides a mechanic for students to increase or decrease the reading level of an article in situ.</p>
+            </summary-paragraph>
+            <summary-paragraph>
+                <h3 slot="slot-header">The result</h3>
+                <p slot="slot-summary">Making an article easier or harder to read can really help people to learn a new language. Students can choose the level that is best for them. They may want to make an article easier to read so that they can understand it better. They may also want to make an article harder so that they can learn more. Easy Read makes reading easier so you can feel better about reading.</p>
+                <p slot="slot-summary">Having access to an article at different reading levels gives students the ability to match their own reading level. This helps students to better understand an article while giving them the opportunity to improve their language. Easy Read makes it easier to read difficult articles, and helps older learners to feel better about reading.</p>
+                <p slot="slot-summary">Progressive summarisation provides flexibility while supporting language acquisition. Students can customise a text to their needs, whether they be for simplification to aid comprehension or elaboration to support learning. Easy Read is designed to make reading more accessible and help build the confidence of mature language learners.</p>
+            </summary-paragraph>
+        </article>
+    </div>
+{% endblock %}

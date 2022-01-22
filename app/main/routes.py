@@ -1435,7 +1435,7 @@ def permadelete_article():
 @bp.route('/')
 @bp.route('/index')
 def index():
-    """Display live, published articles """
+    """Display live, published articles"""
 
     articles = db.session.query(Article, Image, PublishingNote) \
         .outerjoin(Image, Image.id == Article.image_id) \
@@ -1444,6 +1444,13 @@ def index():
         
     # Render index page
     return render_template('index.html', articles=articles)
+
+
+@bp.route('/about')
+def about():
+    """Display an article about Easy Read"""       
+    # Render index page
+    return render_template('about.html')
 
 
 @bp.route('/<int:id>/')
