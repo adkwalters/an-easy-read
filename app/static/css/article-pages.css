@@ -37,6 +37,9 @@ article.full-page {
 .article-page img {
     border-radius: 10px;
 }
+summary-paragraph a {
+    text-decoration: underline;
+}
 summary-paragraph [slot="slot-header"] {
     margin: 0.5rem 0 0.5rem 1rem;
 }
