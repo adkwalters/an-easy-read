@@ -216,6 +216,7 @@ textarea {
     z-index: 1;
 }
 .alert a {
+    color: inherit;
     text-decoration: underline;
 }
 .form-alert {
