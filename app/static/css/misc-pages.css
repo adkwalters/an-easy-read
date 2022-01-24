@@ -6,18 +6,28 @@
     - other */
 
 
-/* || Index || */
-
-#index-page h3 {
+#index-page h3,
+#filter-articles-page h3 {
     margin: 1rem;
 }
-#index-page a {
+#index-page a,
+#filter-articles-page a {
     font-weight: normal;
 }
-#index-page a:hover li {
+#index-page a:hover li,
+#filter-articles-page a:hover li {
     box-shadow: 0 0px 12px 0 rgba(0,0,0,0.4);
 }
 #demo [slot="slot-summary"] {
     margin: 0;
+}
+
+#articles-filter {
+    display: flex;
+        gap: 1rem;
+}
+#articles-filter div {
+    flex: 1;
+    padding: 1rem;
 }
 

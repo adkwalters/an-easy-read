@@ -18,6 +18,7 @@
 //      - transfer article
 //      - hyperlink article
 // || Article Status Icons
+// || Articles filter
 
 
 // || No Results Icon
@@ -544,3 +545,41 @@ for (let article of articlesDisplayed) {
     }    
 }
 
+
+// || Articles Filter
+
+// Filter articles by category
+const selectCategory = document.getElementById("select-category");
+if (selectCategory) {
+    selectCategory.addEventListener("change", (option) => {
+        let allArticles = display.querySelectorAll("li");
+        for (let article of allArticles) {
+            // Hide all articles
+            article.classList.replace("result-display", "result-display-none");
+            // Display articles with selected category
+            if (article.dataset.category.includes(option.target.value)) {
+                article.classList.replace("result-display-none", "result-display");
+            }
+        }
+        // Reset value of time filter
+        selectDate.querySelector("select").value = "";
+    });
+}
+
+// Filter articles by date published
+const selectDate = document.getElementById("select-date");
+if (selectDate) {
+    selectDate.addEventListener("change", (option) => {
+        let allArticles = display.querySelectorAll("li");
+        for (let article of allArticles) {
+            // Hide all articles
+            article.classList.replace("result-display", "result-display-none");
+            // Display articles with selected time
+            if (article.dataset.time.includes(option.target.value)) {
+                article.classList.replace("result-display-none", "result-display");
+            }
+        }
+        // Reset value of date filter
+        selectCategory.querySelector("select").value = "";
+    });
+}

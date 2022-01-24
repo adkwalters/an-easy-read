@@ -81,7 +81,7 @@ import datetime
 from flask import render_template, redirect, url_for, flash, request, current_app, abort, send_from_directory
 from flask_login import login_required, current_user
 from flask_mail import Message
-from sqlalchemy import update, or_, and_
+from sqlalchemy import update, or_, and_, func
 from werkzeug.utils import secure_filename
 
 from app import db, mail
@@ -1444,6 +1444,27 @@ def index():
         
     # Render index page
     return render_template('index.html', articles=articles)
+
+
+@bp.route('/filter-articles')
+def filter_articles():
+    """Display a list of live, published articles to be filtered"""
+
+    categories = db.session.query(Category).all()
+
+    dates = db.session.query(PublishingNote) \
+        .group_by(func.strftime("%Y-%m", PublishingNote.date_published)).all()
+
+    articles = db.session.query(Article, Image, PublishingNote) \
+        .outerjoin(Image, Image.id == Article.image_id) \
+        .outerjoin(PublishingNote, PublishingNote.published_article_id == Article.id) \
+        .filter(Article.status == 'pub_live').all()
+
+    # Render index page
+    return render_template('articles.html', 
+        categories=categories,
+        dates=dates,
+        articles=articles)
 
 
 @bp.route('/about')

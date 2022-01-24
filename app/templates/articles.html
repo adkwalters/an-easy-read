@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+<!-- Page metadata -->
+{% block pagemeta %}
+    <title>Easy Read | Read</title>
+    <meta name="description" content="Check out the different types of articles available to read">
+{% endblock %}
+
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/css/general.css"/> 
+    <link rel="stylesheet" href="/static/css/sitewide.css"/>  
+    <link rel="stylesheet" href="/static/css/article-pages.css"/> 
+    <link rel="stylesheet" href="/static/css/misc-pages.css"/> 
+{% endblock %}
+
+<!-- JavaScript --> 
+{% block scripts %}
+    <script src="/static/javascript/header.js" defer></script>
+    <script src="/static/javascript/display-articles.js" defer></script>
+{% endblock %}
+
+<!-- Main -->
+{% block main %}
+    <div id="filter-articles-page" class="full-spread">
+        <h1>Filter Articles</h1>
+        <section id="articles-filter">
+            <div id="select-category" class="label-colour">
+                <label for="select-category-input">Category:</label>
+                <select id="select-category-input">
+                    <option value="" disabled selected></option>
+                    {% for category in categories %}
+                        <option value="{{ category.name }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="select-date" class="label-colour">
+                <label for="select-date-input">Date:</label>
+                <select id="select-date-inut">
+                    <option value="" disabled selected></option>
+                    {% for date in dates %}
+                        <option value="{{ date.date_published.strftime('%b %Y') }}">{{ date.date_published.strftime("%b %Y") }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </section>
+        <section id="results-display-panel">
+            <h3>Articles</h3>
+            <ul>
+                {% if articles %}
+                    {% for article in articles %}
+                        <li class="label-colour result-display" data-category="{% for category in article['Article'].categories %}{{ category.name }} {% endfor %}" data-time="{{ article['PublishingNote'].date_published.strftime('%b %Y') }}">
+                            <a href="{{ url_for('main.view_article', id=article['PublishingNote'].id, slug=article['PublishingNote'].slug ) }}">
+                                {% if article['Image'].src %}
+                                    <figure>
+                                        <img src="{{ url_for('main.return_image', filename=article['Image'].src) }}">
+                                        <figcaption><h3>{{ article['Article'].title }}</h3></figcaption>
+                                    </figure>
+                                {% else %}
+                                    <h3>{{ article['Article'].title }}</h3>
+                                {% endif %}
+                                <p>{{ article['Article'].description }}</p>
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endif%}
+        </section>
+    </div>
+{% endblock %}
