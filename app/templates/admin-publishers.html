@@ -34,11 +34,11 @@
                 <a id="remove-publisher-tab">Remove Publisher</a>
             </li>
         </ul>
-        <section id="articles-display-panel">
+        <section id="results-display-panel">
             <ul>              
                 {% if publishers %}
                     {% for publisher in publishers %}
-                        <li class="label-colour article-display status-remove-publisher">
+                        <li class="label-colour result-display" data-user="remove-publisher">
                             <h3>{{ publisher['User'].username }}</h3>
                             <div class="writer-actions">
                                 <form class="publisher-action-remove" action="{{ url_for('main.remove_publisher') }}" method="get">

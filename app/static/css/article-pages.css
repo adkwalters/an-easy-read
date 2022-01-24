@@ -54,9 +54,7 @@ summary-paragraph [slot="slot-summary"] {
 
 #article-form {
     gap: 2rem;
-}
-#article-form section {
-    padding: 1rem;
+    padding: 0 1rem;
 }
 #article-form h2 { 
     margin-bottom: 1rem;
@@ -107,12 +105,12 @@ textarea.form-text-header {
 #add-user-by-email {
     display: none;
 }
-#articles-display-panel ul {
+#results-display-panel ul {
     display: grid;
         grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
         grid-gap: 2rem;
 }
-.article-display {
+.result-display {
     position: relative;
     display: flex;
         flex-direction: column;
@@ -120,16 +118,14 @@ textarea.form-text-header {
     height: max-content;
     padding: 1rem;
 }
-.article-display-none {
+.result-display-none {
     display: none;
 }
-.status-published-writer,
-.status-unpublished-writer,
-.status-remove-publisher {
+[data-user] {
     flex-direction: row;
     justify-content: space-between;
 }
-.article-display img {
+.result-display img {
     display: block;
     margin: auto;
     margin-bottom: 1rem;
@@ -161,10 +157,10 @@ textarea.form-text-header {
 .status-icon:hover .status-explanation {
     display: block;
 }
-.article-display h3 {
+.result-display h3 {
     text-align: center;
 }
-.article-display p {
+.result-display p {
     margin: 1rem 0 0.5rem 0;
     text-align: left;
 }

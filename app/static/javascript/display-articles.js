@@ -4,6 +4,7 @@
 //      - add new article
 //      - add user by email address
 // || Action Confirmation
+// || Results Display
 // || Tabs
 //      - article display switch
 //      - admin's articles
@@ -25,8 +26,8 @@
 const noResultsIcon = document.createElement("i");
 noResultsIcon.setAttribute("class", "no-results-icon far fa-question-circle");
 function reportNoResults() {
-    // Check article results length
-    let results = display.getElementsByClassName("article-display");
+    // Check results length
+    let results = display.getElementsByClassName("result-display");
     let addButtons = document.getElementsByClassName("big-add-button");
     if (results.length == 0 && addButtons.length == 0) {
         // Display icon, if not already displayed
@@ -45,7 +46,7 @@ function reportNoResults() {
 
 // Display or hide button
 const addButton = document.createElement("a");
-addButton.setAttribute("class", "big-add-button far fa-plus-square")
+addButton.setAttribute("class", "big-add-button far fa-plus-square");
 function addOrRemoveAddButton(action) {
     if (action == "add") {
         // Display button, if not already displayed
@@ -65,7 +66,7 @@ function addOrRemoveAddButton(action) {
 // Add new article
 let addArticleForm = document.getElementById("create-article");
 if (addArticleForm) {
-    addButton.addEventListener("click", () => { addArticleForm.submit() }) 
+    addButton.addEventListener("click", () => { addArticleForm.submit() });
 }
 
 // Add user by email address
@@ -77,7 +78,7 @@ if (addEmailForm) {
         if (email) {
             // Attach address to form and submit
             let hiddenInput = document.createElement("input");
-            hiddenInput.setAttribute("type", "hidden")
+            hiddenInput.setAttribute("type", "hidden");
             hiddenInput.setAttribute("name", "user_email");
             hiddenInput.value = email;
             addEmailForm.appendChild(hiddenInput);
@@ -96,6 +97,7 @@ if (addEmailForm) {
 const actionsToConfirm = ["article-action-delete", "article-action-request", 
     "article-action-reject", "article-action-review", "article-action-publish", 
     "writer-action-remove", "publisher-action-remove"];
+
 // Confirm user action
 for (let action of actionsToConfirm) {
     let forms = document.getElementsByClassName(action);
@@ -107,7 +109,7 @@ for (let action of actionsToConfirm) {
                 }
             }
             else if (action == "article-action-request") {
-                if (!confirm("Request this article be published?")) {
+                if (!confirm("Request that this article be published?")) {
                     event.preventDefault();
                 }
             }
@@ -141,35 +143,39 @@ for (let action of actionsToConfirm) {
 }
 
 
-// || Tabs
+// || Results Display
 
-// Get article statuses
-const draftArticles = ["draft", "requested", "pending"];
-const publishedArticles = ["pub_draft", "pub_requested", "pub_pending", "published"];
-
-// Article Display Switch - show or hide articles with selected status
-function switchArticleDisplay(status, display) {
-    // Generate classname from status
-    let className = "status-" + status;
-    // Get articles
-    let articlesToDisplay =  document.getElementsByClassName(className);
-    for (let article of articlesToDisplay) {
-        if (display == "show") {  
-            // Display the article
-            if (article.classList.contains("article-display-none")) {
-                article.classList.replace("article-display-none", "article-display")
+// Show or hide results with selected data
+function switchResultsDisplay(data, display) {
+    // Get results to display (articles, requests, users)
+    let selectQuery = "[data-status=" + data + "], \
+                       [data-request=" + data + "], \
+                       [data-user=" + data + "]";
+    let resultsToDisplay = document.querySelectorAll(selectQuery);
+    for (let result of resultsToDisplay) {
+        if (display == "show") {
+            // Display the results
+            if (result.classList.contains("result-display-none")) {
+                result.classList.replace("result-display-none", "result-display");
             }
         } else { 
-            // Hide the article
-            if (article.classList.contains("article-display")) {
-                article.classList.replace("article-display", "article-display-none")
+            // Hide the results
+            if (result.classList.contains("result-display")) {
+                result.classList.replace("result-display", "result-display-none");
             }
         }
     } 
 }
 
+
+// || Tabs
+
+// Get article statuses
+const draftArticles = ["draft", "requested", "pending"];
+const publishedArticles = ["pub_draft", "pub_requested", "pub_pending", "pub_live", "published"];
+
 // Get display area and tabs
-const display = document.getElementById("articles-display-panel");
+const display = document.getElementById("results-display-panel");
 // Admin's articles
 const pubLiveArticlesTab = document.getElementById("published-live-tab");
 const pubDeletedArticlesTab = document.getElementById("published-deleted-tab");
@@ -198,8 +204,8 @@ if (pubLiveArticlesTab) {
         pubLiveArticlesTab.parentElement.classList.add("dropdown-tab-active");
         pubDeletedArticlesTab.parentElement.classList.remove("dropdown-tab-active");
         // Articles
-        switchArticleDisplay("pub_live", "show");
-        switchArticleDisplay("pub_deleted", "hide");
+        switchResultsDisplay("pub_live", "show");
+        switchResultsDisplay("pub_deleted", "hide");
         // No results icon
         reportNoResults();
     })
@@ -211,8 +217,8 @@ if (pubDeletedArticlesTab) {
         pubLiveArticlesTab.parentElement.classList.remove("dropdown-tab-active");
         pubDeletedArticlesTab.parentElement.classList.add("dropdown-tab-active");
         // Articles
-        switchArticleDisplay("pub_live", "hide");
-        switchArticleDisplay("pub_deleted", "show");
+        switchResultsDisplay("pub_live", "hide");
+        switchResultsDisplay("pub_deleted", "show");
         // No results icon
         reportNoResults();
     })
@@ -226,7 +232,7 @@ if (addPublisherTab) {
         addPublisherTab.parentElement.classList.add("dropdown-tab-active");
         removePublisherTab.parentElement.classList.remove("dropdown-tab-active");
         // Publishers
-        switchArticleDisplay("remove-publisher", "hide");
+        switchResultsDisplay("remove-publisher", "hide");
         // Add button
         addOrRemoveAddButton("add");
         // No results icon
@@ -240,7 +246,7 @@ if (removePublisherTab) {
         removePublisherTab.parentElement.classList.add("dropdown-tab-active");
         addPublisherTab.parentElement.classList.remove("dropdown-tab-active"); 
         // Publishers
-        switchArticleDisplay("remove-publisher", "show");
+        switchResultsDisplay("remove-publisher", "show");
         // Remove add button
         addOrRemoveAddButton("remove");
         // No results icon
@@ -256,9 +262,9 @@ if (liveArticlesTab) {
         liveArticlesTab.parentElement.classList.add("dropdown-tab-active");
         pendingArticlesTab.parentElement.classList.remove("dropdown-tab-active");
         // Articles
-        switchArticleDisplay("pub_live", "show");
-        switchArticleDisplay("pending", "hide");
-        switchArticleDisplay("pub_pending", "hide");
+        switchResultsDisplay("pub_live", "show");
+        switchResultsDisplay("pending", "hide");
+        switchResultsDisplay("pub_pending", "hide");
         // No results icon
         reportNoResults();
     })
@@ -270,9 +276,9 @@ if (pendingArticlesTab) {
         pendingArticlesTab.parentElement.classList.add("dropdown-tab-active");
         liveArticlesTab.parentElement.classList.remove("dropdown-tab-active");
         // Articles
-        switchArticleDisplay("pending", "show");
-        switchArticleDisplay("pub_pending", "show");
-        switchArticleDisplay("pub_live", "hide");
+        switchResultsDisplay("pending", "show");
+        switchResultsDisplay("pub_pending", "show");
+        switchResultsDisplay("pub_live", "hide");
         // No results icon
         reportNoResults();
     })
@@ -286,8 +292,8 @@ if (pubWritersTab) {
         pubWritersTab.parentElement.classList.add("dropdown-tab-active");
         unpubWritersTab.parentElement.classList.remove("dropdown-tab-active");
         // Articles
-        switchArticleDisplay("published-writer", "show");
-        switchArticleDisplay("unpublished-writer", "hide");
+        switchResultsDisplay("published-writer", "show");
+        switchResultsDisplay("unpublished-writer", "hide");
         // Remove add button
         addOrRemoveAddButton("add");
         // No results icon
@@ -301,8 +307,8 @@ if (unpubWritersTab) {
         unpubWritersTab.parentElement.classList.add("dropdown-tab-active");
         pubWritersTab.parentElement.classList.remove("dropdown-tab-active");
         // Articles
-        switchArticleDisplay("unpublished-writer", "show");
-        switchArticleDisplay("published-writer", "hide");
+        switchResultsDisplay("unpublished-writer", "show");
+        switchResultsDisplay("published-writer", "hide");
         // Add button
         addOrRemoveAddButton("add");
         // No results icon
@@ -318,8 +324,8 @@ if (myRequestsTab) {
         myRequestsTab.parentElement.classList.add("dropdown-tab-active");
         allWritersTab.parentElement.classList.remove("dropdown-tab-active");
         // Articles
-        switchArticleDisplay("my-requests", "show");
-        switchArticleDisplay("all-requests", "hide");
+        switchResultsDisplay("my-requests", "show");
+        switchResultsDisplay("all-requests", "hide");
         // No results icon
         reportNoResults();
     })
@@ -331,8 +337,8 @@ if (allWritersTab) {
         myRequestsTab.parentElement.classList.remove("dropdown-tab-active");
         allWritersTab.parentElement.classList.add("dropdown-tab-active");
         // Articles
-        switchArticleDisplay("my-requests", "hide");
-        switchArticleDisplay("all-requests", "show");
+        switchResultsDisplay("my-requests", "hide");
+        switchResultsDisplay("all-requests", "show");
         // No results icon
         reportNoResults();
     })
@@ -346,8 +352,8 @@ if (draftsTab) {
         draftsTab.parentNode.classList.add("dropdown-tab-active");
         publishedTab.parentNode.classList.remove("dropdown-tab-active");
         // Articles
-        for (let article of draftArticles) { switchArticleDisplay(article, "show"); }
-        for (let article of publishedArticles) { switchArticleDisplay(article, "hide"); }
+        for (let article of draftArticles) { switchResultsDisplay(article, "show"); }
+        for (let article of publishedArticles) { switchResultsDisplay(article, "hide"); }
         // Add button
         addOrRemoveAddButton("add");
         // No results icon
@@ -361,8 +367,8 @@ if (publishedTab) {
         publishedTab.parentNode.classList.add("dropdown-tab-active");
         draftsTab.parentNode.classList.remove("dropdown-tab-active");
         // Articles
-        for (let article of publishedArticles) { switchArticleDisplay(article, "show"); }
-        for (let article of draftArticles) { switchArticleDisplay(article, "hide"); }
+        for (let article of publishedArticles) { switchResultsDisplay(article, "show"); }
+        for (let article of draftArticles) { switchResultsDisplay(article, "hide"); }
         // Remove add button
         addOrRemoveAddButton("remove");
         // No results icon
@@ -374,7 +380,7 @@ if (publishedTab) {
 
 window.addEventListener('load', () => {
     
-    // Get publisher page
+    // Get pages
     let adminPublishersPage = document.getElementById("admin-page");
     let adminArticlesPage = document.getElementById("admin-articles")
     let authorPage = document.getElementById("author-articles");
@@ -386,7 +392,7 @@ window.addEventListener('load', () => {
         // Show live articles
         pubLiveArticlesTab.parentElement.classList.add("dropdown-tab-active");
         pubDeletedArticlesTab.parentElement.classList.remove("dropdown-tab-active");
-        switchArticleDisplay("pub_deleted", "hide");
+        switchResultsDisplay("pub_deleted", "hide");
         reportNoResults();
     } 
 
@@ -394,7 +400,7 @@ window.addEventListener('load', () => {
         // Show tab to add publisher
         addPublisherTab.parentNode.classList.add("dropdown-tab-active");
         removePublisherTab.parentNode.classList.remove("dropdown-tab-active");
-        switchArticleDisplay("remove-publisher", "hide");
+        switchResultsDisplay("remove-publisher", "hide");
         addOrRemoveAddButton("add");
         reportNoResults();
     } 
@@ -403,8 +409,8 @@ window.addEventListener('load', () => {
         // Show draft articles tab
         draftsTab.parentNode.classList.add("dropdown-tab-active");
         publishedTab.parentNode.classList.remove("dropdown-tab-active");
-        for (let article of draftArticles) { switchArticleDisplay(article, "show"); }
-        for (let article of publishedArticles) { switchArticleDisplay(article, "hide"); }
+        for (let article of draftArticles) { switchResultsDisplay(article, "show"); }
+        for (let article of publishedArticles) { switchResultsDisplay(article, "hide"); }
         addOrRemoveAddButton("add");
         reportNoResults();
     } 
@@ -413,9 +419,9 @@ window.addEventListener('load', () => {
         // Show live articles tab
         liveArticlesTab.parentElement.classList.add("dropdown-tab-active");
         pendingArticlesTab.parentElement.classList.remove("dropdown-tab-active");
-        switchArticleDisplay("pub_live", "show");
-        switchArticleDisplay("pending", "hide");
-        switchArticleDisplay("pub_pending", "hide");
+        switchResultsDisplay("pub_live", "show");
+        switchResultsDisplay("pending", "hide");
+        switchResultsDisplay("pub_pending", "hide");
         reportNoResults(); 
     }
 
@@ -423,8 +429,8 @@ window.addEventListener('load', () => {
         // Show published writers
         pubWritersTab.parentElement.classList.add("dropdown-tab-active");
         unpubWritersTab.parentElement.classList.remove("dropdown-tab-active");
-        switchArticleDisplay("published-writer", "show");
-        switchArticleDisplay("unpublished-writer", "hide");
+        switchResultsDisplay("published-writer", "show");
+        switchResultsDisplay("unpublished-writer", "hide");
         addOrRemoveAddButton("add");
         reportNoResults();    
     }
@@ -433,8 +439,8 @@ window.addEventListener('load', () => {
         // Show requests from publisher's writers
         myRequestsTab.parentElement.classList.add("dropdown-tab-active");
         allWritersTab.parentElement.classList.remove("dropdown-tab-active");
-        switchArticleDisplay("my-requests", "show");
-        switchArticleDisplay("all-requests", "hide");
+        switchResultsDisplay("my-requests", "show");
+        switchResultsDisplay("all-requests", "hide");
         reportNoResults();    
     }
 })
@@ -452,7 +458,7 @@ if (transferForm) {
             if (email) {
                 // Attach address to form and submit
                 let hiddenInput = document.createElement("input");
-                hiddenInput.setAttribute("type", "hidden")
+                hiddenInput.setAttribute("type", "hidden");
                 hiddenInput.setAttribute("name", "user_email");
                 hiddenInput.value = email;
                 form.appendChild(hiddenInput);
@@ -474,7 +480,7 @@ for (let button of linkArticleButton) {
         let pubNoteId = button.querySelector("input[name='pub-id']").value;
         let slug = button.querySelector("input[name='article-slug']").value;
         // Generate and alert hyperlink
-        let hyperlink = "http://127.0.0.1:5000/" + pubNoteId + "/" + slug // !! to be updated
+        let hyperlink = "http://127.0.0.1:5000/" + pubNoteId + "/" + slug; // !! to be updated on deployment
         alert(hyperlink);
     });
 }
@@ -483,57 +489,58 @@ for (let button of linkArticleButton) {
 // || Article Status Icons
 
 // Get displayed articles
-let articlesDisplayed = document.querySelectorAll("li.article-display");
+let articlesDisplayed = document.querySelectorAll("[data-status]");
+
 // Prepare article decorations (icon and tool tip)
 let statusIcon = document.createElement("i");
 let iconToolTip = document.createElement("div");
-iconToolTip.setAttribute("class", "status-explanation")
+iconToolTip.setAttribute("class", "status-explanation");
 statusIcon.appendChild(iconToolTip);
+
 // Match and configure decorations to article by status
 for (let article of articlesDisplayed) {
-    for (let status of article.classList) {
-        // Articles requested for publication
-        if (status.includes("requested")) {
-            statusIcon.setAttribute("class", "status-icon fas fa-envelope");
-            iconToolTip.innerHTML = "Publication request sent";
+    let status = article.dataset.status;
+    // Articles requested for publication
+    if (status == "requested" || status == 'pub_requested') {
+        statusIcon.setAttribute("class", "status-icon fas fa-envelope");
+        iconToolTip.innerHTML = "Publication request sent";
+        article.appendChild(statusIcon.cloneNode(true));
+    }
+    // Articles under review
+    else if (status == "pending") {
+        // Publisher's view
+        let pendingTab = document.getElementById("pending-articles-tab");
+        if (pendingTab) {
+            statusIcon.setAttribute("class", "status-icon fas fa-search");
+            iconToolTip.innerHTML = "You are reviewing this article";
             article.appendChild(statusIcon.cloneNode(true));
         }
-        // Articles under review
-        else if (status.includes("pending")) {
-            // Publisher's view
-            let pendingTab = document.getElementById("pending-articles-tab");
-            if (pendingTab) {
-                statusIcon.setAttribute("class", "status-icon fas fa-search");
-                iconToolTip.innerHTML = "You are reviewing this article";
-                article.appendChild(statusIcon.cloneNode(true));
-            }
-            // Author's view
-            else {
-                statusIcon.setAttribute("class", "status-icon fas fa-lock");
-                iconToolTip.innerHTML = "Article is being reviewed";
-                article.appendChild(statusIcon.cloneNode(true));
-            }
-        }
-        // Published articles (omitting published writers)
-        else if (status.includes("pub") && !status.includes("published-writer")) {
-            statusIcon.setAttribute("class", "status-icon fas fa-book-open");
-            iconToolTip.innerHTML = "Article is published and live";
+        // Author's view
+        else {
+            statusIcon.setAttribute("class", "status-icon fas fa-lock");
+            iconToolTip.innerHTML = "Article is being reviewed";
             article.appendChild(statusIcon.cloneNode(true));
-            // Outdated daft article
-            if (status.includes("pub_draft")) {
-                let toolTip = article.querySelector(".status-explanation");
-                toolTip.innerHTML = "Outdated: click to copy live version";                 
-                let icon = article.querySelector(".status-icon");
-                icon.setAttribute("class", "status-icon fas fa-exclamation-circle");
-                // Click to trigger update
-                icon.addEventListener("click", () => {
-                    let form = article.querySelector("form.article-action-update");
-                    if (confirm("Update this article to its live version?")) {
-                        form.submit()
-                    }
-                }); 
-            }
         }
-    }  
+    }
+    // Published articles
+    else if (publishedArticles.includes(status)) {
+        statusIcon.setAttribute("class", "status-icon fas fa-book-open");
+        iconToolTip.innerHTML = "Article is published and live";
+        article.appendChild(statusIcon.cloneNode(true));
+        // Outdated daft article
+        if (status == "pub_draft") {
+            let toolTip = article.querySelector(".status-explanation");
+            toolTip.innerHTML = "Outdated: click to copy live version";                 
+            let icon = article.querySelector(".status-icon");
+            icon.setAttribute("class", "status-icon fas fa-exclamation-circle");
+            // Click to trigger article update
+            icon.addEventListener("click", () => {
+                let form = article.querySelector("form.article-action-update");
+                if (confirm("Update this article to its live version?")) {
+                    form.submit();
+                }
+            }); 
+        }
+    }    
 }
 

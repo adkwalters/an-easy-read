@@ -35,11 +35,11 @@
                 <a id="all-writers-tab">{% if unassociated %} ({{ unassociated|length }}) {% endif %} To All</a>
             </li>
         </ul>
-        <section id="articles-display-panel">
+        <section id="results-display-panel">
             <ul>
                 {% if associated %}
                     {% for request in associated %}
-                    <li class="label-colour article-display status-my-requests {% if request['Article'].status == 'pub_requested' %} status-published {% endif %}">
+                    <li class="label-colour result-display" data-request="my-requests" data-status="{% if request['Article'].status == 'pub_requested' %}published{% endif %}">
                         {% if request['Image'].src %}
                             <figure>
                                 <img src="{{ url_for('main.return_image', filename=request['Image'].src) }}">
@@ -64,7 +64,7 @@
                 {% endif %}
                 {% if disassociated %}
                     {% for request in disassociated %}
-                    <li class="label-colour article-display status-my-requests {% if request['Article'].status == 'pub_requested' %} status-published {% endif %}">
+                    <li class="label-colour result-display status-my-requests {% if request['Article'].status == 'pub_requested' %}published{% endif %}">
                         {% if request['Image'].src %}
                             <figure>
                                 <img src="{{ url_for('main.return_image', filename=request['Image'].src) }}">
@@ -89,7 +89,7 @@
                 {% endif %}
                 {% if unassociated %}
                     {% for request in unassociated %}
-                    <li class="label-colour article-display status-all-requests {% if request['Article'].status == 'pub_requested' %} status-published {% endif %}">
+                    <li class="label-colour result-display status-all-requests {% if request['Article'].status == 'pub_requested' %}published{% endif %}">
                         {% if request['Image'].src %}
                             <figure>
                                 <img src="{{ url_for('main.return_image', filename=request['Image'].src) }}">

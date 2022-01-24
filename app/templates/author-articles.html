@@ -31,11 +31,11 @@
                 <a id="published-articles-tab">Published</a>
             </li>
         </ul>
-        <section id="articles-display-panel">
+        <section id="results-display-panel">
             <ul>
                 {% if articles %}
                     {% for article in articles %}
-                        <li class="label-colour article-display status-{{ article['Article'].status }}">
+                        <li class="label-colour result-display" data-status="{{ article['Article'].status }}">
                             {% if article['Image'].src %}
                                 <figure>
                                     <img src="{{ url_for('main.return_image', filename=article['Image'].src) }}">

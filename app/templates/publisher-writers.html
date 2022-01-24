@@ -36,11 +36,11 @@
                 <a id="unpublished-writers-tab">Unpublished Writers</a>
             </li>
         </ul>
-        <section id="articles-display-panel">
+        <section id="results-display-panel">
             <ul>
                 {% if published_writers %}
                     {% for writer in published_writers %}
-                        <li class="label-colour article-display status-published-writer">
+                        <li class="label-colour result-display" data-user="published-writer">
                             <h3>{{ writer.username }}</h3>
                             <div class="writer-actions">
                                 <form class="writer-action-remove" action="{{ url_for('main.remove_writer') }}" method="get">
@@ -53,7 +53,7 @@
                 {% endif %}
                 {% if unpublished_writers %}
                     {% for writer in unpublished_writers %}
-                        <li class="label-colour article-display status-unpublished-writer">
+                        <li class="label-colour result-display" data-user="unpublished-writer">
                             <h3>{{ writer.username }}</h3>
                             <div class="writer-actions">
                                 <form class="writer-action-remove" action="{{ url_for('main.remove_writer') }}" method="get">
