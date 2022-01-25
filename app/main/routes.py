@@ -765,6 +765,16 @@ def edit_article():
     article = db.session.query(Article) \
         .filter_by(id = article_id).one()
 
+    if article.has_draft:
+        draft_article = db.session.query(Article) \
+            .filter_by(id = article.has_draft.draft_article_id).one()
+        if draft_article.status == 'pub_requested':
+            flash('The author of that article has requested an update. Please review the request before making changes.', 'info')
+            return redirect(url_for('main.display_requests'))
+        if draft_article.status == 'pub_pending':
+            flash('You are currently reviewing that article. Please publish or reject the requested changes.', 'info')
+            return redirect(url_for('main.display_publisher_articles'))
+
     # Alert user as to the function of form submission
     if request.method == 'GET':
         if article.status == 'published':
