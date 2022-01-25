@@ -31,7 +31,7 @@
     <div class="article-header">
         <ul class="article-categories-list">
             {% for category in categories %}
-                <li class="label-size label-colour">{{ category.name }}</li>
+                <li class="label-size label-colour"><a href="{{ url_for('main.filter_articles', category=category.name) }}">{{ category.name }}</a></li>
             {% endfor %}
         </ul>
         <h1 class="article-title">{{ article.title }}</h1>

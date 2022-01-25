@@ -583,3 +583,18 @@ if (selectDate) {
         selectCategory.querySelector("select").value = "";
     });
 }
+
+// Filter artilces by category from URL parameters
+let url = new URL(window.location.href);
+let category = url.searchParams.get("category");
+if (category) {
+    let allArticles = display.querySelectorAll("li");
+    for (let article of allArticles) {
+        // Hide all articles
+        article.classList.replace("result-display", "result-display-none");
+        // Display articles with selected time
+        if (article.dataset.category.includes(category)) {
+            article.classList.replace("result-display-none", "result-display");
+        }
+    }
+}
