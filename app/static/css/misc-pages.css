@@ -31,3 +31,20 @@
     padding: 1rem;
 }
 
+
+/* || Error Pages || */
+
+#error-page section {
+    padding: 2rem;
+}
+#error-page h3 {
+    margin-bottom: 1rem;
+}
+#error-page p {
+    margin-bottom: 1rem;
+}
+#error-page ul {
+    font-size: 1.2rem;
+    list-style: inside;
+    
+}

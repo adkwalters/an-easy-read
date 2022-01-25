@@ -37,6 +37,9 @@ def create_app(config_class=Config):
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
 
+    from app.error import bp as error_bp
+    app.register_blueprint(error_bp)
+
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
@@ -54,7 +57,7 @@ def create_app(config_class=Config):
             mail_handler = SMTPHandler(
                 mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
                 fromaddr='no-reply@' + app.config['MAIL_SERVER'],
-                toaddrs=app.config['ADMIN'], subject='EasyRead Failure',
+                toaddrs=app.config['ADMIN'], subject='EasyRead Server Error',
                 credentials=auth, secure=secure)
             mail_handler.setLevel(logging.ERROR)
             app.logger.addHandler(mail_handler)

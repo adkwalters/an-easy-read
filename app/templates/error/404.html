@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+<!-- Page metadata -->
+{% block pagemeta %}
+    <title>Easy Read | Page Not Found</title>
+    <meta name="description" content="It seems like we can't find that page">
+{% endblock %}
+
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/css/general.css"/> 
+    <link rel="stylesheet" href="/static/css/sitewide.css"/>
+    <link rel="stylesheet" href="/static/css/misc-pages.css"/>
+{% endblock %}
+
+<!-- JavaScript --> 
+{% block scripts %}
+    <script src="/static/javascript/header.js" defer></script>
+{% endblock %}
+
+<!-- Main -->
+{% block main %}
+    <div id="error-page" class="full-page">
+        <h1>Page Not Found</h1>
+        <section class="label-colour">
+            <h3>Hmmm...</h3>
+            <p>It seems that we can't find the page you're looking for.</p>
+            <p>Please check that you typed the address correctly. Alternatively, check out the following pages:</p>
+            <ul>
+                <li><a href="{{ url_for('main.index') }}">Homepage</a></li>
+                <li><a href="{{ url_for('main.about') }}">Learn about Easy Read</a></li>
+                <li><a href="{{ url_for('main.filter_articles') }}">See all articles</a></li>
+            </ul>
+        </section>
+    </div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+<!-- Page metadata -->
+{% block pagemeta %}
+    <title>Easy Read | Internal Server Error</title>
+    <meta name="description" content="It seems like something went wrong">
+{% endblock %}
+
+<!-- CSS -->
+{% block stylesheets %}
+    <link rel="stylesheet" href="/static/css/general.css"/> 
+    <link rel="stylesheet" href="/static/css/sitewide.css"/>
+    <link rel="stylesheet" href="/static/css/misc-pages.css"/>
+{% endblock %}
+
+<!-- JavaScript --> 
+{% block scripts %}
+    <script src="/static/javascript/header.js" defer></script>
+{% endblock %}
+
+<!-- Main -->
+{% block main %}
+    <div id="error-page" class="full-page">
+        <h1>Internal Server Error</h1>
+        <section class="label-colour">
+            <h3>Hmmm...</h3>
+            <p>It seems like something went wrong.</p>
+            <p>We have reported this error to the administrator. If you need help quickly, please contact us.</p>
+        </section>
+    </div>
+{% endblock %}
