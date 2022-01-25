@@ -503,15 +503,25 @@ for (let article of articlesDisplayed) {
     let status = article.dataset.status;
     // Articles requested for publication
     if (status == "requested" || status == 'pub_requested') {
-        statusIcon.setAttribute("class", "status-icon fas fa-envelope");
-        iconToolTip.innerHTML = "Publication request sent";
-        article.appendChild(statusIcon.cloneNode(true));
+        // Publisher's view
+        if (myRequestsTab || allWritersTab) {
+            if (status == 'pub_requested') {
+                statusIcon.setAttribute("class", "status-icon fas fa-book-open");
+                iconToolTip.innerHTML = "Request to update published article";
+                article.appendChild(statusIcon.cloneNode(true));
+            }
+        }
+        // Author's view
+        else {
+            statusIcon.setAttribute("class", "status-icon fas fa-envelope");
+            iconToolTip.innerHTML = "Publication request sent";
+            article.appendChild(statusIcon.cloneNode(true));
+        }
     }
     // Articles under review
-    else if (status == "pending") {
+    else if (status == "pending" || status == 'pub_pending') {
         // Publisher's view
-        let pendingTab = document.getElementById("pending-articles-tab");
-        if (pendingTab) {
+        if (pendingArticlesTab) {
             statusIcon.setAttribute("class", "status-icon fas fa-search");
             iconToolTip.innerHTML = "You are reviewing this article";
             article.appendChild(statusIcon.cloneNode(true));

@@ -193,7 +193,7 @@ textarea.form-text-header {
         left: 2.5rem;
     display: flex;
         flex-direction: row;
-        /* flex-wrap: wrap; */
+    z-index: 1;
 }
 .no-results-icon {
     width: 100%;
