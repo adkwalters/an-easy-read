@@ -1,19 +1,23 @@
 import os
+from dotenv import load_dotenv
+
 
 # Get application base directory
 basedir = os.path.abspath(os.path.dirname(__file__))
+# Load .env file from base directory
+load_dotenv(os.path.join(basedir, '.env'))
 
 
 # Class-based app configuration
 class Config(object):
 
-    # Set secret key !! to change
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'this is a fallback'
+    # Get secret key
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'this_is_a_fallback_key'
     
     # Auto-reload templates upon change
     TEMPLATES_AUTO_RELOAD = True
 
-    # Set location of database with fallback
+    # Get location of database with fallback
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'easy_read.db')
     
