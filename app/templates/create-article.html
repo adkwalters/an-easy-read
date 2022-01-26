@@ -28,8 +28,20 @@
         <section id="article-form-meta" class="label-colour">
             <h2>Article Data</h2>
             <!-- Article meta data -->
-            {{ form.article_title.label }} {{ form.article_title }}
-            {{ form.article_desc.label }} {{ form.article_desc }}
+            <div>
+                <!-- Article Title -->
+                {{ form.article_title.label }} {{ form.article_title }}
+                {% for error in form.article_title.errors %}
+                <span class="form-alert alert-error">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div>
+                <!-- Article Description -->
+                {{ form.article_desc.label }} {{ form.article_desc }}
+                {% for error in form.article_desc.errors %}
+                <span class="form-alert alert-error">{{ error }}</span>
+                {% endfor %}
+            </div>
             <!-- Article Image -->
             <article-image></article-image>
             <!-- Article Categories -->
