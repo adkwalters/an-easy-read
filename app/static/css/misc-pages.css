@@ -39,6 +39,9 @@
         flex-direction: column;
     padding: 1rem;
 }
+.contact-form div {
+    position: relative;
+}
 #contact-page p {
     margin-bottom: 1rem;
 }
