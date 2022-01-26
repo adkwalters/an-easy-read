@@ -32,6 +32,24 @@
 }
 
 
+/* || Contact Page || */
+
+.contact-form {
+    display: flex;
+        flex-direction: column;
+    padding: 1rem;
+}
+#contact-page p {
+    margin-bottom: 1rem;
+}
+#contact-page #submit {
+    margin-top: 1rem;
+}
+textarea {
+    resize: vertical;
+}
+
+
 /* || Error Pages || */
 
 #error-page section {
@@ -43,8 +61,22 @@
 #error-page p {
     margin-bottom: 1rem;
 }
+#error-page p>a {
+    text-decoration: underline;
+}
 #error-page ul {
+    margin-bottom: 1rem;
     font-size: 1.2rem;
     list-style: inside;
-    
+}
+
+
+/* || Responsive design || */
+
+/* Tablet and larger  */
+
+@media (min-width: 48rem) {
+    #contact-page #submit {
+        margin-top: 2rem;
+    }
 }

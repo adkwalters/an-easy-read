@@ -21,16 +21,16 @@
 <!-- Main -->
 {% block main %}
     <div id="error-page" class="full-page">
-        <h1>Page Not Found</h1>
+        <h1>Page Not Found</h1>            
+        <p>Hmmm...it seems that we can't find the page you're looking for.</p>
         <section class="label-colour">
-            <h3>Hmmm...</h3>
-            <p>It seems that we can't find the page you're looking for.</p>
             <p>Please check that you typed the address correctly. Alternatively, check out the following pages:</p>
             <ul>
                 <li><a href="{{ url_for('main.index') }}">Homepage</a></li>
                 <li><a href="{{ url_for('main.about') }}">Learn about Easy Read</a></li>
                 <li><a href="{{ url_for('main.filter_articles') }}">See all articles</a></li>
             </ul>
+            <p>If you can't find what you're looking for, perhaps <a href="{{ url_for('main.contact') }}">send us a message</a>.</p>
         </section>
     </div>
 {% endblock %}

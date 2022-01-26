@@ -22,10 +22,10 @@
 {% block main %}
     <div id="error-page" class="full-page">
         <h1>Internal Server Error</h1>
+        <p>Hmmm...it seems like something went wrong.</p>
         <section class="label-colour">
-            <h3>Hmmm...</h3>
-            <p>It seems like something went wrong.</p>
-            <p>We have reported this error to the administrator. If you need help quickly, please contact us.</p>
+            <p>We have reported this error to the administrator.</p>
+            <p>If you need help quickly, please feel free to <a href="{{ url_for('main.contact') }}">contact us</a>.</p>
         </section>
     </div>
 {% endblock %}
