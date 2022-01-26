@@ -969,14 +969,11 @@ class ParagraphLevel extends HTMLElement {
             }
         });
 
-        // !! I added this to remove an index but there are still two
         // Overwrite index fallback 
         indexSlot.addEventListener("slotchange", () => {
             
             // Get all level indices (fallback and intended)
             let indices = indexSlot.assignedNodes({flatten: true});
-
-            console.log(indices)
 
             // If intended index exists
             if (indices[1]) {

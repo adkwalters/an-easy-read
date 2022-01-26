@@ -137,7 +137,7 @@
                                             <ul slot="slot-level-index" id="paragraph-{{ summary.paragraph_index }}-summary-{{ summary.level }}">
                                                 <input type="hidden" name="paragraph-{{ summary.paragraph_index }}-summary-{{ summary.level }}-level" value="{{ summary.level }}"></input>
                                             </ul>
-                                            <textarea slot="slot-level-text" name="paragraph-{{ summary.paragraph_index }}-summary-{{ summary.level }}-text">{{ summary.text }}</textarea>
+                                            <textarea slot="slot-level-text" name="paragraph-{{ summary.paragraph_index }}-summary-{{ summary.level }}-text" class="form-text">{{ summary.text }}</textarea>
                                         </paragraph-level>
                                     {% endif %}
                                 {% endfor %}
