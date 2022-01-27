@@ -755,6 +755,11 @@ def edit_article():
     Article model many-to-one, first delete the article's collections, then 
     iterate over the form FieldList in order to access the updated data.
     This allows content to be added as well as removed.
+
+    If an article is published, ensure that its draft version is not currently
+    requested for publication. If the published version is edited, update 
+    its publishing note, take it offline for admin approval, and update the
+    status of both the published and draft versions.
     """
 
     # Get article form data
@@ -765,12 +770,13 @@ def edit_article():
     article = db.session.query(Article) \
         .filter_by(id = article_id).one()
 
+    # Protect requested, published articles
     if article.has_draft:
         draft_article = db.session.query(Article) \
             .filter_by(id = article.has_draft.draft_article_id).one()
         if draft_article.status == 'pub_requested':
             flash('The author of that article has requested an update. Please review the request before making changes.', 'info')
-            return redirect(url_for('main.display_requests'))
+            return redirect(url_for('main.display_publisher_articles'))
         if draft_article.status == 'pub_pending':
             flash('You are currently reviewing that article. Please publish or reject the requested changes.', 'info')
             return redirect(url_for('main.display_publisher_articles'))
@@ -780,7 +786,7 @@ def edit_article():
         if article.status == 'published':
             flash('Changes must be saved and republished to be seen live.', 'info')
         elif article.status == 'pub_live':
-            flash('This is a live document. All changes will be directly published upon save.', 'info')
+            flash('Making changes to this article will take it offline. An administrator will reactivate it upon review.', 'info')
 
     if form.validate_on_submit():
 
@@ -792,6 +798,13 @@ def edit_article():
                 .filter_by(id = article.has_draft.draft_article_id).one_or_none()
             if draft_article:
                 draft_article.status = 'pub_draft';
+            
+            # Deactivate published articles to allow admin review
+            db.session.execute(update(PublishingNote)
+                .where(PublishingNote.published_article_id == article.id)
+                .values(
+                    date_updated = datetime.date.today(),
+                    is_active = False))
 
         # Update Article object
         article.title = form.article_title.data
@@ -1096,12 +1109,14 @@ def publish_article():
     the control of the publisher. 
     
     Create a publishing note to track the published and draft versions of a
-    published article, as well as its date of publication and subsequent
-    updates, and slugified version of the article's title.
+    published article, record the date of publication and subsequent updates, 
+    and slugify the article's title.
     
     If the article is already published, delete the outdated published version,
     update the publishing note with the newly published version, and track the
-    date of update. 
+    date of update.
+
+    Set the published article to inactive in preparation for admin approval.
 
     *Instantiate new objects for Article, Source, Category, Paragraph, and 
     Summary models, and serialise directly from the selected article, using 
@@ -1167,13 +1182,14 @@ def publish_article():
         outdated_article = db.session.query(Article) \
             .filter_by(id = draft_article.is_published.published_article_id).one()
         db.session.delete(outdated_article)
-        
+       
         # Update publishing note
         publishing_note = db.session.query(PublishingNote) \
             .filter_by(id = draft_article.is_published.id).one()
         publishing_note.published_article_id = published_article.id
         publishing_note.date_updated = datetime.date.today()
         publishing_note.to_slug(published_article.title)
+        publishing_note.is_active = False
 
     else:
 
@@ -1182,7 +1198,7 @@ def publish_article():
             draft_article_id = draft_article.id,
             published_article_id = published_article.id,
             date_published = datetime.date.today(),
-            is_active = True)
+            is_active = False)
         publishing_note.to_slug(published_article.title)
         db.session.add(publishing_note)
 
@@ -1196,6 +1212,50 @@ def publish_article():
 
     # Return author to author's articles page
     return redirect(url_for('main.display_publisher_articles'))
+
+
+@bp.route('/activate-article', methods=['GET', 'POST'])
+@admin_access
+def activate_article():
+    """Set published article to active"""
+
+    # Get article
+    article_id = request.args.get('article-id')
+    article = db.session.query(Article, PublishingNote) \
+        .join(PublishingNote, PublishingNote.published_article_id == Article.id) \
+        .filter(Article.id == article_id).one()
+    
+    # Activate article
+    article['PublishingNote'].is_active = True
+
+    # Record and alert
+    db.session.commit()    
+    flash('Article successfully activated.', 'success')
+
+    # Refresh page
+    return redirect(url_for('main.display_admin_articles'))
+
+
+@bp.route('/deactivate-article', methods=['GET', 'POST'])
+@admin_access
+def deactivate_article():
+    """Set published article to inactive"""
+
+    # Get article
+    article_id = request.args.get('article-id')
+    article = db.session.query(Article, PublishingNote) \
+        .join(PublishingNote, PublishingNote.published_article_id == Article.id) \
+        .filter(Article.id == article_id).one()
+    
+    # Deactivate article
+    article['PublishingNote'].is_active = False
+
+    # Record and alert
+    db.session.commit()    
+    flash('Article successfully deactivated.', 'success')
+
+    # Refresh page
+    return redirect(url_for('main.display_admin_articles'))
 
 
 @bp.route('/update-article', methods=['GET'])
@@ -1376,7 +1436,7 @@ def delete_article():
         # Set published article to offline
         db.session.execute(update(PublishingNote)
             .where(PublishingNote.published_article_id == article.id)
-            .values(is_active = None))
+            .values(is_active = False))
 
         # Update article status
         article.status = 'pub_deleted'
@@ -1450,7 +1510,8 @@ def index():
     articles = db.session.query(Article, Image, PublishingNote) \
         .outerjoin(Image, Image.id == Article.image_id) \
         .outerjoin(PublishingNote, PublishingNote.published_article_id == Article.id) \
-        .filter(Article.status == 'pub_live').all()
+        .filter(Article.status == 'pub_live') \
+        .filter(PublishingNote.is_active == True).all()
         
     # Render index page
     return render_template('index.html', articles=articles)
@@ -1468,7 +1529,8 @@ def filter_articles():
     articles = db.session.query(Article, Image, PublishingNote) \
         .outerjoin(Image, Image.id == Article.image_id) \
         .outerjoin(PublishingNote, PublishingNote.published_article_id == Article.id) \
-        .filter(Article.status == 'pub_live').all()
+        .filter(Article.status == 'pub_live') \
+        .filter(PublishingNote.is_active == True).all()
 
     # Render articles filter page
     return render_template('articles.html', 
@@ -1563,6 +1625,6 @@ def view_article(id, slug=None):
     else: # Article marked inactive
 
         # Alert and return to index
-        flash('That article has been taken offline.', 'error')
+        flash('That article is currently offline.', 'error')
         return redirect(url_for('main.index'))
 

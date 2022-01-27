@@ -200,6 +200,9 @@ textarea.form-text-header {
     width: 15rem;
     z-index: 1;
 }
+#admin-articles [data-active="False"] {
+    border: 5px solid red;
+}
 .no-results-icon {
     width: 100%;
     text-align: center;

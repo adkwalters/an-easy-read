@@ -97,7 +97,8 @@ if (addEmailForm) {
 // Get actions requiring confirmation
 const actionsToConfirm = ["article-action-delete", "article-action-request", 
     "article-action-reject", "article-action-review", "article-action-publish", 
-    "writer-action-remove", "publisher-action-remove"];
+    "article-action-activate", "article-action-deactivate", "writer-action-remove", 
+    "publisher-action-remove"];
 
 // Confirm user action
 for (let action of actionsToConfirm) {
@@ -126,6 +127,16 @@ for (let action of actionsToConfirm) {
             }
             else if (action == "article-action-publish") {
                 if (!confirm("Publish this article?")) {
+                    event.preventDefault();
+                }
+            }
+            else if (action == "article-action-activate") {
+                if (!confirm("Activate this article?")) {
+                    event.preventDefault();
+                }
+            }
+            else if (action == "article-action-deactivate") {
+                if (!confirm("Deactivate this article?")) {
                     event.preventDefault();
                 }
             }
@@ -533,26 +544,33 @@ for (let article of articlesDisplayed) {
             article.appendChild(statusIcon.cloneNode(true));
         }
     }
-    // Published articles
-    else if (publishedArticles.includes(status)) {
+    // Published article, live
+    if (status == "pub_live" || status == "published") {
         statusIcon.setAttribute("class", "status-icon fas fa-book-open");
         iconToolTip.innerHTML = "Article is published and live";
         article.appendChild(statusIcon.cloneNode(true));
-        // Outdated daft article
-        if (status == "pub_draft") {
-            let toolTip = article.querySelector(".status-explanation");
-            toolTip.innerHTML = "Outdated: click to copy live version";                 
-            let icon = article.querySelector(".status-icon");
-            icon.setAttribute("class", "status-icon fas fa-exclamation-circle");
-            // Click to trigger article update
-            icon.addEventListener("click", () => {
-                let form = article.querySelector("form.article-action-update");
-                if (confirm("Update this article to its live version?")) {
-                    form.submit();
-                }
-            }); 
+        // Published article, offline
+        if (article.dataset.active == "False") {
+            let tooltip = article.querySelector(".status-explanation");
+            tooltip.innerHTML = "Published article is currently offline";
         }
-    }    
+    }
+    // Outdated daft article
+    if (status == "pub_draft") {
+        statusIcon.setAttribute("class", "status-icon fas fa-exclamation-circle");
+        iconToolTip.innerHTML = "Outdated: click to copy live version";
+        article.appendChild(statusIcon.cloneNode(true));
+        // Click to trigger article update  
+        let icon = article.querySelector(".status-icon");
+        icon.setAttribute("class", "status-icon fas fa-exclamation-circle");
+        icon.addEventListener("click", () => {
+            let form = article.querySelector("form.article-action-update");
+            if (confirm("Reset this article to its live version? \
+                \nPlease note, unpublished changes will be lost.")) {
+                form.submit();
+            }
+        }); 
+    }
 }
 
 

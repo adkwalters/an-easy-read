@@ -39,7 +39,7 @@
             <ul>
                 {% if articles %}
                     {% for article in articles %}
-                        <li class="label-colour result-display" data-status="{{ article['Article'].status }}">
+                        <li class="label-colour result-display" data-status="{{ article['Article'].status }}" data-active="{{ article['PublishingNote'].is_active }}">
                             {% if article['Image'].src %}
                                 <figure>
                                     <img src="{{ url_for('main.return_image', filename=article['Image'].src) }}">
@@ -62,7 +62,7 @@
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                         <button type="submit" class="button grey-out">Edit</button>
                                     </form>
-                                {% if article['Article'].status == 'pub_live' %}
+                                {% if article['Article'].status == 'pub_live' and article['PublishingNote'].is_active %}
                                     <form class="article-action-preview" action="{{ url_for('main.view_article', id=article['PublishingNote'].id, slug=article['PublishingNote'].slug ) }}" method="post">
                                         <button type="submit" class="button grey-out">View</button>
                                     </form>
@@ -76,6 +76,8 @@
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                         <button type="submit" class="button grey-out">Preview</button>
                                     </form>
+                                {% endif %}
+                                {% if article['Article'].status in ('pending', 'pub_pending') %}
                                     <form class="article-action-publish" action="{{ url_for('main.publish_article') }}" method="get">
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                         <button type="submit" class="button action publish-article-button">Publish</button>

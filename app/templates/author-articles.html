@@ -35,7 +35,7 @@
             <ul>
                 {% if articles %}
                     {% for article in articles %}
-                        <li class="label-colour result-display" data-status="{{ article['Article'].status }}">
+                        <li class="label-colour result-display" data-status="{{ article['Article'].status }}" data-active="{{ article['PublishingNote'].is_active }}">
                             {% if article['Image'].src %}
                                 <figure>
                                     <img src="{{ url_for('main.return_image', filename=article['Image'].src) }}">
@@ -57,7 +57,13 @@
                                         <input type="hidden" name="user-route" value="author-articles">
                                         <button type="submit" class="button grey-out">Edit</button></a>
                                     </form>
-                                {% if article['Article'].status == 'published' %}
+                                {% if article['Article'].status in ('pub_draft', 'pub_requested') %}
+                                    <form class="article-action-update" action="{{ url_for('main.update_article') }}" method="get">
+                                        <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
+                                        <button type="submit" class="button no-display"></button>
+                                    </form>
+                                {% endif %}
+                                {% if article['Article'].status == 'published' and article['PublishingNote'].is_active %}
                                     <form class="article-action-preview" action="{{ url_for('main.view_article', id=article['PublishingNote'].id, slug=article['PublishingNote'].slug ) }}" method="post">
                                         <button type="submit" class="button grey-out">View</button>
                                     </form>
@@ -71,15 +77,11 @@
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                         <button type="submit" class="button grey-out">Preview</button>
                                     </form>
+                                {% endif %}
+                                {% if article['Article'].status in ('draft', 'requested', 'pending', 'pub_draft', 'pub_requested', 'pub_pending') %}
                                     <form class="article-action-request" action="{{ url_for('main.request_article') }}" method="get">
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                         <button type="submit" class="button grey-out">Publish</button>
-                                    </form>
-                                {% endif %}
-                                {% if article['Article'].status in ('pub_draft', 'pub_requested') %}
-                                    <form class="article-action-update" action="{{ url_for('main.update_article') }}" method="get">
-                                        <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
-                                        <button type="submit" class="button hidden"></button>
                                     </form>
                                 {% endif %}
                                 </div>
