@@ -55,6 +55,7 @@
                 <article-image>
                     <img slot="slot-article-image" class="article-form-image" src="{{ url_for('main.return_image', filename=article_image.src) }}">
                     <input slot="slot-article-image-alt" name="article_image_alt" value="{{ article_image.alt }}">
+                    <input slot="slot-article-image-citation" name="article_image_cite" value="{{ article_image.cite }}">
                     <input type="hidden" name="article_image_id" value="{{ article_image.id }}">
                 </article-image>
             {% else %}
@@ -120,6 +121,7 @@
                             <paragraph-image slot="slot-paragraph-image" data-paragraph-index="{{ paragraph['Paragraph'].index }}">
                                 <img slot="slot-paragraph-image-img" class="article-form-image" src="{{ url_for('main.return_image', filename=paragraph['Image'].src) }}"/>
                                 <input slot="slot-paragraph-image-alt" name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_image_alt" value="{{ paragraph['Image'].alt }}"/>
+                                <input slot="slot-paragraph-image-citation" name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_image_cite" value="{{ paragraph['Image'].cite }}">
                                 <input type="hidden" name="paragraph-{{ paragraph['Paragraph'].index }}-paragraph_image_id" value="{{ paragraph['Image'].id }}"/>
                             </paragraph-image>
                             {% endif %}

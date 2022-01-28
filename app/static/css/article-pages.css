@@ -29,13 +29,18 @@ article.full-page {
         flex-direction: column;
         gap: 0.5rem;
     margin: 1rem;
-    margin-bottom: 2rem;
 }
 .article-categories-list>li:hover {
     background: var(--foreground-dark);
 }
-.article-page img {
+article img {
+    width: 100%;
     border-radius: 10px;
+}
+figcaption {
+    padding-right: 1rem;
+    text-align: right;
+    font-size: 1rem;
 }
 summary-paragraph a {
     text-decoration: underline;

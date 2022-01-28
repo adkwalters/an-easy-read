@@ -114,6 +114,7 @@ class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     alt = db.Column(db.String)
     src = db.Column(db.String)
+    cite = db.Column(db.String)
     # Relationships
     article = db.relationship('Article', 
         backref='image')

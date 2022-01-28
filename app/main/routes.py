@@ -677,7 +677,9 @@ def create_article():
         # Update Image object 
         db.session.execute(update(Image)
             .where(Image.id == form.article_image_id.data)
-            .values(alt = form.article_image_alt.data))
+            .values(
+                alt = form.article_image_alt.data,
+                cite = form.article_image_cite.data))
 
         # Create and add Source object
         source = Source(
@@ -713,7 +715,9 @@ def create_article():
             # Update Image object
             db.session.execute(update(Image)
                 .where(Image.id == paragraph['paragraph_image_id'])
-                .values(alt = paragraph['paragraph_image_alt']))
+                .values(
+                    alt = paragraph['paragraph_image_alt'],
+                    cite = paragraph['paragraph_image_cite']))
             
             # Append paragraphs to article
             article.paragraphs.append(paragraph_in_database)
@@ -814,7 +818,9 @@ def edit_article():
         # Update Image object
         db.session.execute(update(Image)
             .where(Image.id == form.article_image_id.data)
-            .values(alt = form.article_image_alt.data))
+            .values(
+                alt = form.article_image_alt.data,
+                cite = form.article_image_cite.data))
 
         # Update Source object
         db.session.execute(update(Source)
@@ -858,8 +864,10 @@ def edit_article():
             # Update Image objects
             db.session.execute(update(Image)
                 .where(Image.id == paragraph['paragraph_image_id'])
-                .values(alt = paragraph['paragraph_image_alt']))
-            
+                .values(
+                    alt = paragraph['paragraph_image_alt'],
+                    cite = paragraph['paragraph_image_cite']))
+
             # Append paragraphs to article
             article.paragraphs.append(paragraph_in_database)
 

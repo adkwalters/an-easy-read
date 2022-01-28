@@ -23,10 +23,16 @@
 <!-- Main -->
 {% block main %}
 <article class="full-page">
-    <!-- Image needs proper labelling and referencing  -->
+    <!-- Article Main Image -->
     {% if article_image %}
-        <img src="{{ url_for('main.return_image', filename=article_image.src) }}" alt="{{ article_image.alt }}"/>
-    {% endif %}    <!-- Article header -->
+        <figure>
+            <img src="{{ url_for('main.return_image', filename=article_image.src) }}" alt="{{ article_image.alt }}"/>
+            {% if article_image.cite %}
+                <figcaption>{{ article_image.cite | safe }}</figcaption>
+            {% endif %}
+        </figure>
+    {% endif %}
+    <!-- Article header -->
     <div class="article-header">
         <ul class="article-categories-list">
             {% for category in categories %}
@@ -76,7 +82,12 @@
         {% for paragraph in paragraphs %}
             <summary-paragraph>
                 {% if paragraph['Image'] %}
-                    <img slot="slot-image" src="{{ url_for('main.return_image', filename=paragraph['Image'].src) }}" alt="{{ paragraph['Image'].alt }}"/>
+                    <figure slot="slot-image" >
+                        <img src="{{ url_for('main.return_image', filename=paragraph['Image'].src) }}" alt="{{ paragraph['Image'].alt }}"/>
+                        {% if article_image.cite %}
+                            <figcaption>{{ paragraph['Image'].cite | safe }}</figcaption>
+                        {% endif %}
+                    </figure>
                 {% endif %}
                 {% if paragraph['Paragraph'].header %}
                     <h3 slot="slot-header">{{ paragraph['Paragraph'].header }}</h3>

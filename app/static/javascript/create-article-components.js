@@ -24,14 +24,21 @@ class ArticleImage extends HTMLElement {
         imageLabel.textContent = "Main image";
 
         const altLabel = document.createElement("label");
-        altLabel.setAttribute("for", "article-image-alt");
+        altLabel.setAttribute("for", "article_image_alt");
         altLabel.textContent = "Image description:";
+
+        const citeLabel = document.createElement("label");
+        citeLabel.setAttribute("for", "article_image_cite");
+        citeLabel.textContent = "Image credit";
 
         const imgSlot = document.createElement("slot");
         imgSlot.setAttribute("name", "slot-article-image");
 
         const altSlot = document.createElement("slot");
         altSlot.setAttribute("name", "slot-article-image-alt");
+
+        const citeSlot = document.createElement("slot");
+        citeSlot.setAttribute("name", "slot-article-image-citation");
 
         const hiddenId = document.createElement("input");
         hiddenId.setAttribute("type", "hidden");
@@ -46,6 +53,11 @@ class ArticleImage extends HTMLElement {
         const altInput = document.createElement("input");
         altInput.setAttribute("slot", "slot-article-image-alt");
         altInput.setAttribute("name", "article_image_alt");
+
+        const citeInput = document.createElement("input");
+        citeInput.setAttribute("slot", "slot-article-image-citation");
+        citeInput.setAttribute("name", "article_image_cite");
+        citeInput.setAttribute("placeholder", "eg. Image by [name] from [website link]")
 
         const img = document.createElement("img");
         img.setAttribute("slot", "slot-article-image");
@@ -62,6 +74,7 @@ class ArticleImage extends HTMLElement {
             imageLabel.appendChild(imageInput);
         shadow.appendChild(imgSlot);
         shadow.appendChild(altSlot);
+        shadow.appendChild(citeSlot);
   
         // Add article image
         imageInput.addEventListener("change", async () => {
@@ -106,6 +119,7 @@ class ArticleImage extends HTMLElement {
                     this.appendChild(img);
                     this.appendChild(hiddenId);
                     this.appendChild(altInput);
+                    this.appendChild(citeInput);
                 });
             }
         });
@@ -119,8 +133,9 @@ class ArticleImage extends HTMLElement {
             // If image exists
             if (image[0]) {
 
-                // Display image-alt header
+                // Display image alt and citation labels
                 shadow.insertBefore(altLabel, altSlot);
+                shadow.insertBefore(citeLabel, citeSlot);
 
                 // Display image-delete button
                 shadow.appendChild(delImageButton);
@@ -134,8 +149,9 @@ class ArticleImage extends HTMLElement {
             }
             else {
                 
-                // Remove image-alt header
+                // Remove image alt and citation labels
                 shadow.removeChild(altLabel);
+                shadow.removeChild(citeLabel);
 
                 // Remove image-delete button
                 shadow.removeChild(delImageButton);
@@ -152,6 +168,7 @@ class ArticleImage extends HTMLElement {
             // Get image content
             let image = imgSlot.assignedNodes();
             let imageAlt = altSlot.assignedNodes();
+            let imageCite = citeSlot.assignedNodes();
 
             // If image exists
             if (image[0]) {
@@ -159,8 +176,9 @@ class ArticleImage extends HTMLElement {
                 // Remove image
                 image[0].remove();
 
-                // Remove image alt
+                // Remove image alt and citation
                 imageAlt[0].remove();
+                imageCite[0].remove();
 
                 // Remove hidden ID
                 hiddenId.remove();
@@ -687,7 +705,8 @@ class ParagraphImage extends HTMLElement {
         // Generate input names (matching WTForms)
         const paragraphName = "paragraph-" + paragraphIndex;
         const hiddenIdName = paragraphName + "-paragraph_image_id";
-        const imageAltName = paragraphName + "-paragraph_image_alt";   
+        const imageAltName = paragraphName + "-paragraph_image_alt";
+        const imageCiteName = paragraphName + "-paragraph_image_cite";  
 
         // Prepare elements
         const form = document.getElementById('article-form')
@@ -702,6 +721,9 @@ class ParagraphImage extends HTMLElement {
         const altSlot = document.createElement("slot");
         altSlot.setAttribute("name", "slot-paragraph-image-alt");
 
+        const citeSlot = document.createElement("slot");
+        citeSlot.setAttribute("name", "slot-paragraph-image-citation");
+
         const imageLabel = document.createElement("label");
         imageLabel.setAttribute("for", "upload_image");
         imageLabel.textContent = "Image:";
@@ -709,6 +731,10 @@ class ParagraphImage extends HTMLElement {
         const altLabel = document.createElement("label");
         altLabel.setAttribute("for", imageAltName);
         altLabel.textContent = "Image description:";
+
+        const citeLabel = document.createElement("label");
+        citeLabel.setAttribute("for", imageCiteName);
+        citeLabel.textContent = "Image credit";
 
         const imageInput = document.createElement("input");
         imageInput.setAttribute("type", "file");
@@ -719,6 +745,11 @@ class ParagraphImage extends HTMLElement {
         const altInput = document.createElement("input");
         altInput.setAttribute("slot", "slot-paragraph-image-alt");
         altInput.setAttribute("name", imageAltName);
+
+        const citeInput = document.createElement("input");
+        citeInput.setAttribute("slot", "slot-paragraph-image-citation");
+        citeInput.setAttribute("name", imageCiteName);
+        citeInput.setAttribute("placeholder", "eg. Image by [name] from [website link]")
 
         const img = document.createElement("img");
         img.setAttribute("slot", "slot-paragraph-image-img");
@@ -739,7 +770,7 @@ class ParagraphImage extends HTMLElement {
             imageLabel.appendChild(imageInput);
         shadow.appendChild(imageSlot);
         shadow.appendChild(altSlot);
-
+        shadow.appendChild(citeSlot);
         shadow.appendChild(delImageButton);
 
         // Apppend fieldList to light DOM to be sent with form
@@ -787,6 +818,7 @@ class ParagraphImage extends HTMLElement {
                     // Append elements to light DOM
                     this.appendChild(img);
                     this.appendChild(altInput);
+                    this.appendChild(citeInput);
                     fieldList.appendChild(hiddenId);                     
                 });
             }
@@ -801,8 +833,9 @@ class ParagraphImage extends HTMLElement {
             // If image exists
             if (images[0]) {
 
-                // Display image-alt label
+                // Display image alt and citation labels
                 shadow.insertBefore(altLabel, altSlot);
+                shadow.insertBefore(citeLabel, citeSlot);
 
                 // Remove image input
                 imageInput.remove();
