@@ -8,18 +8,20 @@ class SummaryParagraph extends HTMLElement {
 
         // Set the reading level
         this.setLevel = (difficulty) => {
-            // Hide all summaries
-            for (let summary of this.summaries) {
-                summary.classList.remove("cursor");
-                summary.classList.add("no-display");
-            }
-            // Display highest level
-            if (difficulty == "hardest") {
-                this.summaries.at(-1).classList.replace("no-display", "cursor");            
-            }
-            // Display lowest level
-            else if (difficulty == "easiest") {
-                this.summaries.at(0).classList.replace("no-display", "cursor");          
+            if (this.summaries.length > 0) {
+                // Hide all summaries
+                for (let summary of this.summaries) {
+                    summary.classList.remove("cursor");
+                    summary.classList.add("no-display");
+                }
+                // Display highest level
+                if (difficulty == "hardest") {
+                    this.summaries.at(-1).classList.replace("no-display", "cursor");            
+                }
+                // Display lowest level
+                else if (difficulty == "easiest") {
+                    this.summaries.at(0).classList.replace("no-display", "cursor");          
+                }
             }
         }
 
@@ -52,18 +54,24 @@ class SummaryParagraph extends HTMLElement {
             // Get arrows
             let incArrow = this.shadowRoot.querySelector(".next");
             let decArrow = this.shadowRoot.querySelector(".prev");
-            // If highest level, remove increase arrow
-            if (this.summaries.at(-1).classList.contains("cursor")) {
-                incArrow.classList.add("no-display");
-            } else {
-                incArrow.classList.remove("no-display");
-            }  
-            // If lowest level, remove decrease arrow
-            if (this.summaries.at(0).classList.contains("cursor")) {
-                decArrow.classList.add("no-display");
-            } else {
-                decArrow.classList.remove("no-display");
-            }  
+            if (this.summaries.length > 0) {
+                // If highest level, remove increase arrow
+                if (this.summaries.at(-1).classList.contains("cursor")) {
+                    incArrow.classList.add("no-display");
+                } else {
+                    incArrow.classList.remove("no-display");
+                }  
+                // If lowest level, remove decrease arrow
+                if (this.summaries.at(0).classList.contains("cursor")) {
+                    decArrow.classList.add("no-display");
+                } else {
+                    decArrow.classList.remove("no-display");
+                }  
+            }
+            else {
+                incArrow.remove();
+                decArrow.remove();
+            }
         }
     }
 
