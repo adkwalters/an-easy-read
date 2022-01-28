@@ -34,11 +34,13 @@
     {% endif %}
     <!-- Article header -->
     <div class="article-header">
-        <ul class="article-categories-list">
-            {% for category in categories %}
-                <li class="label-size label-colour"><a href="{{ url_for('main.filter_articles', category=category.name) }}">{{ category.name }}</a></li>
-            {% endfor %}
-        </ul>
+        {% if categories %}
+            <ul class="article-categories-list">
+                {% for category in categories %}
+                    <li class="label-size label-colour"><a href="{{ url_for('main.filter_articles', category=category.name) }}">{{ category.name }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         <h1 class="article-title">{{ article.title }}</h1>
         <div class="article-meta">
             <author id="article-author">Author: {{ article.author.username }}</author>

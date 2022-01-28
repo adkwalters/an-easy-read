@@ -16,7 +16,7 @@ article.full-page {
 .article-body {
     width: 100%;
     max-width: 42rem;
-    margin: auto;
+    margin: 0 auto;
 }
 .article-categories-list {
     display: flex;

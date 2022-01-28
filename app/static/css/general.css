@@ -169,11 +169,12 @@ textarea {
     font-size: 1.2rem;
 }
 .dropdown-tab {
-    padding: 0.6rem 1rem;
+    padding: 0.6rem 0.8rem;
 }
 .dropdown-tab-right {
     position: relative;
     margin-left: auto;
+    text-align: right;
 }
 .dropdown-tab-right ul {
     right: 0;
@@ -263,6 +264,9 @@ textarea {
 @media (min-width: 48rem) {
     h1 {
         font-size: 2.4rem;
+    }
+    .dropdown-tab {
+        padding: 0.6rem 1rem;
     }
 }
 
