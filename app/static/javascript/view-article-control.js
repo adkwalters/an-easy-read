@@ -63,7 +63,7 @@ const head = document.querySelector("head");
 
 // Create stylesheet with rule to remove images from print
 const stylesheet = document.createElement("style");
-stylesheet.innerHTML = "@media print { img { display: none; } }";
+stylesheet.innerHTML = "@media print { img, figcaption { display: none; } }";
 
 // Print article with images
 printWithImages.addEventListener("click", () => {

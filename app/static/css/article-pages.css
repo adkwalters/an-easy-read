@@ -219,17 +219,32 @@ textarea.form-text-header {
 /* || Print Article || */
 
 @media print {
+    .full-page {
+        display: block;
+    }
     #header-main,
     .dropdown-panel,
     .article-categories-list {
         display: none;
     }
+    h1 {
+        margin: 1rem;
+        text-align: center;
+    }
+    .article-meta {
+        text-align: center;
+    }
     img {
         display: block;
         max-width: 300px;
         height: auto;
-        margin: auto; 
+        margin: auto;
     }
-
+    figure {
+        page-break-inside: avoid;
+    }
+    figcaption {
+        text-align: center;
+    }
 }
 
