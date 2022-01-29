@@ -24,7 +24,7 @@
     <div id="admin-articles" class="full-spread">
         <ul id="admin-navigation">
             <li><h1>Articles</h1></li>
-            <li><a href="{{ url_for('main.display_publishers') }}">Publishers</a></li>
+            <li><a href="{{ url_for('publish.display_publishers') }}">Publishers</a></li>
         </ul>
         <ul class="dropdown-panel label-colour">
             <li class="dropdown-tab">
@@ -41,7 +41,7 @@
                         <li class="label-colour result-display" data-status="{{ article['Article'].status }}" data-active="{{ article['PublishingNote'].is_active }}">
                             {% if article['Image'].src %}
                                 <figure>
-                                    <img src="{{ url_for('main.return_image', filename=article['Image'].src) }}">
+                                    <img src="{{ url_for('publish.return_image', filename=article['Image'].src) }}">
                                     <figcaption><h3>{{ article['Article'].title }}</h3></figcaption>
                                 </figure>
                             {% else %}
@@ -49,18 +49,18 @@
                                 <h3>{{ article['Article'].title }}</h3>
                             {% endif %}
                             <p>{{ article['Article'].description }}</p>
-                            <form class="article-action-delete" action="{{ url_for('main.permadelete_article') }}" method="get">
+                            <form class="article-action-delete" action="{{ url_for('publish.permadelete_article') }}" method="get">
                                 <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                 <button type="submit" class="button delete"><i class="far fa-trash-alt"></i></button>
                             </form>
                             <i class="article-actions-icon fas fa-edit">
                                 <div class="article-actions-dropdown">
-                                    <form class="article-action-edit" action="{{ url_for('main.edit_article') }}" method="get">
+                                    <form class="article-action-edit" action="{{ url_for('publish.edit_article') }}" method="get">
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                         <button type="submit" class="button grey-out">Edit</button>
                                     </form>
                                 {% if article['Article'].status == 'pub_live' and article['PublishingNote'].is_active %}
-                                    <form class="article-action-preview" action="{{ url_for('main.view_article', id=article['PublishingNote'].id, slug=article['PublishingNote'].slug ) }}" method="post">
+                                    <form class="article-action-preview" action="{{ url_for('publish.view_article', id=article['PublishingNote'].id, slug=article['PublishingNote'].slug ) }}" method="post">
                                         <button type="submit" class="button grey-out">View</button>
                                     </form>
                                     <div class="article-action-link">
@@ -69,24 +69,24 @@
                                         <button type="submit" class="button grey-out">Link</button>
                                     </div>
                                 {% else %}
-                                    <form class="article-action-preview" action="{{ url_for('main.preview_article') }}" method="get">
+                                    <form class="article-action-preview" action="{{ url_for('publish.preview_article') }}" method="get">
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                         <button type="submit" class="button grey-out">Preview</button>
                                     </form>
                                 {% endif %}
                                 {% if article['PublishingNote'].is_active == False %}
-                                    <form class="article-action-activate" action="{{ url_for('main.activate_article') }}" method="get">
+                                    <form class="article-action-activate" action="{{ url_for('publish.activate_article') }}" method="get">
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                         <button type="submit" class="button grey-out">Activate</button>
                                     </form>
                                 {% else %}
-                                    <form class="article-action-deactivate" action="{{ url_for('main.deactivate_article') }}" method="get">
+                                    <form class="article-action-deactivate" action="{{ url_for('publish.deactivate_article') }}" method="get">
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
                                         <button type="submit" class="button grey-out">Deactivate</button>
                                     </form>
                                 {% endif %}
                                 {% if article['Article'].status == 'pub_deleted' %}
-                                    <form class="article-action-transfer" action="{{ url_for('main.transfer_article') }}" method="post">
+                                    <form class="article-action-transfer" action="{{ url_for('publish.transfer_article') }}" method="post">
                                         {{ form.hidden_tag() }}
                                         <input type="hidden" name="article_id" value="{{ article['Article'].id }}">
                                         <button type="button" class="button action">Transfer</button>

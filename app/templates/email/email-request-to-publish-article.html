@@ -1,3 +1,3 @@
 <h3>Request to Publish an Article</h3>
 <p><b>{{ current_user.username }}</b> has made a request to publish the following article:</p>
-<p>Title: <a href="{{ url_for('main.preview_article', **{'article-id':article.id, '_external':True}) }}">{{ article.title }}<a></p>
+<p>Title: <a href="{{ url_for('publish.preview_article', **{'article-id':article.id, '_external':True}) }}">{{ article.title }}<a></p>

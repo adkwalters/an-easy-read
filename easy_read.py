@@ -1,6 +1,6 @@
 from app import create_app, db
 from app.models import User, Article, Image, Category, Paragraph, Summary, Publisher, PublishingNote
-from app.main.routes import display_admin_articles
+from app.publish.routes import display_admin_articles
 
 app = create_app()
 

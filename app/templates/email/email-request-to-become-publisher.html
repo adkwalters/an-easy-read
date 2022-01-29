@@ -1,5 +1,5 @@
 <h3>Invitation to Publish</h3>
 <p>You have been invited to become a publisher!</p>
 <p>As publisher, you can now display articles live on the site.</p>
-<p><a href="{{ url_for('main.display_author_articles', **{'_external':True}) }}">Publish your own articles<a></p>
-<p>Or <a href="{{ url_for('main.display_requests', **{'_external':True}) }}">publish articles requested by others<a></p>
+<p><a href="{{ url_for('publish.display_author_articles', **{'_external':True}) }}">Publish your own articles<a></p>
+<p>Or <a href="{{ url_for('publish.display_requests', **{'_external':True}) }}">publish articles requested by others<a></p>

@@ -73,7 +73,7 @@ def resent_email_confirmation():
     flash('Confirmation email resent. Please check your spam folder.', 'success')
 
     # Redirect user to index page
-    return redirect(url_for('main.display_author_articles'))
+    return redirect(url_for('publish.display_author_articles'))
 
 
 @bp.route('/confirm-email/<token>', methods=['GET', 'POST'])
@@ -134,7 +134,7 @@ def login():
         if not target_page or url_parse(target_page).netloc != '':
 
             # Reassign author's articles page as index
-            target_page = url_for('main.display_author_articles')
+            target_page = url_for('publish.display_author_articles')
 
         # Redirect user to target page
         return redirect(target_page)

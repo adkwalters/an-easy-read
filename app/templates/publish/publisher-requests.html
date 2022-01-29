@@ -23,8 +23,8 @@
 {% block main %}
     <div id="publisher-requests" class="full-spread">
         <ul id="publisher-navigation">
-            <li><a href="{{ url_for('main.display_publisher_articles') }}">Articles</a></li>
-            <li><a href="{{ url_for('main.display_writers') }}">Writers</a></li>
+            <li><a href="{{ url_for('publish.display_publisher_articles') }}">Articles</a></li>
+            <li><a href="{{ url_for('publish.display_writers') }}">Writers</a></li>
             <li><h1>Requests</h1></li>
         </ul>
         <ul class="dropdown-panel label-colour">
@@ -42,7 +42,7 @@
                     <li class="label-colour result-display" data-request="my-requests" data-status="{{ request['Article'].status }}">
                         {% if request['Image'].src %}
                             <figure>
-                                <img src="{{ url_for('main.return_image', filename=request['Image'].src) }}">
+                                <img src="{{ url_for('publish.return_image', filename=request['Image'].src) }}">
                                 <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
                             </figure>
                         {% else %}
@@ -53,7 +53,7 @@
                         <p>Author: {{ request['User'].username }}</p>
                         <i class="article-actions-icon fas fa-edit">
                             <div class="article-actions-dropdown">
-                                <form class="article-action-review" action="{{ url_for('main.review_article') }}" method="get">
+                                <form class="article-action-review" action="{{ url_for('publish.review_article') }}" method="get">
                                     <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
                                     <button type="submit" class="button grey-out">Review</button>
                                 </form>
@@ -67,7 +67,7 @@
                     <li class="label-colour result-display" data-request="my-requests" data-status="{{ request['Article'].status }}">
                         {% if request['Image'].src %}
                             <figure>
-                                <img src="{{ url_for('main.return_image', filename=request['Image'].src) }}">
+                                <img src="{{ url_for('publish.return_image', filename=request['Image'].src) }}">
                                 <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
                             </figure>
                         {% else %}
@@ -78,7 +78,7 @@
                         <p>Author: {{ request['User'].username }}</p>
                         <i class="article-actions-icon fas fa-edit">
                             <div class="article-actions-dropdown">
-                                <form class="article-action-review" action="{{ url_for('main.review_article') }}" method="get">
+                                <form class="article-action-review" action="{{ url_for('publish.review_article') }}" method="get">
                                     <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
                                     <button type="submit" class="button grey-out">Review</button>
                                 </form>
@@ -92,7 +92,7 @@
                     <li class="label-colour result-display" data-request="all-requests" data-status="{{ request['Article'].status }}">
                         {% if request['Image'].src %}
                             <figure>
-                                <img src="{{ url_for('main.return_image', filename=request['Image'].src) }}">
+                                <img src="{{ url_for('publish.return_image', filename=request['Image'].src) }}">
                                 <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
                             </figure>
                         {% else %}
@@ -103,7 +103,7 @@
                         <p>Author: {{ request['User'].username }}</p>
                         <i class="article-actions-icon fas fa-edit">
                             <div class="article-actions-dropdown">
-                                <form class="article-action-review" action="{{ url_for('main.review_article') }}" method="get">
+                                <form class="article-action-review" action="{{ url_for('publish.review_article') }}" method="get">
                                     <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
                                     <button type="submit" class="button grey-out">Review</button></a>
                                 </form>

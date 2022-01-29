@@ -43,6 +43,9 @@ def create_app(config_class=Config):
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
+    from app.publish import bp as publish_bp
+    app.register_blueprint(publish_bp)
+
     # Email all errors to all admins while in production
     # https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-vii-error-handling 
     if not app.debug and not app.testing:

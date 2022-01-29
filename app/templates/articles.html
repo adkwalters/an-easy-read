@@ -50,10 +50,10 @@
                 {% if articles %}
                     {% for article in articles %}
                         <li class="label-colour result-display" data-category="{% for category in article['Article'].categories %}{{ category.name }} {% endfor %}" data-time="{{ article['PublishingNote'].date_published.strftime('%b %Y') }}">
-                            <a href="{{ url_for('main.view_article', id=article['PublishingNote'].id, slug=article['PublishingNote'].slug ) }}">
+                            <a href="{{ url_for('publish.view_article', id=article['PublishingNote'].id, slug=article['PublishingNote'].slug ) }}">
                                 {% if article['Image'].src %}
                                     <figure>
-                                        <img src="{{ url_for('main.return_image', filename=article['Image'].src) }}">
+                                        <img src="{{ url_for('publish.return_image', filename=article['Image'].src) }}">
                                         <figcaption><h3>{{ article['Article'].title }}</h3></figcaption>
                                     </figure>
                                 {% else %}

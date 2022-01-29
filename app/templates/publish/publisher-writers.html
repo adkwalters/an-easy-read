@@ -24,9 +24,9 @@
 {% block main %}
     <div id="publisher-writers" class="full-spread">
         <ul id="publisher-navigation">
-            <li><a href="{{ url_for('main.display_publisher_articles') }}">Articles</a></li>
+            <li><a href="{{ url_for('publish.display_publisher_articles') }}">Articles</a></li>
             <li><h1>Writers</h1></li>
-            <li><a href="{{ url_for('main.display_requests') }}">Requests</a></li>
+            <li><a href="{{ url_for('publish.display_requests') }}">Requests</a></li>
         </ul>
         <ul class="dropdown-panel label-colour">
             <li class="dropdown-tab">
@@ -43,7 +43,7 @@
                         <li class="label-colour result-display" data-user="published-writer">
                             <h3>{{ writer.username }}</h3>
                             <div class="writer-actions">
-                                <form class="writer-action-remove" action="{{ url_for('main.remove_writer') }}" method="get">
+                                <form class="writer-action-remove" action="{{ url_for('publish.remove_writer') }}" method="get">
                                     <input type="hidden" name="writer" value="{{ writer.id }}">
                                     <button type="submit" class="button delete">Remove</button>
                                 </form>
@@ -56,7 +56,7 @@
                         <li class="label-colour result-display" data-user="unpublished-writer">
                             <h3>{{ writer.username }}</h3>
                             <div class="writer-actions">
-                                <form class="writer-action-remove" action="{{ url_for('main.remove_writer') }}" method="get">
+                                <form class="writer-action-remove" action="{{ url_for('publish.remove_writer') }}" method="get">
                                     <input type="hidden" name="writer" value="{{ writer.id }}">
                                     <button type="submit" class="button delete">Remove</button>
                                 </form>
@@ -64,7 +64,7 @@
                         </li>
                     {% endfor %}
                 {% endif %}
-                <form id="add-user-by-email" action="{{ url_for('main.add_writer') }}" method="post">
+                <form id="add-user-by-email" action="{{ url_for('publish.add_writer') }}" method="post">
                     {{ form.hidden_tag() }}
                 </form>            
             </ul>

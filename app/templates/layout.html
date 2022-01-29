@@ -34,10 +34,10 @@
             <i id="header-nav-icon" class="fas fa-bars"></i>
             <ul id="header-nav-list">
                 {% if current_user.is_publisher %}
-                <li><a href="{{ url_for('main.display_publisher_articles') }}">Publish</a></li>
+                <li><a href="{{ url_for('publish.display_publisher_articles') }}">Publish</a></li>
                 {% endif %}
                 {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('main.display_author_articles') }}">Write</a></li>
+                <li><a href="{{ url_for('publish.display_author_articles') }}">Write</a></li>
                 {% endif %}
                 <li><a href="{{ url_for('main.filter_articles') }}">Read</a></li>                
                 <li><a href="{{ url_for('main.about') }}">About</a></li>
