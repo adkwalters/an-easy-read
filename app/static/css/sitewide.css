@@ -65,21 +65,36 @@
     display: flex;
         flex-direction: column;
         gap: 1rem;
+    min-height: calc(100vh - 11rem); /* for footer on short pages */
     min-width: 10rem;
     max-width: 80vw;
-    margin: 6rem auto;
+    margin: 6rem auto 3rem auto;
 }
 .full-page {
     display: flex;
         flex-direction: column;
         gap: 1rem;
+    height: 100%;
+    min-height: calc(100vh - 11rem); /* for footer on short pages*/
     min-width: 10rem;
     max-width: 49rem;
-    margin: 6rem auto;
+    margin: 6rem auto 3rem auto;
     padding: 0 2rem;
 }
 .full-page section {
     padding: 1rem;
+}
+
+
+/* || Footer || */
+
+footer {
+    width: 100%;
+    padding: 1rem 2rem;
+    background: var(--foreground);
+}
+footer ul {
+    text-align: right;
 }
 
 
@@ -111,7 +126,8 @@
     .full-spread,
     .full-page {
         gap: 2rem;
-        margin: 7rem auto;
+        min-height: calc(100vh - 13rem); /* for footer on short pages*/
+        margin: 7rem auto 4rem auto;
     }
     .full-page {
         padding: 0 3rem;

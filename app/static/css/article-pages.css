@@ -246,5 +246,8 @@ textarea.form-text-header {
     figcaption {
         text-align: center;
     }
+    footer {
+        display: none;
+    }
 }
 

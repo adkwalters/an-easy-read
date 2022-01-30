@@ -9,9 +9,10 @@
 /* || Registration and Login || */
 
 #auth-page {
+    min-height: calc(100vh - 14rem); /* for footer on short pages*/
     min-width: 10rem;
     max-width: 30rem;
-    margin: 6rem auto;
+    margin: 6rem auto 4rem auto;
     padding: 0 1rem;
 }
 #auth-page a {
