@@ -57,6 +57,22 @@ def about():
     return render_template('about.html')
 
 
+@bp.route('/privacy-policy')
+def privacy_policy():
+    """Display the privacy policy of Easy Read"""
+
+    # Render privacy policy page
+    return render_template('privacy-policy.html')
+
+
+@bp.route('/terms-and-conditions')
+def terms_and_conditions():
+    """Display the terms and conditions of Easy Read"""
+
+    # Render terms and conditions page
+    return render_template('terms-and-conditions.html')
+
+
 @bp.route('/contact', methods=['GET', 'POST'])
 def contact():
     """Display a form to contact Easy Read"""

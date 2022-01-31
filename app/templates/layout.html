@@ -68,7 +68,8 @@
     <footer>
         <ul>
             <li><a href="">Sitemap</a></li>
-            <li><a href="">Privacy Policy</a></li>
+            <li><a href="{{ url_for('main.terms_and_conditions')}}">Terms and Conditions</a></li>
+            <li><a href="{{ url_for('main.privacy_policy')}}">Privacy Policy</a></li>
             <li><a href="{{ url_for('main.contact')}}">Contact</a></li>
         </ul>
     </footer>
