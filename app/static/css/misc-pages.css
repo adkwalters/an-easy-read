@@ -32,6 +32,31 @@
 }
 
 
+/* || Legal Pages || */
+
+#legal-page h2 {
+    margin-top: 1rem;
+}
+#legal-page p {
+    font-size: 1rem;
+    line-height: 1.6rem;
+}
+#legal-page li p:not(:first-child) {
+    margin-top: 1rem;
+}
+#legal-page ul {
+    margin-left: 1.5rem;
+    list-style: outside;
+}
+#legal-page li:not(:last-child) {
+    margin-bottom: 1rem;
+}
+#legal-page a {
+    text-decoration: underline;
+}
+
+
+
 /* || Contact Page || */
 
 .contact-form {
