@@ -35,6 +35,21 @@
     align-self: flex-end;
     font-size: 1.1rem;
 }
+#legal-agreement {
+    display: flex;
+}
+#legal-agreement input {
+    width: max-content;
+}
+#legal-agreement p {
+    padding-left: 1rem;
+    font-size: 1rem;
+}
+#legal-agreement a {
+    padding: 0;
+    font-size: 1rem;
+}
+
 
 /* view password */
 

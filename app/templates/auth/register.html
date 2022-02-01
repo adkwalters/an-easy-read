@@ -23,7 +23,7 @@
 {% block main %}
     <div id="auth-page">
         <h1>Register</h1>
-        <form class="auth-form" action="" method="post" novalidate>  
+        <form class="auth-form" action="/register" method="post" novalidate>  
             {{ form.hidden_tag() }}
             <div class="auth-form label-colour">
                 <div>
@@ -57,6 +57,10 @@
                     {% for error in form.confirm_password.errors %}
                         <span class="form-alert alert-error">{{ error }}</span>
                     {% endfor %}     
+                </div>
+                <div id="legal-agreement">
+                    <input type="checkbox">
+                    <p>I have read and agree to the <a href="{{ url_for('main.terms_and_conditions') }}">Terms and Conditions</a> and <a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a>.</p>
                 </div>
             </div>
                 {{ form.submit(class="label-colour big-button") }}
