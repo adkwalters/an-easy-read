@@ -23,3 +23,44 @@ if (flashClose) {
         flashClose.parentNode.remove();
     });
 }
+
+
+// || Cookie Consent
+
+// Helper function to test local storage availability
+const localStorageAvailable = () => {
+    let test = "test";
+    try {
+        localStorage.setItem("test", test);
+        localStorage.removeItem(test);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+// Get consent modal popup
+const consentModal = document.getElementById("consent-modal");
+
+// Show popup if local storage is available and user consent is unknown
+if (localStorageAvailable() && localStorage.getItem('cookies_enabled') == null) {
+    consentModal.classList.remove("no-display");
+}
+
+// Record users' consent to cookies
+consentModal.addEventListener("click", (event) => {
+    if (localStorageAvailable()) {
+        let consent = event.target.innerHTML;
+        console.log(consent)
+        if (consent == "Accept") {
+            // Enable cookies and hide pop up
+            localStorage.setItem('cookies_enabled', '1');
+            consentModal.classList.add("no-display");
+        }
+        else if (consent == "Reject") {
+            // Keep cookies disabled and hide pop up
+            localStorage.setItem('cookies_enabled', '0');
+            consentModal.classList.add("no-display");
+        }
+    }
+})

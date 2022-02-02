@@ -1,24 +1,52 @@
 <!doctype html>
 <html lang="en">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width", initial-scale=1>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width", initial-scale=1>
 
-    <!-- Page meta data -->
-    {% block pagemeta %}{% endblock %}
+        <!-- Google Analytics Default Consent -->
+        <script>
+            // Define dataLayer and the gtag function
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
 
-    <!-- Add in other rich data -->
+            // Default analytics_storage to 'denied'
+            gtag('consent', 'default', {
+                'analytics_storage': 'denied'
+            });
 
-    <!-- Icons and fonts -->
-    <link rel="icon" href="/static/images/book-open-solid.svg">  <!-- Favicon -->
-    <script src="https://kit.fontawesome.com/ab4f2900b6.js" crossorigin="anonymous"></script>  <!-- Fontawesome icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&family=Source+Sans+Pro&display=swap" rel="stylesheet"> <!-- Google fonts -->
+            if (localStorage.getItem('cookies_enabled') === '1') {
+                console.log("tracking")
+                gtag('consent', 'update', {
+                    'analytics_storage': 'granted'
+                });
+            }
+        </script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-BY2EJ031EQ"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-BY2EJ031EQ');
+        </script>
 
-    <!-- CSS -->
-    {% block stylesheets%}{% endblock %}
-    
-    <!-- JavaScript --> 
-    {% block scripts %}{% endblock %}
-    
+        <!-- Page meta data -->
+        {% block pagemeta %}{% endblock %}
+
+        <!-- Add in other rich data -->
+
+        <!-- Icons and fonts -->
+        <link rel="icon" href="/static/images/book-open-solid.svg">  <!-- Favicon -->
+        <script src="https://kit.fontawesome.com/ab4f2900b6.js" crossorigin="anonymous"></script>  <!-- Fontawesome icons -->
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&family=Source+Sans+Pro&display=swap" rel="stylesheet"> <!-- Google fonts -->
+
+        <!-- CSS -->
+        {% block stylesheets%}{% endblock %}
+        
+        <!-- JavaScript --> 
+        {% block scripts %}{% endblock %}
+    </head>
 </html>
 <body>
     <header id="header-main">
@@ -50,6 +78,16 @@
         </nav>   
     </header>
     <main>
+
+        <!-- Cookie Consent -->
+        <div id="consent-modal" class="no-display">
+            <h3>With your permission..</h3>
+            <p>We use Google Analytics to track our visitors, to help us improve our service. For full details, see our <a href="{{ url_for('main.privacy_policy') }}">privacy policy</a></p>
+            <div id="consent-actions">
+                <button type="button" class="button">Accept</button>
+                <button type="button" class="button">Reject</button>
+            </div>
+        </div>
 
         <!-- Flashed messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}

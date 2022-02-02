@@ -59,6 +59,35 @@
 }
 
 
+/* || Consent Modal || */
+
+#consent-modal {
+    position: fixed;
+        bottom: 1rem;
+    margin: 0 1rem;
+    padding: 1rem;
+    background: var(--foreground-dark);
+    border-radius: 10px;
+    box-shadow: 0 0px 12px 0 rgba(0,0,0,0.4);
+    text-align: center;
+    z-index: 1;
+}
+#consent-modal p {
+    margin: 1rem auto;
+    font-size: 1rem;
+}
+#consent-modal a {
+    text-decoration: underline;
+}
+#consent-actions {
+    display: flex;
+        gap: 0.5rem;
+}
+#consent-actions button {
+    flex: 1;
+}
+
+
 /* || Page Layout || */
 
 .full-spread {
@@ -131,6 +160,12 @@ footer ul {
     }
     .full-page {
         padding: 0 3rem;
+    }
+    #consent-modal {
+        bottom: 2rem;
+        right: 2rem;
+        width: 40vw;
+        min-width: 15rem;
     }
 }
 
