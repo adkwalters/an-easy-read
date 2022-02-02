@@ -21,3 +21,20 @@ for (let input of passwordInputs) {
         showPasswordIcon.parentNode.replaceChild(hidePasswordIcon, showPasswordIcon);
     })
 }
+
+
+// || Legal Checkbox
+
+// Ensure all registered users have agreed legal contract
+const checkbox = document.querySelector("#legal-agreement>input");
+const registerForm = document.querySelector(".auth-form");
+// Prompt user to agree
+if (checkbox) {
+    registerForm.addEventListener("submit", (event) => {
+        if (!checkbox.checked) {
+            alert("Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy.");
+            event.preventDefault();
+        }
+    })
+}
+
