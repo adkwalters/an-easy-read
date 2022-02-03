@@ -2,18 +2,24 @@
 
 // Toggle navigation display
 const navIcon = document.getElementById("header-nav-icon");
-const header = document.getElementById('header-main');
+const header = document.getElementById("header-main");
 // click menu button to toggle menu
 navIcon.addEventListener("click", () => {
-    header.classList.toggle('display-menu')
+    header.classList.toggle("display-menu");
+    // Toggle aria-expanded attribute
+    if (header.classList.contains("display-menu")) {
+        navIcon.ariaExpanded = "true";
+    } else { 
+        navIcon.ariaExpanded = "false"; }
 });
 // Click outside open menu to close
 window.addEventListener("click", (event) => {
     if (!header.contains(event.target) 
-            && header.classList.contains('display-menu')) {
-        header.classList.toggle('display-menu');
+            && header.classList.contains("display-menu")) {
+        header.classList.toggle("display-menu");
+        navIcon.ariaExpanded = "false";
     } 
-})
+});
 
 
 // Close flashed message
@@ -51,7 +57,6 @@ if (localStorageAvailable() && localStorage.getItem('cookies_enabled') == null) 
 consentModal.addEventListener("click", (event) => {
     if (localStorageAvailable()) {
         let consent = event.target.innerHTML;
-        console.log(consent)
         if (consent == "Accept") {
             // Enable cookies and hide pop up
             localStorage.setItem('cookies_enabled', '1');

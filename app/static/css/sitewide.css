@@ -39,6 +39,9 @@
         flex-direction: column;
         align-items: flex-end;
 }
+#header-nav-icon {
+    border: none;
+}
 #header-nav-list {
     display: none;
     align-items: flex-end;
@@ -150,7 +153,7 @@ footer ul {
         margin: 0;
     }
     #header-nav-icon {
-        font-size: 0; /* hide icon */
+        display: none;
     }
     .full-spread,
     .full-page {

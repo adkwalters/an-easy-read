@@ -16,7 +16,6 @@
             });
 
             if (localStorage.getItem('cookies_enabled') === '1') {
-                console.log("tracking")
                 gtag('consent', 'update', {
                     'analytics_storage': 'granted'
                 });
@@ -59,7 +58,7 @@
             </h1>
         </div>
         <nav id="header-nav">
-            <i id="header-nav-icon" class="fas fa-bars"></i>
+            <button id="header-nav-icon" type="button" class="fas fa-bars" aria-label="mobile navigation menu" aria-expanded="false"></button>
             <ul id="header-nav-list">
                 {% if current_user.is_publisher %}
                 <li><a href="{{ url_for('publish.display_publisher_articles') }}">Publish</a></li>
