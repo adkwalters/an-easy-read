@@ -187,17 +187,23 @@ textarea {
     margin-top: 0.6rem;
     margin-left: -1rem;
     box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.1);
-    z-index: 1;
 }
-.dropdown-tab:hover .dropdown-tab-dropdown {
+.dropdown-tab:hover .dropdown-tab-dropdown,
+.dropdown-tab:focus .dropdown-tab-dropdown,
+.dropdown-tab:focus-within .dropdown-tab-dropdown {
     display: block;
 }
-.dropdown-tab-dropdown>li {
+.dropdown-panel button {
+    border: none;
+    background: none;
+    font-size: 1.2rem;
+}
+.dropdown-tab-dropdown button {
     padding: 0.3rem 1rem;
 }
 .dropdown-tab-active,
 .dropdown-tab:hover,
-.dropdown-tab-dropdown>li:hover {
+.dropdown-tab-dropdown li:hover {
     background: var(--foreground-dark);
     border-radius: 10px;
 }

@@ -29,10 +29,10 @@
         </ul>
         <ul class="dropdown-panel label-colour">
             <li class="dropdown-tab">
-                <a id="my-requests-tab">To Me {% if associated or disassociated %} ({{ associated|length + disassociated|length }}) {% endif %}</a>
+                <button id="my-requests-tab" type="button" role="tab" aria-label="Requests to me tab">To Me {% if associated or disassociated %} ({{ associated|length + disassociated|length }}) {% endif %}</button>
             </li>
             <li class="dropdown-tab dropdown-tab-right">
-                <a id="all-writers-tab">{% if unassociated %} ({{ unassociated|length }}) {% endif %} To All</a>
+                <button id="all-writers-tab" type="button" role="tab" aria-label="Requests to all tab">{% if unassociated %} ({{ unassociated|length }}) {% endif %} To All</button>
             </li>
         </ul>
         <section id="results-display-panel">
