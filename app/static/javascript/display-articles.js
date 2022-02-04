@@ -46,7 +46,8 @@ function reportNoResults() {
 // Big Add Button
 
 // Display or hide button
-const addButton = document.createElement("a");
+const addButton = document.createElement("button");
+addButton.setAttribute("type", "button");
 addButton.setAttribute("class", "big-add-button far fa-plus-square");
 function addOrRemoveAddButton(action) {
     if (action == "add") {
@@ -505,6 +506,7 @@ let articlesDisplayed = document.querySelectorAll("[data-status]");
 
 // Prepare article decorations (icon and tool tip)
 let statusIcon = document.createElement("i");
+statusIcon.setAttribute("tabindex", "0");
 let iconToolTip = document.createElement("div");
 iconToolTip.setAttribute("class", "status-explanation");
 statusIcon.appendChild(iconToolTip);
@@ -518,15 +520,17 @@ for (let article of articlesDisplayed) {
         if (myRequestsTab || allWritersTab) {
             if (status == 'pub_requested') {
                 statusIcon.setAttribute("class", "status-icon fas fa-book-open");
+                statusIcon.setAttribute("aria-label", "Request to update published article");
                 iconToolTip.innerHTML = "Request to update published article";
-                article.appendChild(statusIcon.cloneNode(true));
+                article.prepend(statusIcon.cloneNode(true));
             }
         }
         // Author's view
         else {
             statusIcon.setAttribute("class", "status-icon fas fa-envelope");
+            statusIcon.setAttribute("aria-label", "Publication request sent");
             iconToolTip.innerHTML = "Publication request sent";
-            article.appendChild(statusIcon.cloneNode(true));
+            article.prepend(statusIcon.cloneNode(true));
         }
     }
     // Articles under review
@@ -534,21 +538,24 @@ for (let article of articlesDisplayed) {
         // Publisher's view
         if (pendingArticlesTab) {
             statusIcon.setAttribute("class", "status-icon fas fa-search");
+            statusIcon.setAttribute("aria-label", "You are reviewing this article");
             iconToolTip.innerHTML = "You are reviewing this article";
-            article.appendChild(statusIcon.cloneNode(true));
+            article.prepend(statusIcon.cloneNode(true));
         }
         // Author's view
         else {
             statusIcon.setAttribute("class", "status-icon fas fa-lock");
+            statusIcon.setAttribute("aria-label", "Article is being reviewed");
             iconToolTip.innerHTML = "Article is being reviewed";
-            article.appendChild(statusIcon.cloneNode(true));
+            article.prepend(statusIcon.cloneNode(true));
         }
     }
     // Published article, live
     if (status == "pub_live" || status == "published") {
         statusIcon.setAttribute("class", "status-icon fas fa-book-open");
+        statusIcon.setAttribute("aria-label", "Article is published and live");
         iconToolTip.innerHTML = "Article is published and live";
-        article.appendChild(statusIcon.cloneNode(true));
+        article.prepend(statusIcon.cloneNode(true));
         // Published article, offline
         if (article.dataset.active == "False") {
             let tooltip = article.querySelector(".status-explanation");
@@ -557,13 +564,16 @@ for (let article of articlesDisplayed) {
     }
     // Outdated daft article
     if (status == "pub_draft") {
-        statusIcon.setAttribute("class", "status-icon fas fa-exclamation-circle");
+        let updateButton = document.createElement("button");
+        updateButton.setAttribute("class", "status-icon fas fa-exclamation-circle");
+        updateButton.setAttribute("type", "button");
+        updateButton.setAttribute("aria-label", "Outdated: click to copy live version");
+        let iconToolTip = document.createElement("div");
+        iconToolTip.setAttribute("class", "status-explanation");
         iconToolTip.innerHTML = "Outdated: click to copy live version";
-        article.appendChild(statusIcon.cloneNode(true));
-        // Click to trigger article update  
-        let icon = article.querySelector(".status-icon");
-        icon.setAttribute("class", "status-icon fas fa-exclamation-circle");
-        icon.addEventListener("click", () => {
+        updateButton.appendChild(iconToolTip);
+        article.prepend(updateButton);
+        updateButton.addEventListener("click", () => {
             let form = article.querySelector("form.article-action-update");
             if (confirm("Reset this article to its live version? \
                 \nPlease note, unpublished changes will be lost.")) {

@@ -102,6 +102,8 @@ textarea.form-text-header {
 
 /* || Display Articles || */
 
+/* Navigation */
+
 #admin-navigation,
 #publisher-navigation {
     display: flex;
@@ -109,14 +111,26 @@ textarea.form-text-header {
         align-items: flex-end;
         gap: 2rem;
 }
+
+/* Add button */
+
 #create-article,
 #add-user-by-email {
     display: none;
 }
+
+/* Results */
+
 #results-display-panel ul {
     display: grid;
         grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
         grid-gap: 2rem;
+}
+.no-results-icon {
+    width: 100%;
+    text-align: center;
+    color: var(--foreground);
+    font-size: 10rem;
 }
 .result-display {
     position: relative;
@@ -150,6 +164,8 @@ textarea.form-text-header {
     position: absolute;
         top: -0.5rem;
         left: -0.5rem; 
+    background: none;
+    border: none;
     color: var(--contrast-light);
     font-size: 2rem;
 }
@@ -172,6 +188,9 @@ textarea.form-text-header {
     margin: 1rem 0 0.5rem 0;
     text-align: left;
 }
+
+/* Article actions */
+
 .article-action-delete button {
     position: absolute;
         bottom: 0;
@@ -207,12 +226,6 @@ textarea.form-text-header {
 }
 #admin-articles [data-active="False"] {
     border: 5px solid red;
-}
-.no-results-icon {
-    width: 100%;
-    text-align: center;
-    color: var(--foreground);
-    font-size: 10rem;
 }
 
 

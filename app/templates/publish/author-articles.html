@@ -45,12 +45,8 @@
                                 <i class="no-image-icon far fa-image"></i>
                                 <h3>{{ article['Article'].title }}</h3>
                             {% endif %}
-                            <p>{{ article['Article'].description }}</p>
-                            <form class="article-action-delete" action="{{ url_for('publish.delete_article') }}" method="get">
-                                <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
-                                <button type="submit" class="delete"><i class="far fa-trash-alt"></i></button>
-                            </form>                            
-                            <i class="article-actions-icon fas fa-edit">
+                            <p>{{ article['Article'].description }}</p>                          
+                            <i class="article-actions-icon fas fa-edit" tabindex="0" aria-label="Article actions menu">
                                 <div class="article-actions-dropdown">
                                     <form class="article-action-edit" action="{{ url_for('publish.edit_article') }}" method="get">
                                         <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
@@ -86,6 +82,10 @@
                                 {% endif %}
                                 </div>
                             </i>
+                            <form class="article-action-delete" action="{{ url_for('publish.delete_article') }}" method="get">
+                                <input type="hidden" name="article-id" value="{{ article['Article'].id }}">
+                                <button type="submit" class="delete"><i class="far fa-trash-alt" aria-label="Delete article button"></i></button>
+                            </form>  
                         </li>
                     {% endfor %}
                 {% endif %}

@@ -51,7 +51,7 @@
                         {% endif %}
                         <p>{{ request['Article'].description }}</p>
                         <p>Author: {{ request['User'].username }}</p>
-                        <i class="article-actions-icon fas fa-edit">
+                        <i class="article-actions-icon fas fa-edit" tabindex="0" aria-label="Article actions menu">
                             <div class="article-actions-dropdown">
                                 <form class="article-action-review" action="{{ url_for('publish.review_article') }}" method="get">
                                     <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
@@ -76,7 +76,7 @@
                         {% endif %}
                         <p>{{ request['Article'].description }}</p>
                         <p>Author: {{ request['User'].username }}</p>
-                        <i class="article-actions-icon fas fa-edit">
+                        <i class="article-actions-icon fas fa-edit" tabindex="0" aria-label="Article actions menu">
                             <div class="article-actions-dropdown">
                                 <form class="article-action-review" action="{{ url_for('publish.review_article') }}" method="get">
                                     <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
@@ -101,7 +101,7 @@
                         {% endif %}
                         <p>{{ request['Article'].description }}</p>
                         <p>Author: {{ request['User'].username }}</p>
-                        <i class="article-actions-icon fas fa-edit">
+                        <i class="article-actions-icon fas fa-edit" tabindex="0" aria-label="Article actions menu">
                             <div class="article-actions-dropdown">
                                 <form class="article-action-review" action="{{ url_for('publish.review_article') }}" method="get">
                                     <input type="hidden" name="article-id" value="{{ request['Article'].id }}">
