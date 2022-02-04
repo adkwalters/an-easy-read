@@ -4,10 +4,14 @@
 const passwordInputs = document.querySelectorAll("input#password, input#confirm_password");
 for (let input of passwordInputs) {
     // Create icons
-    let hidePasswordIcon = document.createElement("i");
+    let hidePasswordIcon = document.createElement("button");
     hidePasswordIcon.setAttribute("class", "see-password-icon far fa-eye");
-    let showPasswordIcon = document.createElement("i");
+    hidePasswordIcon.setAttribute("type", "button");
+    hidePasswordIcon.setAttribute("aria-label", "Hide input password")
+    let showPasswordIcon = document.createElement("button");
     showPasswordIcon.setAttribute("class", "hide-password-icon far fa-eye-slash");
+    showPasswordIcon.setAttribute("type", "button");
+    showPasswordIcon.setAttribute("aria-label", "Show input password")
     // Append to input div
     input.parentNode.appendChild(hidePasswordIcon);
     // Show input password
