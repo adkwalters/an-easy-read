@@ -178,7 +178,8 @@ textarea.form-text-header {
     font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
     font-size: 1rem;
 }
-.status-icon:hover .status-explanation {
+.status-icon:hover .status-explanation,
+.status-icon:focus-within .status-explanation {
     display: block;
 }
 .result-display h3 {
@@ -214,7 +215,8 @@ textarea.form-text-header {
 .article-actions-dropdown {
     display: none;
 }
-.article-actions-icon:hover .article-actions-dropdown {
+.article-actions-icon:hover .article-actions-dropdown,
+.article-actions-icon:focus-within .article-actions-dropdown {
     position: absolute;
         top: -5px;
         left: 2.5rem;

@@ -17,6 +17,8 @@ const changeFontSize = (size) => {
             // Replace font size with selected size
             summary.classList.remove("small-font", "medium-font", "large-font");
             summary.classList.add(size);
+            // Remove focus in order to close dropdown
+            document.activeElement.blur();
         } 
     }
 }
@@ -41,6 +43,8 @@ const changeLevel = (difficulty) => {
         // Change level and configure arrow controls
         paragraph.setLevel(difficulty);
         paragraph.displayArrows();
+        // Remove focus in order to close dropdown
+        document.activeElement.blur();
     }
 }
 
@@ -70,7 +74,9 @@ printWithImages.addEventListener("click", () => {
     if (head.contains(stylesheet)) {
         head.removeChild(stylesheet);
     }
-    print()
+    print();
+    // Remove focus in order to close dropdown
+    document.activeElement.blur();
 })
 
 // Print article without images
@@ -78,6 +84,8 @@ printWithoutImages.addEventListener("click", () => {
     if (!head.contains(stylesheet)) {
         head.appendChild(stylesheet);
     }
-    print()
+    print();
+    // Remove focus in order to close dropdown
+    document.activeElement.blur();
     
 })

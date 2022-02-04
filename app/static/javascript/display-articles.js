@@ -151,6 +151,8 @@ for (let action of actionsToConfirm) {
                     event.preventDefault();
                 }
             }
+            // Remove focus in order to close dropdown
+            document.activeElement.blur();
         })
     }
 }
@@ -495,6 +497,8 @@ for (let button of linkArticleButton) {
         // Generate and alert hyperlink
         let hyperlink = "http://127.0.0.1:5000/" + pubNoteId + "/" + slug; // !! to be updated on deployment
         alert(hyperlink);
+        // Remove focus in order to close dropdown
+        document.activeElement.blur();
     });
 }
 
@@ -578,6 +582,9 @@ for (let article of articlesDisplayed) {
             if (confirm("Reset this article to its live version? \
                 \nPlease note, unpublished changes will be lost.")) {
                 form.submit();
+            } else {
+                // Remove focus in order to close dropdown
+                document.activeElement.blur();
             }
         }); 
     }

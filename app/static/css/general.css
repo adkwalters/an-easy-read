@@ -190,7 +190,6 @@ textarea {
     box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.1);
 }
 .dropdown-tab:hover .dropdown-tab-dropdown,
-.dropdown-tab:focus .dropdown-tab-dropdown,
 .dropdown-tab:focus-within .dropdown-tab-dropdown {
     display: block;
 }
