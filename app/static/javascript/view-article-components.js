@@ -69,8 +69,8 @@ class SummaryParagraph extends HTMLElement {
                 }  
             }
             else {
-                incArrow.remove();
-                decArrow.remove();
+                if (incArrow) { incArrow.remove(); }
+                if (decArrow) { decArrow.remove(); }
             }
         }
     }
