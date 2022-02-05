@@ -1222,7 +1222,7 @@ def publish_article():
                     
     # Record and alert
     db.session.commit()    
-    flash('Article successfully published.', 'success')
+    flash('Article successfully published. Please await activation.', 'success')
 
     # Return author to author's articles page
     return redirect(url_for('publish.display_publisher_articles'))
