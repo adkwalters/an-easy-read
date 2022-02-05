@@ -32,7 +32,8 @@ html {
     font-size: 100%;
 }
 body, 
-input, 
+input,
+select,
 textarea, 
 button {
     background: var(--background);
