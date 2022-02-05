@@ -57,8 +57,8 @@
                 <a href="{{ url_for('main.index') }}">Easy Read</a>
             </h1>
         </div>
-        <nav id="header-nav">
-            <button id="header-nav-icon" type="button" class="fas fa-bars" aria-label="mobile navigation menu" aria-expanded="false"></button>
+        <nav id="header-nav" aria-label="Main menu">
+            <button id="header-nav-icon" type="button" class="fas fa-bars" aria-label="main menu button" aria-expanded="false"></button>
             <ul id="header-nav-list">
                 {% if current_user.is_publisher %}
                 <li><a href="{{ url_for('publish.display_publisher_articles') }}">Publish</a></li>
