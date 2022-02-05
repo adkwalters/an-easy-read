@@ -89,7 +89,7 @@ summary-paragraph [slot="slot-summary"] {
 }
 paragraph-header,
 paragraph-level {
-    margin-top: -1rem; /*tighten up whitespace between content slots*/
+    margin-top: -0.5rem; /*tighten up whitespace between content slots*/
 }
 .form-text {
     resize: vertical;

@@ -25,7 +25,7 @@ class ArticleImage extends HTMLElement {
 
         const altLabel = document.createElement("label");
         altLabel.setAttribute("for", "article_image_alt");
-        altLabel.textContent = "Image description:";
+        altLabel.textContent = "Image description";
 
         const citeLabel = document.createElement("label");
         citeLabel.setAttribute("for", "article_image_cite");
@@ -57,7 +57,7 @@ class ArticleImage extends HTMLElement {
         const citeInput = document.createElement("input");
         citeInput.setAttribute("slot", "slot-article-image-citation");
         citeInput.setAttribute("name", "article_image_cite");
-        citeInput.setAttribute("placeholder", "eg. Image by [name] from [website link]")
+        citeInput.setAttribute("placeholder", "eg. Image by [name] from [website link]");
 
         const img = document.createElement("img");
         img.setAttribute("slot", "slot-article-image");
@@ -85,7 +85,7 @@ class ArticleImage extends HTMLElement {
             if (file) {
 
                 // Reappend file input to light DOM before creation of form data
-                this.appendChild(imageInput)
+                this.appendChild(imageInput);
         
                 // Create image URL
                 img.src = URL.createObjectURL(file);
@@ -98,9 +98,9 @@ class ArticleImage extends HTMLElement {
                     method: "POST",
                     body: formData
                 })
-                .then(response => response.json()) 
+                .then(response => response.json())
                 .catch(error => {
-                    console.error(error)
+                    console.error(error);
 
                     // Alert author
                     alert('The file selected is invalid or not permitted.');
@@ -114,7 +114,7 @@ class ArticleImage extends HTMLElement {
                     // Save image ID to hidden input
                     hiddenId.value = response.image_id;
                     imageInput.value = "";
-                    
+
                     // Append elements to light DOM                                   
                     this.appendChild(img);
                     this.appendChild(hiddenId);
@@ -244,8 +244,9 @@ class ArticleContent extends HTMLElement {
             // Append paragraph to DOM
             this.appendChild(newParagraph);
 
-            // // Scroll into view
-            // newParagraph.scrollIntoView({block: "center", behavior: "smooth"});
+            // Focus first button in new paragraph and scroll into view
+            newParagraph.shadowRoot.querySelector("button").focus();
+            newParagraph.scrollIntoView({block: "center", behavior: "smooth"});
         });
 
         // Display delete-paragraph button for last paragraph only (LIFO)
@@ -280,7 +281,7 @@ class ArticleContent extends HTMLElement {
                     }
                 } 
                 else {
-                
+
                     // If button exists
                     if (controls.contains(button)) {
 
@@ -291,9 +292,10 @@ class ArticleContent extends HTMLElement {
             }      
         });
 
-        // Delete paragraph
+        // Delete paragraph and focus add-paragraph button
         delParaButton.addEventListener("click", (event) => {  
-            let paragraph = event.target.getRootNode().host; 
+            let paragraph = event.target.getRootNode().host;
+            paragraph.parentNode.shadowRoot.querySelector("button").focus();
             paragraph.remove();
         }); 
 
@@ -374,7 +376,7 @@ class ArticleParagraph extends HTMLElement {
         const addLevelButton = document.createElement("button");
         addLevelButton.setAttribute("type", "button");
         addLevelButton.setAttribute("class", "button grey-out content-placeholder");
-        addLevelButton.textContent = "Add Level";    
+        addLevelButton.textContent = "Add Summary";    
                  
         const delParaButton = document.createElement("button");
         delParaButton.setAttribute("type", "button");
@@ -434,17 +436,17 @@ class ArticleParagraph extends HTMLElement {
                 image.setAttribute("slot", "slot-paragraph-image");
                 image.setAttribute("data-paragraph-index", paragraphIndex);
                 
-                // Append header to light DOM
+                // Append image to light DOM
                 this.appendChild(image);
 
-                // Scroll into view
-                // image.scrollIntoView({block: "center", behavior: "smooth"});
+                // Focus first input in image component and scroll into view
+                image.shadowRoot.querySelector("input").focus();
+                image.scrollIntoView({block: "center", behavior: "smooth"});
             }
             else {
                 
                 // Alert author
                 alert("An image has already been added for this paragraph");
-
             }
         });
 
@@ -465,8 +467,9 @@ class ArticleParagraph extends HTMLElement {
                 // Append header to light DOM
                 this.appendChild(header);
 
-                // Scroll into view
-                // header.scrollIntoView({block: "center", behavior: "smooth"});
+                // Focus first input in header component and scroll into view
+                header.querySelector("textarea").focus();
+                header.scrollIntoView({block: "center", behavior: "smooth"});
             } 
             else {
 
@@ -490,10 +493,11 @@ class ArticleParagraph extends HTMLElement {
             level.setAttribute("class", "custom-level");
                 
             // Append level to light DOM
-            this.appendChild(level);       
-
-            // Scroll into view
-            // level.scrollIntoView({block: "center", behavior: "smooth"});
+            this.appendChild(level);
+            
+            // Focus first input in header component and scroll into view
+            level.querySelector("textarea").focus();
+            level.scrollIntoView({block: "center", behavior: "smooth"});
         });   
 
         // Initialise delete-paragraph criteria
@@ -529,7 +533,8 @@ class ArticleParagraph extends HTMLElement {
             // Update previous paragraph's button
             updateDelParaButton(); 
 
-            // Delete paragraph
+            // Delete paragraph and focus add-paragraph button
+            this.parentNode.shadowRoot.querySelector("button").focus();
             this.remove();
         }); 
 
@@ -537,9 +542,12 @@ class ArticleParagraph extends HTMLElement {
         delLevelButton.addEventListener("click", () => {
             
             // Get last level
-            // let levelsSlot = this.shadowRoot.querySelector("[name='slot-paragraph-levels']");
             let levels = levelsSlot.assignedNodes({flatten: true});
             let lastLevel = levels[levels.length -1];
+            let penultimateLevel = levels[levels.length -2];
+            if (penultimateLevel) {
+                penultimateLevel.querySelector("textarea").focus();
+            }
             
             // Delete last level
             lastLevel.remove();
@@ -557,8 +565,9 @@ class ArticleParagraph extends HTMLElement {
                 // Mark slot as empty
                 imageSlotEmpty = true;
 
-                // Display add-image button
+                // Display and focus add-image button
                 imageControls.appendChild(addImageButton);
+                addImageButton.focus();
             }         
             else {
 
@@ -585,8 +594,9 @@ class ArticleParagraph extends HTMLElement {
                 // Mark slot as empty
                 headerSlotEmpty = true;
 
-                // Display add-header button
-                headerControls.appendChild(addHeaderButton)
+                // Display and focus add-header button
+                headerControls.appendChild(addHeaderButton);
+                addHeaderButton.focus();
             } 
             else {
 
@@ -594,7 +604,7 @@ class ArticleParagraph extends HTMLElement {
                 headerSlotEmpty = false;
 
                 // Remove add-header button
-                headerControls.removeChild(addHeaderButton)
+                headerControls.removeChild(addHeaderButton);
             }
 
             // Update button
@@ -613,8 +623,10 @@ class ArticleParagraph extends HTMLElement {
                 // Mark slot as empty
                 levelsSlotEmpty = true;
 
-                // Display placeholder
+                // Display and focus placeholder
                 addLevelButton.classList.add("content-placeholder");
+                addLevelButton.textContent = "Add Summary";
+                addLevelButton.focus();
             } 
             else {
 
@@ -623,7 +635,7 @@ class ArticleParagraph extends HTMLElement {
 
                 // Remove placeholder
                 addLevelButton.classList.remove("content-placeholder");
-
+                addLevelButton.textContent = "Add Level";    
             } 
  
             // Update button
@@ -652,7 +664,7 @@ class ArticleParagraph extends HTMLElement {
             else {
 
                 for (let level of levels) {
-
+                    
                     if (level == lastLevel) {
                         
                         // If no button exists
@@ -709,7 +721,7 @@ class ParagraphImage extends HTMLElement {
         const imageCiteName = paragraphName + "-paragraph_image_cite";  
 
         // Prepare elements
-        const form = document.getElementById('article-form')
+        const form = document.getElementById('article-form');
 
         const fieldList = document.createElement("ul");
         fieldList.setAttribute("id", paragraphName);
@@ -726,11 +738,11 @@ class ParagraphImage extends HTMLElement {
 
         const imageLabel = document.createElement("label");
         imageLabel.setAttribute("for", "upload_image");
-        imageLabel.textContent = "Image:";
+        imageLabel.textContent = "Image";
 
         const altLabel = document.createElement("label");
         altLabel.setAttribute("for", imageAltName);
-        altLabel.textContent = "Image description:";
+        altLabel.textContent = "Image description";
 
         const citeLabel = document.createElement("label");
         citeLabel.setAttribute("for", imageCiteName);
@@ -749,7 +761,7 @@ class ParagraphImage extends HTMLElement {
         const citeInput = document.createElement("input");
         citeInput.setAttribute("slot", "slot-paragraph-image-citation");
         citeInput.setAttribute("name", imageCiteName);
-        citeInput.setAttribute("placeholder", "eg. Image by [name] from [website link]")
+        citeInput.setAttribute("placeholder", "eg. Image by [name] from [website link]");
 
         const img = document.createElement("img");
         img.setAttribute("slot", "slot-paragraph-image-img");
@@ -800,7 +812,7 @@ class ParagraphImage extends HTMLElement {
                 })
                 .then(response => response.json()) 
                 .catch(error => {
-                    console.error(error)
+                    console.error(error);
 
                     // Alert author
                     alert('The file selected is invalid or not permitted.');
@@ -866,7 +878,7 @@ class ParagraphHeader extends HTMLElement {
         const paragraphIndex = this.getAttribute("data-paragraph-index");
 
         // Generate label
-        const headerName = `paragraph-${paragraphIndex}-paragraph_header`
+        const headerName = `paragraph-${paragraphIndex}-paragraph_header`;
                 
         // Attach shadow DOM
         const shadow = this.attachShadow({mode: "open"});
@@ -877,7 +889,7 @@ class ParagraphHeader extends HTMLElement {
         // Prepare elements       
         const headerLabel = document.createElement("label");
         headerLabel.setAttribute("for", headerName);
-        headerLabel.textContent = "Header:";
+        headerLabel.textContent = "Header";
 
         const headerSlot = document.createElement("slot");
         headerSlot.setAttribute("name", "slot-header-text");
@@ -955,7 +967,7 @@ class ParagraphLevel extends HTMLElement {
         // Prepare elements     
         const textLabel = document.createElement("label");
         textLabel.setAttribute("for", textName);
-        textLabel.textContent = `Level ${levelIndex}:`; 
+        textLabel.textContent = `Level ${levelIndex}`; 
 
         const textSlot = document.createElement("slot");
         textSlot.setAttribute("name", "slot-level-text");
@@ -976,7 +988,7 @@ class ParagraphLevel extends HTMLElement {
 
         const fieldList = document.createElement("ul");
         fieldList.setAttribute("id", summaryName);
-        fieldList.setAttribute("slot", "slot-level-index")
+        fieldList.setAttribute("slot", "slot-level-index");
 
         // Append elements to shadow DOM
         shadow.appendChild(textLabel);
