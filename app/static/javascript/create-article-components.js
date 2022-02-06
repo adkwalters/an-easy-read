@@ -6,7 +6,41 @@
 // <article-image> 
 class ArticleImage extends HTMLElement {
     constructor() {
-        super(); 
+        super();
+
+        // Display alert if image has no alt or citation
+        this.alert_image_support = () => {
+
+            // Get image alt and citation inputs
+            const altInputDiv = this.querySelector("[slot=slot-article-image-alt]");
+            const altInput = this.querySelector("[name=article_image_alt]");
+            const citeInputDiv = this.querySelector("[slot=slot-article-image-citation]");
+            const citeInput = this.querySelector("[name=article_image_cite]");
+
+            // Create alert and append to inputs
+            const errorAlert = document.createElement("span");
+            errorAlert.setAttribute("class", "form-alert alert-error");
+            errorAlert.textContent = "This field is required";
+            altInputDiv.appendChild(errorAlert.cloneNode(true));
+            citeInputDiv.appendChild(errorAlert.cloneNode(true));
+
+            // Helper function to toggle alert
+            const toggleAlert = (div, input) => {
+                if (input.value != "") {
+                    let alert = div.querySelector("span.form-alert");
+                    if (alert) { div.removeChild(alert); }
+                } 
+                else { div.appendChild(errorAlert.cloneNode(true)); }
+            }
+
+            // Toggle alert upon data entry
+            altInput.addEventListener("keyup", () => {
+                toggleAlert(altInputDiv, altInput)
+            });
+            citeInput.addEventListener("keyup", () => {
+                toggleAlert(citeInputDiv, citeInput)
+            });
+        }
     }
     connectedCallback() {
         
@@ -50,12 +84,16 @@ class ArticleImage extends HTMLElement {
         imageInput.setAttribute("class", "image-upload");
         imageInput.setAttribute("accept", "image/*");
 
+        const altInputDiv = document.createElement("div"); // Required to position error alert
+        altInputDiv.setAttribute("slot", "slot-article-image-alt");
+
         const altInput = document.createElement("input");
-        altInput.setAttribute("slot", "slot-article-image-alt");
         altInput.setAttribute("name", "article_image_alt");
 
+        const citeInputDiv = document.createElement("div"); // Required to position error alert
+        citeInputDiv.setAttribute("slot", "slot-article-image-citation");
+
         const citeInput = document.createElement("input");
-        citeInput.setAttribute("slot", "slot-article-image-citation");
         citeInput.setAttribute("name", "article_image_cite");
         citeInput.setAttribute("placeholder", "eg. Image by [name] from [website link]");
 
@@ -118,8 +156,13 @@ class ArticleImage extends HTMLElement {
                     // Append elements to light DOM                                   
                     this.appendChild(img);
                     this.appendChild(hiddenId);
-                    this.appendChild(altInput);
-                    this.appendChild(citeInput);
+                    this.appendChild(altInputDiv);
+                        altInputDiv.appendChild(altInput);
+                    this.appendChild(citeInputDiv);
+                        citeInputDiv.appendChild(citeInput);
+
+                    // Display alert if image has no alt or citation
+                    this.alert_image_support();
                 });
             }
         });
@@ -702,6 +745,40 @@ customElements.define("article-paragraph", ArticleParagraph);
 class ParagraphImage extends HTMLElement {
     constructor() {
         super();
+
+            // Display alert if image has no alt or citation
+            this.alert_image_support = () => {
+
+            // Get image alt and citation inputs
+            const altInputDiv = this.querySelector("[slot=slot-paragraph-image-alt]");
+            const altInput = altInputDiv.querySelector("input");
+            const citeInputDiv = this.querySelector("[slot=slot-paragraph-image-citation]");
+            const citeInput = citeInputDiv.querySelector("input");
+
+            // Create alert and append to inputs
+            const errorAlert = document.createElement("span");
+            errorAlert.setAttribute("class", "form-alert alert-error");
+            errorAlert.textContent = "This field is required";
+            altInputDiv.appendChild(errorAlert.cloneNode(true));
+            citeInputDiv.appendChild(errorAlert.cloneNode(true));
+
+            // Helper function to toggle alert
+            const toggleAlert = (div, input) => {
+                if (input.value != "") {
+                    let alert = div.querySelector("span.form-alert");
+                    if (alert) { div.removeChild(alert); }
+                } 
+                else { div.appendChild(errorAlert.cloneNode(true)); }
+            }
+
+            // Toggle alert upon data entry
+            altInput.addEventListener("keyup", () => {
+                toggleAlert(altInputDiv, altInput)
+            });
+            citeInput.addEventListener("keyup", () => {
+                toggleAlert(citeInputDiv, citeInput)
+            });
+        }
     }
     connectedCallback() {    
 
@@ -753,13 +830,17 @@ class ParagraphImage extends HTMLElement {
         imageInput.setAttribute("name", "upload_image");
         imageInput.setAttribute("class", "image-upload");
         imageInput.setAttribute("accept", "image/*");
-                
+
+        const altInputDiv = document.createElement("div"); // Required to position error alert
+        altInputDiv.setAttribute("slot", "slot-paragraph-image-alt");
+
         const altInput = document.createElement("input");
-        altInput.setAttribute("slot", "slot-paragraph-image-alt");
         altInput.setAttribute("name", imageAltName);
 
+        const citeInputDiv = document.createElement("div"); // Required to position error alert
+        citeInputDiv.setAttribute("slot", "slot-paragraph-image-citation");
+
         const citeInput = document.createElement("input");
-        citeInput.setAttribute("slot", "slot-paragraph-image-citation");
         citeInput.setAttribute("name", imageCiteName);
         citeInput.setAttribute("placeholder", "eg. Image by [name] from [website link]");
 
@@ -829,9 +910,14 @@ class ParagraphImage extends HTMLElement {
 
                     // Append elements to light DOM
                     this.appendChild(img);
-                    this.appendChild(altInput);
-                    this.appendChild(citeInput);
-                    fieldList.appendChild(hiddenId);                     
+                    this.appendChild(altInputDiv);
+                        altInputDiv.appendChild(altInput);
+                    this.appendChild(citeInputDiv);
+                        citeInputDiv.appendChild(citeInput);
+                    fieldList.appendChild(hiddenId);
+                    
+                    // Display alert if image has no alt or citation
+                    this.alert_image_support();
                 });
             }
         });

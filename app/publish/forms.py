@@ -37,7 +37,7 @@ class ArticleForm(FlaskForm):
     source_link         = StringField('Source Link')
     source_name         = StringField('Source Name')
     source_contact      = StringField('Source Contact Details')
-    article_image_id    = IntegerField('Article Image ID') # ?? How to make image alt required ONLY when image ID exists
+    article_image_id    = IntegerField('Article Image ID')
     article_image_alt   = StringField('Article Image Description')
     article_image_cite  = StringField('Article Image Credit')
     paragraph           = FieldList(FormField(ParagraphForm))

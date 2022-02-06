@@ -64,7 +64,7 @@ summary-paragraph [slot="slot-summary"] {
 #article-form h2 { 
     margin-bottom: 1rem;
 }
-#article-form-meta div {
+#article-form div {
     position: relative;
 }
 .article-form-image {

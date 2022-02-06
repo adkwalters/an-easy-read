@@ -98,9 +98,22 @@ categoryInput.addEventListener("focus", function() { // Non-arrow func for this.
 let forms = document.querySelectorAll("input");
 for (let form of forms) {
     form.addEventListener("keypress", (event) => {
-        console.log(event)
         if (event.key === "Enter") {
             event.preventDefault();
         }
     })
 }
+
+
+// || Custom Validation
+
+// Prevent form submission if outstanding alerts exist
+const submitButton = document.getElementById("submit");
+submitButton.addEventListener("click", (event) => {
+    let alerts = document.querySelectorAll("span.form-alert");
+    if (alerts[0]) {
+        alerts[0].scrollIntoView({block: "center", behavior: "smooth"});
+        event.preventDefault();
+    }
+})
+
