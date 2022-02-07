@@ -5,6 +5,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_migrate import Migrate
 
 from config import Config
 
@@ -20,6 +21,9 @@ login.login_message_category = 'error'
 # Instantiate flask-mail
 mail = Mail()
 
+# Instantiate flask-migrate
+migrate = Migrate()
+
 
 def create_app(config_class=Config):
 
@@ -33,6 +37,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     login.init_app(app)
     mail.init_app(app)
+    migrate.init_app(app, db)
     
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
