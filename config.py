@@ -34,8 +34,8 @@ class Config(object):
     MAIL_SERVER = os.environ.get('MAIL_SERVER')    # $env  smtp.googlemail.com
     MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)    # $env 587
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None    # $env 1
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')    # $env email.easyread@gmail.com
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')    # $env andrew@an-easy-read.com
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')    # $env <app password>
-    ADMIN = ['email.easyread@gmail.com', 'adkwalters@gmail.com']
+    ADMIN = ['andrew@an-easy-read.com', 'adkwalters@gmail.com']
     
     
