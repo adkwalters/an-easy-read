@@ -195,6 +195,10 @@ class Paragraph(db.Model):
     index = db.Column(db.Integer, primary_key=True)
     header = db.Column(db.String)
     image_id = db.Column(db.ForeignKey('image.id'))
+    # Relationships
+    summaries = db.relationship('Summary',
+        backref='paragraph',
+        cascade="all, delete, delete-orphan")
 
 
 class Summary(db.Model):
