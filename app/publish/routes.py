@@ -680,12 +680,13 @@ def create_article():
         db.session.add(article)
         db.session.flush()
 
-        # Update Image object 
-        db.session.execute(update(Image)
-            .where(Image.id == form.article_image_id.data)
-            .values(
-                alt = form.article_image_alt.data,
-                cite = form.article_image_cite.data))
+        # Update Image object
+        if form.article_image_id.data:
+            db.session.execute(update(Image)
+                .where(Image.id == form.article_image_id.data)
+                .values(
+                    alt = form.article_image_alt.data,
+                    cite = form.article_image_cite.data))
 
         # Create and add Source object
         source = Source(
@@ -715,15 +716,17 @@ def create_article():
             # Create new Paragraph objects
             paragraph_in_database = Paragraph(
                 index = paragraph['paragraph_index'],
-                header = paragraph['paragraph_header'],
-                image_id = paragraph['paragraph_image_id'])
+                header = paragraph['paragraph_header'])
+            if paragraph['paragraph_image_id']:
+                paragraph_in_database.image_id = paragraph['paragraph_image_id']
             
             # Update Image object
-            db.session.execute(update(Image)
-                .where(Image.id == paragraph['paragraph_image_id'])
-                .values(
-                    alt = paragraph['paragraph_image_alt'],
-                    cite = paragraph['paragraph_image_cite']))
+            if paragraph['paragraph_image_id']:
+                db.session.execute(update(Image)
+                    .where(Image.id == paragraph['paragraph_image_id'])
+                    .values(
+                        alt = paragraph['paragraph_image_alt'],
+                        cite = paragraph['paragraph_image_cite']))
             
             # Append paragraphs to article
             article.paragraphs.append(paragraph_in_database)
@@ -819,14 +822,16 @@ def edit_article():
         # Update Article object
         article.title = form.article_title.data
         article.description = form.article_desc.data
+
         article.image_id = form.article_image_id.data
 
         # Update Image object
-        db.session.execute(update(Image)
-            .where(Image.id == form.article_image_id.data)
-            .values(
-                alt = form.article_image_alt.data,
-                cite = form.article_image_cite.data))
+        if form.article_image_id.data:
+            db.session.execute(update(Image)
+                .where(Image.id == form.article_image_id.data)
+                .values(
+                    alt = form.article_image_alt.data,
+                    cite = form.article_image_cite.data))
 
         # Update Source object
         db.session.execute(update(Source)
@@ -864,15 +869,17 @@ def edit_article():
             # Create new Paragraph objects
             paragraph_in_database = Paragraph(
                 index = paragraph['paragraph_index'],
-                header = paragraph['paragraph_header'],
-                image_id = paragraph['paragraph_image_id'])
+                header = paragraph['paragraph_header'])
+            if paragraph['paragraph_image_id']:
+                paragraph_in_database.image_id = paragraph['paragraph_image_id']
 
             # Update Image objects
-            db.session.execute(update(Image)
-                .where(Image.id == paragraph['paragraph_image_id'])
-                .values(
-                    alt = paragraph['paragraph_image_alt'],
-                    cite = paragraph['paragraph_image_cite']))
+            if paragraph['paragraph_image_id']:
+                db.session.execute(update(Image)
+                    .where(Image.id == paragraph['paragraph_image_id'])
+                    .values(
+                        alt = paragraph['paragraph_image_alt'],
+                        cite = paragraph['paragraph_image_cite']))
 
             # Append paragraphs to article
             article.paragraphs.append(paragraph_in_database)
