@@ -191,14 +191,12 @@ class Paragraph(db.Model):
     Paragraph indices refer to their position within their articles.
     """
     # Attributes
-    article_id = db.Column(db.ForeignKey('article.id'), primary_key=True)
-    index = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    article_id = db.Column(db.ForeignKey('article.id'))
+    index = db.Column(db.Integer)
     header = db.Column(db.String)
     image_id = db.Column(db.ForeignKey('image.id'))
-    # Relationships
-    summaries = db.relationship('Summary',
-        backref='paragraph',
-        cascade="all, delete, delete-orphan")
+    __table_args__ = (db.UniqueConstraint('article_id', 'index'),)
 
 
 class Summary(db.Model):
@@ -208,10 +206,12 @@ class Summary(db.Model):
     Low levels indicate higher reading levels due to less summarisation.
     """
     # Attributes
-    article_id = db.Column(db.ForeignKey('article.id'), primary_key=True)
-    paragraph_index = db.Column(db.ForeignKey('paragraph.index'), primary_key=True)
-    level = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    article_id = db.Column(db.ForeignKey('article.id'))
+    paragraph_index = db.Column(db.ForeignKey('paragraph.id'))
+    level = db.Column(db.Integer)
     text = db.Column(db.String)
+    __table_args__ = (db.UniqueConstraint('article_id', 'paragraph_index', 'level'),)
 
 
 class PublishingNote(db.Model):
