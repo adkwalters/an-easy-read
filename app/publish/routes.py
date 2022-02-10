@@ -564,10 +564,10 @@ def display_publisher_articles():
     display_publisher_articles = ['pending', 'pub_pending', 'pub_live']
     
     # Get publisher's articles
-    articles = db.session.query(Article, Image, User, Publisher, PublishingNote) \
+    articles = db.session.query(Article, Image, Publisher, User, PublishingNote) \
         .outerjoin(Image, Image.id == Article.image_id) \
-        .join(User, User.id == Publisher.user_id) \
         .join(Publisher, Publisher.id == Article.publisher_id) \
+        .join(User, User.id == Publisher.user_id) \
         .outerjoin(PublishingNote, PublishingNote.published_article_id == Article.id) \
         .filter(Publisher.id == current_user.is_publisher.id) \
         .filter(Article.status.in_(display_publisher_articles)).all()
