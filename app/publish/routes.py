@@ -911,7 +911,8 @@ def edit_article():
         .filter_by(id = article.image_id).one_or_none()
     paragraphs = db.session.query(Paragraph, Image) \
         .outerjoin(Image, Image.id == Paragraph.image_id) \
-        .filter(Paragraph.article_id == article.id).all()
+        .filter(Paragraph.article_id == article.id) \
+        .order_by(Paragraph.index).all()
     summaries = article.summaries
 
     # Render prefilled article form (edit mode)  
@@ -943,7 +944,8 @@ def preview_article():
         .filter_by(id = article.image_id).one_or_none()
     paragraphs = db.session.query(Paragraph, Image) \
         .outerjoin(Image, Image.id == Paragraph.image_id) \
-        .filter(Paragraph.article_id == article.id).all()
+        .filter(Paragraph.article_id == article.id) \
+        .order_by(Paragraph.index).all()
     summaries = article.summaries
     
     # Render article  
@@ -1556,7 +1558,8 @@ def view_article(id, slug=None):
             .filter_by(id = article.image_id).one_or_none()
         paragraphs = db.session.query(Paragraph, Image) \
             .outerjoin(Image, Image.id == Paragraph.image_id) \
-            .filter(Paragraph.article_id == article.id).all()
+            .filter(Paragraph.article_id == article.id) \
+            .order_by(Paragraph.index).all()
         summaries = article.summaries
         
         # Render article  
