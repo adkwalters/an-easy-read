@@ -81,12 +81,15 @@ import os
 import imghdr
 import functools
 import datetime
+import requests
 
 from flask import render_template, redirect, url_for, flash, request, current_app, abort, send_from_directory
 from flask_login import login_required, current_user
 from flask_mail import Message
 from sqlalchemy import update, or_, and_
 from werkzeug.utils import secure_filename
+import boto3
+from botocore.client import Config
 
 from app import db, mail
 from app.publish import bp
@@ -624,12 +627,32 @@ def add_image():
                     or file_ext != validate_image(file.stream):
                 abort(400)
 
-        # # Save image to file
-        file.save(os.path.join(
-            basedir + current_app.config.get('UPLOAD_PATH'), filename))
+            # Get Amazon s3 bucket
+            s3_bucket = current_app.config.get('S3_BUCKET')
+
+            # Initialise s3 client
+            s3 = boto3.client('s3', 'eu-west-2', 
+                config = Config(signature_version = 's3v4'))
+
+            # Generate s3 presigned URL
+            presigned_post = s3.generate_presigned_post(
+                Bucket = s3_bucket,
+                Key = filename,
+                Fields = {"Content-Type": file_ext, "acl": "public-read"},
+                Conditions = [
+                    {"acl": "public-read"},
+                    {"Content-Type": file_ext}],
+                ExpiresIn = 3600)
+
+            # Post presigned URL to upload media to Amazon s3
+            http_response = requests.post(
+                presigned_post['url'], 
+                data=presigned_post['fields'], 
+                files={'file': file.read()})
 
         # Create database object
-        image = Image(src=filename)
+        image = Image(
+            src = 'https://an-easy-read.s3.amazonaws.com/%s' % (filename))
         
         # Add object to session 
         db.session.add(image)

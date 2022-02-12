@@ -30,6 +30,9 @@ class Config(object):
     MAX_CONTENT_LENGTH = 1024 * 1024    # 1MB
     UPLOAD_EXTENSIONS = ['.jpg', '.png', '.gif']
 
+    # Configure Amazon S3 storage
+    S3_BUCKET = os.environ.get('S3_BUCKET')
+
     # Configure mail settings 
     MAIL_SERVER = os.environ.get('MAIL_SERVER')    # $env  smtp.googlemail.com
     MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)    # $env 587
