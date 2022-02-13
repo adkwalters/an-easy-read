@@ -26,7 +26,7 @@
     <!-- Article Main Image -->
     {% if article_image %}
         <figure>
-            <img src="{{ url_for('publish.return_image', filename=article_image.src) }}" alt="{{ article_image.alt }}"/>
+            <img src="{{ article_image.src }}" alt="{{ article_image.alt }}"/>
             {% if article_image.cite %}
                 <figcaption>{{ article_image.cite | safe }}</figcaption>
             {% endif %}
@@ -85,7 +85,7 @@
             <summary-paragraph>
                 {% if paragraph['Image'] %}
                     <figure slot="slot-image" >
-                        <img src="{{ url_for('publish.return_image', filename=paragraph['Image'].src) }}" alt="{{ paragraph['Image'].alt }}"/>
+                        <img src="{{ paragraph['Image'].src }}" alt="{{ paragraph['Image'].alt }}"/>
                         {% if article_image.cite %}
                             <figcaption>{{ paragraph['Image'].cite | safe }}</figcaption>
                         {% endif %}

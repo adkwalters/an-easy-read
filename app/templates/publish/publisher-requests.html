@@ -42,7 +42,7 @@
                     <li class="label-colour result-display" data-request="my-requests" data-status="{{ request['Article'].status }}">
                         {% if request['Image'].src %}
                             <figure>
-                                <img src="{{ url_for('publish.return_image', filename=request['Image'].src) }}">
+                                <img src="{{ request['Image'].src }}">
                                 <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
                             </figure>
                         {% else %}
@@ -67,7 +67,7 @@
                     <li class="label-colour result-display" data-request="my-requests" data-status="{{ request['Article'].status }}">
                         {% if request['Image'].src %}
                             <figure>
-                                <img src="{{ url_for('publish.return_image', filename=request['Image'].src) }}">
+                                <img src="{{ request['Image'].src }}">
                                 <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
                             </figure>
                         {% else %}
@@ -92,7 +92,7 @@
                     <li class="label-colour result-display" data-request="all-requests" data-status="{{ request['Article'].status }}">
                         {% if request['Image'].src %}
                             <figure>
-                                <img src="{{ url_for('publish.return_image', filename=request['Image'].src) }}">
+                                <img src="{{ request['Image'].src }}">
                                 <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
                             </figure>
                         {% else %}

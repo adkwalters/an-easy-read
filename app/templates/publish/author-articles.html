@@ -38,7 +38,7 @@
                         <li class="label-colour result-display" data-status="{{ article['Article'].status }}" data-active="{{ article['PublishingNote'].is_active }}">
                             {% if article['Image'].src %}
                                 <figure>
-                                    <img src="{{ url_for('publish.return_image', filename=article['Image'].src) }}">
+                                    <img src="{{ article['Image'].src }}">
                                     <figcaption><h3>{{ article['Article'].title }}</h3></figcaption>
                                 </figure>
                             {% else %}
