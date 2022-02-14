@@ -191,12 +191,15 @@ class Paragraph(db.Model):
     Paragraph indices refer to their position within their articles.
     """
     # Attributes
-    id = db.Column(db.Integer, primary_key=True)
-    article_id = db.Column(db.ForeignKey('article.id'))
-    index = db.Column(db.Integer)
+    article_id = db.Column(db.ForeignKey('article.id'), primary_key=True)
+    index = db.Column(db.Integer, primary_key=True)
     header = db.Column(db.String)
     image_id = db.Column(db.ForeignKey('image.id'))
-    __table_args__ = (db.UniqueConstraint('article_id', 'index'),)
+    # Relationships
+    summaries = db.relationship('Summary',
+        back_populates='paragraph',
+        overlaps='article, summaries',
+        cascade="all, delete, delete-orphan")
 
 
 class Summary(db.Model):
@@ -206,12 +209,17 @@ class Summary(db.Model):
     Low levels indicate higher reading levels due to less summarisation.
     """
     # Attributes
-    id = db.Column(db.Integer, primary_key=True)
-    article_id = db.Column(db.ForeignKey('article.id'))
-    paragraph_index = db.Column(db.ForeignKey('paragraph.id'))
-    level = db.Column(db.Integer)
+    article_id = db.Column(db.ForeignKey('article.id'), primary_key=True)
+    paragraph_index = db.Column(primary_key=True)
+    level = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String)
-    __table_args__ = (db.UniqueConstraint('article_id', 'paragraph_index', 'level'),)
+    # Relationships
+    paragraph = db.relationship('Paragraph',
+        back_populates='summaries',
+        overlaps='article, summaries')
+    __table_args__ = (db.ForeignKeyConstraint(
+        ['article_id', 'paragraph_index'],
+        ['paragraph.article_id', 'paragraph.index']),)
 
 
 class PublishingNote(db.Model):
