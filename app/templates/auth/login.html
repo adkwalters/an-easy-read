@@ -5,17 +5,18 @@
     <title>Easy Read | Login</title>
     <meta name="description" content="Login to create and edit new articles">
 {% endblock %}
+
 <!-- CSS -->
 {% block stylesheets %}
-    <link rel="stylesheet" href="/static/css/general.css"/>
-    <link rel="stylesheet" href="/static/css/sitewide.css"/>
-    <link rel="stylesheet" href="/static/css/auth.css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sitewide.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}"/>
 {% endblock %}
 
 <!-- JavaScript -->
 {% block scripts %}
-    <script src="/static/javascript/header.js" defer></script>
-    <script src="/static/javascript/support-auth.js" defer></script>
+    <script src="{{ url_for('static', filename='javascript/header.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='javascript/support-auth.js') }}" defer></script>
 {% endblock %}
 
 <!-- Main -->

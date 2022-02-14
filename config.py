@@ -26,12 +26,12 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Configure images
-    UPLOAD_PATH = r'\app\static\images'
     MAX_CONTENT_LENGTH = 1024 * 1024    # 1MB
     UPLOAD_EXTENSIONS = ['.jpg', '.png', '.gif']
 
     # Configure Amazon S3 storage
-    S3_BUCKET = os.environ.get('S3_BUCKET')
+    FLASKS3_BUCKET_NAME = os.environ.get('FLASKS3_BUCKET_NAME')
+    FLASKS3_FORCE_MIMETYPE = True
 
     # Configure mail settings 
     MAIL_SERVER = os.environ.get('MAIL_SERVER')    # $env  smtp.googlemail.com

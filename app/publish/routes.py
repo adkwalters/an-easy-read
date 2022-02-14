@@ -628,7 +628,7 @@ def add_image():
                 abort(400)
 
             # Get Amazon s3 bucket
-            s3_bucket = current_app.config.get('S3_BUCKET')
+            s3_bucket = current_app.config.get('FLASKS3_BUCKET_NAME')
 
             # Initialise s3 client
             s3 = boto3.client('s3', 'eu-west-2', 

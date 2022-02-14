@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
+from flask_s3 import FlaskS3
 
 from config import Config
 
@@ -18,11 +19,10 @@ login.login_view = 'auth.login'
 login.login_message = 'Please log in to access that page.'
 login.login_message_category = 'error'
 
-# Instantiate flask-mail
+# Instantiate other extensions
 mail = Mail()
-
-# Instantiate flask-migrate
 migrate = Migrate()
+s3 = FlaskS3()
 
 
 def create_app(config_class=Config):
@@ -38,6 +38,7 @@ def create_app(config_class=Config):
     login.init_app(app)
     mail.init_app(app)
     migrate.init_app(app, db)
+    s3.init_app(app)
     
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
