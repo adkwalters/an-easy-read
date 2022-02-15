@@ -33,8 +33,8 @@ def filter_articles():
 
     categories = db.session.query(Category).all()
 
-    dates = db.session.query(PublishingNote) \
-        .group_by(func.strftime("%Y-%m", PublishingNote.date_published)).all()
+    dates = db.session.query(func.to_char(PublishingNote.date_published, "FMMonth YYYY")) \
+        .group_by(func.to_char(PublishingNote.date_published, "FMMonth YYYY")).all()
 
     articles = db.session.query(Article, Image, PublishingNote) \
         .outerjoin(Image, Image.id == Article.image_id) \
