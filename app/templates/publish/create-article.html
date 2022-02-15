@@ -8,16 +8,16 @@
 
 <!-- CSS -->
 {% block stylesheets %}
-    <link rel="stylesheet" href="/static/css/general.css"/> 
-    <link rel="stylesheet" href="/static/css/sitewide.css"/>  
-    <link rel="stylesheet" href="/static/css/article-pages.css"/> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sitewide.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/article-pages.css') }}"/>
 {% endblock %}
 
-<!-- JavaScript -->
+<!-- JavaScript --> 
 {% block scripts %}
-    <script src="/static/javascript/header.js" defer></script>
-    <script src="/static/javascript/create-article-components.js"></script> 
-    <script src="/static/javascript/create-article-control.js" defer></script>
+    <script src="{{ url_for('static', filename='javascript/header.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='javascript/create-article-control.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='javascript/create-article-components.js') }}"></script>
 {% endblock %}
 
 <!-- Main -->
