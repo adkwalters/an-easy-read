@@ -21,7 +21,6 @@ login.login_message_category = 'error'
 
 # Instantiate other extensions
 mail = Mail()
-migrate = Migrate()
 s3 = FlaskS3()
 
 
@@ -37,7 +36,6 @@ def create_app(config_class=Config):
     db.init_app(app)
     login.init_app(app)
     mail.init_app(app)
-    migrate.init_app(app, db)
     s3.init_app(app)
     
     from app.auth import bp as auth_bp
