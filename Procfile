@@ -1,1 +1,1 @@
-web: flask db upgrade; gunicorn easy_read:app
+web: gunicorn easy_read:app
