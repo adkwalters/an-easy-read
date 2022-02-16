@@ -58,7 +58,6 @@ This document is laid out in the following structure:
         - author
     - article actions
         - add image
-        - return image
         - create
         - edit
         - preview
@@ -612,12 +611,15 @@ def add_image():
 
     if form.validate_on_submit():
         
-        # Get image file and validate filename
+        # Get image file
         file = form.upload_image.data
-        filename = secure_filename(file.filename)
 
         # If a file is selected 
-        if filename != '':
+        if file.filename != '':
+
+            # Validate filename
+            filename = secure_filename(file.filename)
+            filename = str(current_user.id) + '-' + filename
             
             # Get its extension
             file_ext = os.path.splitext(filename)[1]
@@ -638,10 +640,10 @@ def add_image():
             presigned_post = s3.generate_presigned_post(
                 Bucket = s3_bucket,
                 Key = filename,
-                Fields = {"Content-Type": file_ext, "acl": "public-read"},
+                Fields = {'Content-Type': file_ext, 'acl': 'public-read'},
                 Conditions = [
-                    {"acl": "public-read"},
-                    {"Content-Type": file_ext}],
+                    {'acl': 'public-read'},
+                    {'Content-Type': file_ext}],
                 ExpiresIn = 3600)
 
             # Post presigned URL to upload media to Amazon s3
@@ -661,15 +663,10 @@ def add_image():
         db.session.commit()
 
         # return image ID
-        return {"image_id": image.id}, 201
+        return {'image_id': image.id}, 201
 
     # Abort invalid image upload
     abort(400)
-
-
-@bp.route('/static/images/<filename>')
-def return_image(filename):
-    return send_from_directory('static/images', filename)
 
 
 @bp.route('/create-article', methods=['GET', 'POST'])
