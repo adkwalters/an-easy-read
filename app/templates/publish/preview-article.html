@@ -44,12 +44,8 @@
         <h1 class="article-title">{{ article.title }}</h1>
         <div class="article-meta">
             <author id="article-author">Author: {{ article.author.username }}</author>
-            <time id="article-date-published">Published: {{ article.date_published }}</time>
-            {% if article.date_updated %}
-            <time id="article-date-updated">Updated: {{ article.date_updated }}</time>
-            {% endif %}
-            {% if article.date_updated %}
-            <span id="original-artile"> Source: <a href="{{ source.link }}">{{ source.title }}</a></span>
+            {% if source.title != "" %}
+                <span> Source: {% if source.link != "" %}<a href="{{ source.link }}">{% endif %}{{ source.title }}</a> {% if source.author != "" %}by {{ source.author }}{% endif %}</span>
             {% endif %}
         </div>
         <!-- Article control panel -->
