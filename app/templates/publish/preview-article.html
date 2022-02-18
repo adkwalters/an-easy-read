@@ -93,7 +93,7 @@
                 {% if summaries %}
                     {% for summary in summaries %}
                         {% if summary.paragraph_index == paragraph['Paragraph'].index %}
-                            <p slot="slot-summary">{{ summary.text }}</p>
+                            <p slot="slot-summary">{{ summary.text | safe }}</p>
                         {% endif %}
                     {% endfor %}
                 {% endif %}
