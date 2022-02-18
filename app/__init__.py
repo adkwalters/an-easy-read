@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_s3 import FlaskS3
+from flask_talisman import Talisman
 
 from config import Config
 
@@ -21,6 +22,7 @@ login.login_message_category = 'error'
 # Instantiate other extensions
 mail = Mail()
 s3 = FlaskS3()
+talisman = Talisman()
 
 
 def create_app(config_class=Config):
@@ -36,6 +38,7 @@ def create_app(config_class=Config):
     login.init_app(app)
     mail.init_app(app)
     s3.init_app(app)
+    talisman.init_app(app, content_security_policy=None)
     
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
