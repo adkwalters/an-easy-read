@@ -2,7 +2,7 @@
 
 <!-- Page metadata -->
 {% block pagemeta %}
-    <title>Easy Read | Make reading easier</title>
+    <title>An Easy Read | Make reading easier</title>
     <meta name="description" content="A place to read progressively summarised content">
 {% endblock %}
 
@@ -24,7 +24,7 @@
 {% block main %}
     <div id="index-page" class="full-spread">
 
-        <h1>Welcome to Easy Read{% if current_user.is_authenticated %}, {{ current_user.username }} {% endif %}</h1>
+        <h1>Welcome to An Easy Read{% if current_user.is_authenticated %}, {{ current_user.username }} {% endif %}</h1>
         <summary-paragraph id="demo">
             <h3 slot="slot-header">How it works</h3>
             <p slot="slot-summary" class="cursor">Can you read this? Is it too easy? Let's make it harder. Use the button on the right and see how the words change.</p>
