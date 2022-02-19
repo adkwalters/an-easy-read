@@ -210,7 +210,7 @@ class Summary(db.Model):
     """
     # Attributes
     article_id = db.Column(db.ForeignKey('article.id'), primary_key=True)
-    paragraph_index = db.Column(primary_key=True)
+    paragraph_index = db.Column(db.Integer, primary_key=True)
     level = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String)
     # Relationships
