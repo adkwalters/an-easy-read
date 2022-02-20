@@ -181,7 +181,6 @@ textarea {
 .dropdown-tab-right ul {
     right: 0;
     width: max-content;
-    text-align: right;
 }
 .dropdown-tab-dropdown {
     position: absolute;
@@ -196,9 +195,14 @@ textarea {
     display: block;
 }
 .dropdown-panel button {
+    width: 100%;
     border: none;
     background: none;
     font-size: 1.2rem;
+    text-align: left;
+}
+.dropdown-tab-right button {
+    text-align: right;
 }
 .dropdown-tab-dropdown button {
     padding: 0.3rem 1rem;
