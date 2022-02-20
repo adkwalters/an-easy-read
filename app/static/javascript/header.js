@@ -22,6 +22,8 @@ window.addEventListener("click", (event) => {
 });
 
 
+// || Flash Messages
+
 // Close flashed message
 const flashClose = document.querySelector(".close-message");
 if (flashClose) {
@@ -29,6 +31,29 @@ if (flashClose) {
         flashClose.parentNode.remove();
     });
 }
+
+
+// || Register Prompt
+
+// Popup a modal box to prompt users to register
+const registerModal = document.getElementById("register-modal");
+if (registerModal) {
+    // Observe menu expansion
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+            if (mutation.type === 'attributes') {
+                // Toggle modal conditioned on menu expansion
+                if (navIcon.ariaExpanded == "true") {
+                    registerModal.classList.add("no-display");
+                } else {
+                    registerModal.classList.remove("no-display");
+                }
+            }
+        });
+    });
+    observer.observe(navIcon, { attributes: true });
+}
+
 
 
 // || Cookie Consent
