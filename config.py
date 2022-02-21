@@ -20,8 +20,8 @@ class Config(object):
     # Get location of database with fallback   
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', '').replace(
         'postgres://', 'postgresql://') or \
-        'sqlite:///' + os.path.join(basedir, 'easy_read.db')
-    
+        'postgresql://postgres:adm@localhost:5432'
+
     # Disable application change signalling
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
