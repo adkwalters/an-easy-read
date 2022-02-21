@@ -4,12 +4,19 @@ import json
 
 from flask import current_app
 
-# Configure tests to use in-memory database
+# Configure tests to use separate PostgreSQL database
 # Configure before local application to avoid triggering fallback in Config object
-os.environ['DATABASE_URL'] = 'sqlite://'  
+os.environ['DATABASE_URL'] = 'postgresql://postgres:adm@localhost:5432'
 
 from app import create_app, db, mail
 from app.models import User, Article, Image
+
+
+# Clean database by dropping all tables
+def clean_db(db):
+    for table in reversed(db.metadata.sorted_tables):
+        db.session.execute(table.delete())
+        db.session.commit()
 
 
 class TestWebApp(unittest.TestCase):
@@ -44,11 +51,12 @@ class UserModelCase(unittest.TestCase):
         self.appctx = self.app.app_context()
         self.appctx.push()
         self.client = self.app.test_client()
+        clean_db(db)
         db.create_all()
         mail.init_app(current_app)                  # Initialise Flask-Mail to allow email suppression
 
     def tearDown(self):
-        db.drop_all()
+        clean_db(db)
         self.appctx.pop()
         self.app = None
         self.appctx = None
@@ -106,12 +114,13 @@ class ArticleModelCase(unittest.TestCase):
         self.appctx = self.app.app_context()
         self.appctx.push()
         self.client = self.app.test_client()
+        clean_db(db)
         db.create_all()
         self.populate_db()
         self.login()
 
     def tearDown(self):
-        db.drop_all()
+        clean_db(db)
         self.appctx.pop()
         self.app = None
         self.appctx = None
@@ -305,10 +314,11 @@ class SourceModelCase(unittest.TestCase):
         self.appctx = self.app.app_context()
         self.appctx.push()
         self.client = self.app.test_client()
+        clean_db(db)
         db.create_all()
 
     def tearDown(self):
-        db.drop_all()
+        clean_db(db)
         self.appctx.pop()
         self.app = None
         self.appctx = None
@@ -373,10 +383,11 @@ class CategoryModelCase(unittest.TestCase):
         self.appctx = self.app.app_context()
         self.appctx.push()
         self.client = self.app.test_client()
+        clean_db(db)
         db.create_all()
 
     def tearDown(self):
-        db.drop_all()
+        clean_db(db)
         self.appctx.pop()
         self.app = None
         self.appctx = None
@@ -435,12 +446,13 @@ class ImageModelCase(unittest.TestCase):
         self.appctx = self.app.app_context()
         self.appctx.push()
         self.client = self.app.test_client()
+        clean_db(db)
         db.create_all()
         self.populate_db()
         self.login()
 
     def tearDown(self):
-        db.drop_all()
+        clean_db(db)
         self.appctx.pop()
         self.app = None
         self.appctx = None
@@ -547,12 +559,13 @@ class ParagraphModelCase(unittest.TestCase):
         self.appctx = self.app.app_context()
         self.appctx.push()
         self.client = self.app.test_client()
+        clean_db(db)
         db.create_all()
         self.populate_db()
         self.login()
 
     def tearDown(self):
-        db.drop_all()
+        clean_db(db)
         self.appctx.pop()
         self.app = None
         self.appctx = None
@@ -673,12 +686,13 @@ class LevelModelCase(unittest.TestCase):
         self.appctx = self.app.app_context()
         self.appctx.push()
         self.client = self.app.test_client()
+        clean_db(db)
         db.create_all()
         self.populate_db()
         self.login()
 
     def tearDown(self):
-        db.drop_all()
+        clean_db(db)
         self.appctx.pop()
         self.app = None
         self.appctx = None
