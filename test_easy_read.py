@@ -85,8 +85,8 @@ class UserModelCase(unittest.TestCase):
             follow_redirects=True)
         html = post_registration.get_data(as_text=True)
         assert post_registration.request.path == '/index'
-        assert 'Welcome to Easy Read, Andrew' in html
-        assert 'Welcome to Easy Read, David' not in html
+        assert 'Welcome to An Easy Read, Andrew' in html
+        assert 'Welcome to An Easy Read, David' not in html
 
     def test_log_user_in_and_out(self):
         user = User(username='Andrew', email='andrew@email.com')
