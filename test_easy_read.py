@@ -3,6 +3,7 @@ import unittest
 import json
 
 from flask import current_app
+import boto3
 
 # Configure tests to use separate PostgreSQL database
 # Configure before local application to avoid triggering fallback in Config object
@@ -11,12 +12,21 @@ os.environ['DATABASE_URL'] = 'postgresql://postgres:adm@localhost:5432'
 from app import create_app, db, mail
 from app.models import User, Article, Image
 
+# Get Amazon S3 cloud storage bucket
+BUCKET = os.environ['FLASKS3_BUCKET_NAME']
+
 
 # Clean database by dropping all tables
 def clean_db(db):
     for table in reversed(db.metadata.sorted_tables):
         db.session.execute(table.delete())
         db.session.commit()
+
+
+# Delete image saved to Amazon S3 cloud storage
+def delete_image_from_storage(response):
+    test_image = json.loads(response.data)['image_name']
+    boto3.resource('s3').Object(BUCKET, test_image).delete()
 
 
 class TestWebApp(unittest.TestCase):
@@ -495,6 +505,8 @@ class ImageModelCase(unittest.TestCase):
             data={
             'upload_image': (open(text_file, 'rb'), text_file)})
         assert post_text_file.status_code == 400    # Bad request
+        # Delete test images from cloud storage
+        delete_image_from_storage(post_valid_image)
 
     def test_add_and_update_article_image(self):
         # Post initial image 
@@ -554,6 +566,9 @@ class ImageModelCase(unittest.TestCase):
         assert updated_image_src in updated_article_html
         assert 'Updated image description' in updated_article_html
         assert 'Updated image citation' in updated_article_html
+        # Delete test images from cloud storage
+        delete_image_from_storage(post_image)
+        delete_image_from_storage(post_updated_image)
 
 
 class ParagraphModelCase(unittest.TestCase):    
@@ -685,6 +700,9 @@ class ParagraphModelCase(unittest.TestCase):
         assert updated_image_src in updated_article_html
         assert 'Updated image description' in updated_article_html
         assert 'Updated image citation' in updated_article_html
+        # Delete test images from cloud storage
+        delete_image_from_storage(post_image)
+        delete_image_from_storage(post_updated_image)
 
 
 class LevelModelCase(unittest.TestCase):    
