@@ -82,7 +82,7 @@ import functools
 import datetime
 import requests
 
-from flask import render_template, redirect, url_for, flash, request, current_app, abort, send_from_directory
+from flask import render_template, redirect, url_for, flash, request, current_app, abort
 from flask_login import login_required, current_user
 from flask_mail import Message
 from sqlalchemy import update, or_, and_
@@ -94,7 +94,6 @@ from app import db, mail
 from app.publish import bp
 from app.publish.forms import ArticleForm, ImageForm, EmailForm
 from app.models import Article, Source, Category, Image, Paragraph, Summary, User, Publisher, PublishingNote
-from config import basedir
 
 
 # || Helper Functions
@@ -663,7 +662,9 @@ def add_image():
         db.session.commit()
 
         # return image ID
-        return {'image_id': image.id}, 201
+        return {
+            'image_id': image.id,
+            'image_name': filename}, 201
 
     # Abort invalid image upload
     abort(400)
