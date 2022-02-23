@@ -16,11 +16,11 @@ class SummaryParagraph extends HTMLElement {
                 }
                 // Display highest level
                 if (difficulty == "hardest") {
-                    this.summaries.at(-1).classList.replace("no-display", "cursor");            
+                    this.summaries[this.summaries.length -1].classList.replace("no-display", "cursor");
                 }
                 // Display lowest level
                 else if (difficulty == "easiest") {
-                    this.summaries.at(0).classList.replace("no-display", "cursor");          
+                    this.summaries[0].classList.replace("no-display", "cursor");
                 }
             }
         }
@@ -56,13 +56,13 @@ class SummaryParagraph extends HTMLElement {
             let decArrow = this.shadowRoot.querySelector(".prev");
             if (this.summaries.length > 0) {
                 // If highest level, remove increase arrow
-                if (this.summaries.at(-1).classList.contains("cursor")) {
+                if (this.summaries[this.summaries.length -1].classList.contains("cursor")) {
                     incArrow.classList.add("no-display");
                 } else {
                     incArrow.classList.remove("no-display");
                 }  
                 // If lowest level, remove decrease arrow
-                if (this.summaries.at(0).classList.contains("cursor")) {
+                if (this.summaries[0].classList.contains("cursor")) {
                     decArrow.classList.add("no-display");
                 } else {
                     decArrow.classList.remove("no-display");
