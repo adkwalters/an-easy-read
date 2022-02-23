@@ -99,6 +99,8 @@ class SummaryParagraph extends HTMLElement {
                 position: absolute;
                 transform: translateY(-50%);
                 top: 50%;
+                margin: 0;
+                padding: 0;
                 background: none;
                 border: none;
                 font-size: 2rem;
