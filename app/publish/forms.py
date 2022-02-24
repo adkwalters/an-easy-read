@@ -46,7 +46,7 @@ class ArticleForm(FlaskForm):
 
 class ImageForm(FlaskForm):
     """A form to collect and validate an article image"""
-    upload_image        = FileField('Article Image', validators=[FileAllowed(['jpg', 'png', 'gif'], 'Please select an image.')])
+    upload_image        = FileField('Article Image', validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Please select an image.')])
 
 
 class EmailForm(FlaskForm):

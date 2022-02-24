@@ -106,7 +106,7 @@ def validate_image(stream):
     format = imghdr.what(None, header)  # Process first chunk with imghrd library
     if not format:
         return None
-    return '.' + (format if format != 'jpeg' else 'jpg')
+    return '.' + (format)
 
 
 # || Decorators
@@ -622,6 +622,10 @@ def add_image():
             
             # Get its extension
             file_ext = os.path.splitext(filename)[1]
+
+            # Convert .jpg to .jpeg for imghdr image validation
+            if file_ext == ".jpg":
+                file_ext = ".jpeg"
 
             # Abort if the file extension is not permitted or file is invalid (see function)
             if file_ext not in current_app.config.get('UPLOAD_EXTENSIONS') \

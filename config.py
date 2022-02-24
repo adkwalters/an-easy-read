@@ -27,7 +27,7 @@ class Config(object):
 
     # Configure images
     MAX_CONTENT_LENGTH = 1024 * 1024    # 1MB
-    UPLOAD_EXTENSIONS = ['.jpg', '.png', '.gif']
+    UPLOAD_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif']
 
     # Configure Amazon S3 storage
     FLASKS3_BUCKET_NAME = os.environ.get('FLASKS3_BUCKET_NAME')
