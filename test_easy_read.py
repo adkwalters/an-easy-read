@@ -481,12 +481,30 @@ class ImageModelCase(unittest.TestCase):
                 password='password'))
     
     def test_upload_and_validate_image(self):
-        # Post valid image
+        # Post valid image (.jpg)
         image = r'app\static\test_images\initial_image.jpg'
-        post_valid_image = self.client.post('/add-image', 
+        post_valid_jpg = self.client.post('/add-image', 
             data={
             'upload_image': (open(image, 'rb'), image)})
-        assert post_valid_image.status_code == 201    # success, created
+        assert post_valid_jpg.status_code == 201    # success, created
+        # Post valid image (.jpeg)
+        jpeg_image = r'app\static\test_images\jpeg_image.jpeg'
+        post_valid_jpeg = self.client.post('/add-image', 
+            data={
+            'upload_image': (open(jpeg_image, 'rb'), jpeg_image)})
+        assert post_valid_jpeg.status_code == 201    # success, created
+        # Post valid image (.png)
+        png_image = r'app\static\test_images\png_image.png'
+        post_valid_png = self.client.post('/add-image', 
+            data={
+            'upload_image': (open(png_image, 'rb'), png_image)})
+        assert post_valid_png.status_code == 201    # success, created
+        # Post valid image (.gif)
+        gif_image = r'app\static\test_images\gif_image.gif'
+        post_valid_gif = self.client.post('/add-image', 
+            data={
+            'upload_image': (open(gif_image, 'rb'), gif_image)})
+        assert post_valid_gif.status_code == 201    # success, created     
         # Post false image (incorrect file extension)
         false_image = r'app\static\test_images\inorrect_ext_jpg.png'
         post_false_image = self.client.post('/add-image', 
@@ -506,7 +524,10 @@ class ImageModelCase(unittest.TestCase):
             'upload_image': (open(text_file, 'rb'), text_file)})
         assert post_text_file.status_code == 400    # Bad request
         # Delete test images from cloud storage
-        delete_image_from_storage(post_valid_image)
+        delete_image_from_storage(post_valid_jpg)
+        delete_image_from_storage(post_valid_jpeg)
+        delete_image_from_storage(post_valid_png)
+        delete_image_from_storage(post_valid_gif)
 
     def test_add_and_update_article_image(self):
         # Post initial image 
