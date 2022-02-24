@@ -136,34 +136,44 @@ class ArticleImage extends HTMLElement {
                     method: "POST",
                     body: formData
                 })
-                .then(response => response.json())
-                .catch(error => {
-                    console.error(error);
+                .then(response => {
 
-                    // Alert author
-                    alert('The file selected is invalid or not permitted.');
+                    // Successful upload
+                    if (response.ok) { 
+                        response.json().then(response => {
 
-                    // Reappend file input to shadow DOM
-                    imageLabel.appendChild(imageInput);
-                    imageInput.value = "";
+                            // Save image ID to hidden input
+                            hiddenId.value = response.image_id;
+                            imageInput.value = "";
 
-                }).then(response => {
+                            // Append elements to light DOM                                   
+                            this.appendChild(img);
+                            this.appendChild(hiddenId);
+                            this.appendChild(altInputDiv);
+                                altInputDiv.appendChild(altInput);
+                            this.appendChild(citeInputDiv);
+                                citeInputDiv.appendChild(citeInput);
 
-                    // Save image ID to hidden input
-                    hiddenId.value = response.image_id;
-                    imageInput.value = "";
+                            // Display alert if image has no alt or citation
+                            this.alert_image_support();
+                        })
+                    }
+                    // Failed upload
+                    else {
 
-                    // Append elements to light DOM                                   
-                    this.appendChild(img);
-                    this.appendChild(hiddenId);
-                    this.appendChild(altInputDiv);
-                        altInputDiv.appendChild(altInput);
-                    this.appendChild(citeInputDiv);
-                        citeInputDiv.appendChild(citeInput);
-
-                    // Display alert if image has no alt or citation
-                    this.alert_image_support();
-                });
+                        // Alert author
+                        if (response.status === 413) {
+                            alert("The file selected is too large. Images must be under 1MB.");
+                        } else {
+                            alert('The file selected is invalid or not permitted.');
+                        }
+                        
+                        // Reappend file input to shadow DOM
+                        imageLabel.appendChild(imageInput);
+                        imageInput.value = "";
+                    }
+                })
+                .catch(error => console.error(error));
             }
         });
 
