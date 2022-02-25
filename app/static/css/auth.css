@@ -61,7 +61,8 @@
     position: absolute;
     bottom: 2rem;
     right: 1rem;
-    color: #DDD;
+    color: var(--contrast-light);
+    background: none;
     border: none;
     cursor: pointer;
 }
