@@ -7,6 +7,8 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_s3 import FlaskS3
 from flask_talisman import Talisman
+from flask_migrate import Migrate
+migrate = Migrate()
 
 from config import Config
 
@@ -23,6 +25,7 @@ login.login_message_category = 'error'
 mail = Mail()
 s3 = FlaskS3()
 talisman = Talisman()
+migrate = Migrate()
 
 
 def create_app(config_class=Config):
@@ -39,7 +42,8 @@ def create_app(config_class=Config):
     mail.init_app(app)
     s3.init_app(app)
     talisman.init_app(app, content_security_policy=None)
-    
+    migrate.init_app(app, db)
+
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
 
