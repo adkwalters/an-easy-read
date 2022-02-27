@@ -1499,6 +1499,10 @@ def delete_article():
     Delete the Article model object and cascade the deletion of the related 
     Source, Paragraph, and Summary model objects.
 
+    If and article has no published version, delete all Image model objects 
+    from the database and delete the related image file from Amazon S3 cloud 
+    storage.
+
     If an article is published, create the appearance of deletion by taking
     the article offline and reassigning it to admin. This is in effort to 
     protect against the accidental or malicious deletion of content considered 
@@ -1541,6 +1545,24 @@ def delete_article():
 
         # Return author to author's articles page
         return redirect(url_for('publish.display_publisher_articles'))
+
+    # Delete article images from database and cloud storage
+    if not article.is_published:
+        article_image = db.session.query(Image) \
+            .filter_by(id = article.image_id).first()
+        if article_image:
+            db.session.delete(article_image)
+            article_image_filename = os.path.basename(article_image.src)
+            boto3.resource('s3').Object(
+                os.environ['FLASKS3_BUCKET_NAME'], article_image_filename).delete()
+        for paragraph in article.paragraphs:
+            paragraph_image = db.session.query(Image) \
+                .filter_by(id = paragraph.image_id).first()
+            if paragraph_image:
+                db.session.delete(paragraph_image)
+                paragraph_image_filename = os.path.basename(paragraph_image.src)
+                boto3.resource('s3').Object(
+                    os.environ['FLASKS3_BUCKET_NAME'], paragraph_image_filename).delete()
     
     # Delete article
     db.session.delete(article)
@@ -1560,6 +1582,10 @@ def permadelete_article():
 
     Delete the Article model object and cascade the deletion of the related 
     Source, Paragraph, and Summary model objects.
+
+    If and article has no draft version, delete all Image model objects 
+    from the database and delete the related image file from Amazon S3 cloud 
+    storage.
 
     If an article is published, reset its draft version's status and assignment,
     and delete the related PublishingNote model object.
@@ -1584,6 +1610,25 @@ def permadelete_article():
             .join(Article, Article.id == PublishingNote.published_article_id) \
             .filter(Article.id == article.id).one()
         db.session.delete(pub_note['PublishingNote'])
+
+    else: # Published article has no draft version
+
+        # Delete article images from database and cloud storage
+        article_image = db.session.query(Image) \
+            .filter_by(id = article.image_id).first()
+        if article_image:
+            db.session.delete(article_image)
+            article_image_filename = os.path.basename(article_image.src)
+            boto3.resource('s3').Object(
+                os.environ['FLASKS3_BUCKET_NAME'], article_image_filename).delete()
+        for paragraph in article.paragraphs:
+            paragraph_image = db.session.query(Image) \
+                .filter_by(id = paragraph.image_id).first()
+            if paragraph_image:
+                db.session.delete(paragraph_image)
+                paragraph_image_filename = os.path.basename(paragraph_image.src)
+                boto3.resource('s3').Object(
+                    os.environ['FLASKS3_BUCKET_NAME'], paragraph_image_filename).delete()
 
     # Delete article
     db.session.delete(article)
