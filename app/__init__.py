@@ -8,7 +8,8 @@ from flask_mail import Mail
 from flask_s3 import FlaskS3
 from flask_talisman import Talisman
 from flask_migrate import Migrate
-migrate = Migrate()
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 
 from config import Config
 
@@ -27,6 +28,12 @@ s3 = FlaskS3()
 talisman = Talisman()
 migrate = Migrate()
 
+# Initialise and configure APScheduler for image deletion
+# Persist scheduled jobs using database
+scheduled_delete = BackgroundScheduler(jobstores={
+    'default': SQLAlchemyJobStore(url=Config.SQLALCHEMY_DATABASE_URI)
+})
+
 
 def create_app(config_class=Config):
 
@@ -44,6 +51,10 @@ def create_app(config_class=Config):
     talisman.init_app(app, content_security_policy=None)
     migrate.init_app(app, db)
 
+    # Start APScheduler for image deletion
+    scheduled_delete.start()
+    
+    # Register blueprints
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
 
