@@ -711,7 +711,8 @@ def create_article():
                 .where(Image.id == form.article_image_id.data)
                 .values(
                     alt = form.article_image_alt.data,
-                    cite = form.article_image_cite.data))
+                    cite = form.article_image_cite.data,
+                    used = True))
 
         # Create and add Source object
         source = Source(
@@ -751,7 +752,8 @@ def create_article():
                     .where(Image.id == paragraph['paragraph_image_id'])
                     .values(
                         alt = paragraph['paragraph_image_alt'],
-                        cite = paragraph['paragraph_image_cite']))
+                        cite = paragraph['paragraph_image_cite'],
+                        used = True))
             
             # Append paragraphs to article
             article.paragraphs.append(paragraph_in_database)
@@ -856,7 +858,8 @@ def edit_article():
                 .where(Image.id == form.article_image_id.data)
                 .values(
                     alt = form.article_image_alt.data,
-                    cite = form.article_image_cite.data))
+                    cite = form.article_image_cite.data,
+                    used = True))
 
         # Update Source object
         db.session.execute(update(Source)
@@ -904,7 +907,8 @@ def edit_article():
                     .where(Image.id == paragraph['paragraph_image_id'])
                     .values(
                         alt = paragraph['paragraph_image_alt'],
-                        cite = paragraph['paragraph_image_cite']))
+                        cite = paragraph['paragraph_image_cite'],
+                        used = True))
 
             # Append paragraphs to article
             article.paragraphs.append(paragraph_in_database)
