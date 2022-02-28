@@ -50,9 +50,6 @@ def create_app(config_class=Config):
     s3.init_app(app)
     talisman.init_app(app, content_security_policy=None)
     migrate.init_app(app, db)
-
-    # Start APScheduler for image deletion
-    scheduled_delete.start()
     
     # Register blueprints
     from app.auth import bp as auth_bp
@@ -85,6 +82,10 @@ def create_app(config_class=Config):
                 credentials=auth, secure=secure)
             mail_handler.setLevel(logging.ERROR)
             app.logger.addHandler(mail_handler)
+
+        # Start APScheduler for image deletion
+        if not scheduled_delete.running:
+            scheduled_delete.start()
 
     return app
 
