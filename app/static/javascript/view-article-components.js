@@ -143,6 +143,9 @@ class SummaryParagraph extends HTMLElement {
                 .next {
                     display: none;
                 }
+                ::slotted([slot=slot-summary]) {
+                    background: none;
+                }
             }
             `;
 
