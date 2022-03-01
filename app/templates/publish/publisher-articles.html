@@ -43,14 +43,11 @@
                     {% for article in articles %}
                         <li class="label-colour result-display" data-status="{{ article['Article'].status }}" data-active="{{ article['PublishingNote'].is_active }}">
                             {% if article['Image'].src %}
-                                <figure>
-                                    <img src="{{ article['Image'].src }}">
-                                    <figcaption><h3>{{ article['Article'].title }}</h3></figcaption>
-                                </figure>
+                                <img src="{{ article['Image'].src }}" alt="{{ article['Image'].alt }}">
                             {% else %}
                                 <i class="no-image-icon far fa-image"></i>
-                                <h3>{{ article['Article'].title }}</h3>
                             {% endif %}
+                            <h3>{{ article['Article'].title }}</h3>
                             <p>{{ article['Article'].description }}</p>
                             <i class="article-actions-icon fas fa-edit" tabindex="0" aria-label="Article actions menu">
                                 <div class="article-actions-dropdown">

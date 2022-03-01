@@ -41,14 +41,11 @@
                     {% for request in associated %}
                     <li class="label-colour result-display" data-request="my-requests" data-status="{{ request['Article'].status }}">
                         {% if request['Image'].src %}
-                            <figure>
-                                <img src="{{ request['Image'].src }}">
-                                <figcaption><h3>{{ request['Article'].title }}</h3></figcaption>
-                            </figure>
+                            <img src="{{ request['Image'].src }}" alt="{{ request['Image'].alt }}">
                         {% else %}
                             <i class="no-image-icon far fa-image"></i>
-                            <h3>{{ request['Article'].title }}</h3>
                         {% endif %}
+                        <h3>{{ request['Article'].title }}</h3>
                         <p>{{ request['Article'].description }}</p>
                         <p>Author: {{ request['User'].username }}</p>
                         <i class="article-actions-icon fas fa-edit" tabindex="0" aria-label="Article actions menu">
