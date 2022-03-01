@@ -21,7 +21,9 @@ def index():
         .outerjoin(Image, Image.id == Article.image_id) \
         .outerjoin(PublishingNote, PublishingNote.published_article_id == Article.id) \
         .filter(Article.status == 'pub_live') \
-        .filter(PublishingNote.is_active == True).all()
+        .filter(PublishingNote.is_active == True) \
+        .order_by(PublishingNote.date_published.desc()).all()
+
         
     # Render index page
     return render_template('index.html', articles=articles)
@@ -40,7 +42,9 @@ def filter_articles():
         .outerjoin(Image, Image.id == Article.image_id) \
         .outerjoin(PublishingNote, PublishingNote.published_article_id == Article.id) \
         .filter(Article.status == 'pub_live') \
-        .filter(PublishingNote.is_active == True).all()
+        .filter(PublishingNote.is_active == True) \
+        .order_by(PublishingNote.date_published.desc()).all()
+
 
     # Render articles filter page
     return render_template('articles.html', 

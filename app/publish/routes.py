@@ -579,7 +579,8 @@ def display_admin_articles():
     articles = db.session.query(Article, Image, PublishingNote) \
         .outerjoin(Image, Image.id == Article.image_id) \
         .outerjoin(PublishingNote, PublishingNote.published_article_id == Article.id) \
-        .filter(Article.status.in_(display_admin_articles)).all()
+        .filter(Article.status.in_(display_admin_articles)) \
+        .order_by(PublishingNote.date_published.desc()).all()
             
     return render_template('/publish/admin-articles.html', 
         articles=articles, 
@@ -606,7 +607,8 @@ def display_publisher_articles():
         .join(User, User.id == Publisher.user_id) \
         .outerjoin(PublishingNote, PublishingNote.published_article_id == Article.id) \
         .filter(Publisher.id == current_user.is_publisher.id) \
-        .filter(Article.status.in_(display_publisher_articles)).all()
+        .filter(Article.status.in_(display_publisher_articles)) \
+        .order_by(PublishingNote.date_published.desc()).all()
 
     # Render author's articles page
     return render_template('/publish/publisher-articles.html', articles=articles)
@@ -629,7 +631,10 @@ def display_author_articles():
         .outerjoin(Image, Image.id == Article.image_id) \
         .outerjoin(PublishingNote, PublishingNote.draft_article_id == Article.id) \
         .filter(Article.author_id == current_user.id) \
-        .filter(Article.status.not_in(display_publisher_articles)).all()
+        .filter(Article.status.not_in(display_publisher_articles)) \
+        .order_by(PublishingNote.date_published.desc(),
+                  Article.id.desc()).all()
+
 
     # Render author's articles pages
     return render_template('/publish/author-articles.html', articles=articles)
