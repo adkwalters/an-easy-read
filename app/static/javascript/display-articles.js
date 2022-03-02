@@ -54,7 +54,7 @@ function addOrRemoveAddButton(action) {
         // Display button, if not already displayed
         if (!display.contains(addButton)) {
             let list = display.querySelector("ul");
-            list.appendChild(addButton);
+            list.prepend(addButton);
         }
     }
     else if (action == "remove") {
