@@ -146,6 +146,7 @@ textarea.form-text-header {
 [data-user] {
     flex-direction: row;
     justify-content: space-between;
+    margin-top: 1rem;
 }
 .result-display img {
     display: block;
