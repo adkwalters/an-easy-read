@@ -452,7 +452,8 @@ class CategoryModelCase(unittest.TestCase):
 class ImageModelCase(unittest.TestCase):    
     def setUp(self):
         self.app = create_app()
-        self.app.config['WTF_CSRF_ENABLED'] = False   
+        self.app.config['WTF_CSRF_ENABLED'] = False
+        self.app.config['TESTING'] = True
         self.appctx = self.app.app_context()
         self.appctx.push()
         self.client = self.app.test_client()
@@ -595,7 +596,8 @@ class ImageModelCase(unittest.TestCase):
 class ParagraphModelCase(unittest.TestCase):    
     def setUp(self):
         self.app = create_app()
-        self.app.config['WTF_CSRF_ENABLED'] = False   
+        self.app.config['WTF_CSRF_ENABLED'] = False
+        self.app.config['TESTING'] = True
         self.appctx = self.app.app_context()
         self.appctx.push()
         self.client = self.app.test_client()

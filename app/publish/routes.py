@@ -708,9 +708,10 @@ def add_image():
         # Record changes
         db.session.commit()
 
-        # Schedule image for deletion if not used
-        scheduled_delete.add_job(delete_unused_image, 'interval', hours=4, 
-            id=str(image.id), kwargs={'image': filename, 'job_id': image.id})
+        if not current_app.testing:
+            # Schedule image for deletion if not used
+            scheduled_delete.add_job(delete_unused_image, 'interval', hours=4,
+                id=str(image.id), kwargs={'image': filename, 'job_id': image.id})
 
         # return image ID
         return {
