@@ -83,9 +83,9 @@ def create_app(config_class=Config):
             mail_handler.setLevel(logging.ERROR)
             app.logger.addHandler(mail_handler)
 
-        # Start APScheduler for image deletion
-        if not scheduled_delete.running:
-            scheduled_delete.start()
+    # Start APScheduler for image deletion
+    if not scheduled_delete.running:
+        scheduled_delete.start()
 
     return app
 
