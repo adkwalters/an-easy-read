@@ -1,5 +1,5 @@
 # Database schema: 
-# https://an-easy-read.s3.eu-west-2.amazonaws.com/database_schema.pdf
+# https://an-easy-read.s3.eu-west-2.amazonaws.com/easy_read_database_schema.pdf
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import current_app
