@@ -1,3 +1,5 @@
+n.b. This project was discontinued after its completion in March 2022, and the site was taken offline in November 2022 with the [termination of Heroku's Postgres servers](https://help.heroku.com/RSBRUH58/removal-of-heroku-free-product-plans-faq). 
+
 # An Easy Read
 
 A web app designed to help EFL learners to improve their reading skill. 
